@@ -39,7 +39,6 @@ const Middles = () => {
     const handleResize = () => {
       const newInnerWidth = window.innerWidth;
       if (newInnerWidth < 1000) {
-        console.log(newInnerWidth); // Log the newInnerWidth
         setIsMobile(true);
       } else {
         setIsMobile(false);
@@ -52,8 +51,6 @@ const Middles = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  console.log(isMobile);
 
   const handleSportsBooksChange = (event) => {
     const {
@@ -87,7 +84,6 @@ const Middles = () => {
       const response = await axios.get(paths.getMiddlesBasePath, {
         params: queryParams,
       });
-      console.log(response);
       setData(response.data);
     } catch (error) {
       console.error(error);
@@ -98,14 +94,14 @@ const Middles = () => {
     columns: middlesColumnsV1,
     data,
     layoutMode: "semantic",
-    enableColumnResizing: true,
+    enableColumnResizing: false,
     enableColumnActions: false,
     enableColumnFilters: false,
     enablePagination: false,
     enableSorting: true,
     enableBottomToolbar: false,
     enableTopToolbar: false,
-    muiTableBodyRowProps: { hover: true },
+    muiTableBodyRowProps: { hover: false },
   });
 
   const tableV2 = useMaterialReactTable({
@@ -117,7 +113,7 @@ const Middles = () => {
     enableColumnActions: false,
     enableColumnFilters: false,
     enablePagination: false,
-    enableSorting: true,
+    enableSorting: false,
     enableBottomToolbar: false,
     enableTopToolbar: false,
     renderDetailPanel: ({ row }) => (

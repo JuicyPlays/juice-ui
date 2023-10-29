@@ -1,4 +1,5 @@
 import Cell from "./Cell";
+import CellLine from "./CellLine";
 
 export const middlesColumnsV1 = [
   {
@@ -33,12 +34,14 @@ export const middlesColumnsV1 = [
     header: "Stat Type",
   },
   {
-    accessorKey: "prizepicksLine",
-    header: "PrizePicks",
+    // accessorKey: "prizepicksLine",
+    header: "Prize Picks",
+    Cell: CellLine,
   },
   {
-    accessorKey: "udLine",
+    // accessorKey: "udLine",
     header: "Underdog",
+    Cell: CellLine,
   },
 ];
 
@@ -84,25 +87,34 @@ export const correlationColumns = [
   {
     accessorKey: "sportsBookName",
     header: "BOOK",
-  },
-  {
-    accessorKey: "over",
-    header: "O / U",
-  },
-  {
-    accessorKey: "diff",
-    header: "DIFF",
-    Cell,
+    size: 30,
   },
   {
     accessorKey: "player",
     header: "PLAYER",
     enableClickToCopy: true,
+    size: 30,
+  },
+  {
+    accessorKey: "over",
+    header: "O / U",
+    size: 30,
   },
   {
     accessorKey: "line",
     header: "LINE",
-    enableClickToCopy: true,
+    size: 10,
+  },
+  {
+    accessorKey: "stat_type",
+    header: "STAT",
+    size: 10,
+  },
+  {
+    accessorKey: "diff",
+    header: "DIFF",
+    Cell,
+    size: 30,
   },
 ];
 

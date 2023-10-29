@@ -13,6 +13,15 @@ const theme = createTheme({
   palette: {
     mode: "dark",
   },
+  components: {
+    MuiCard: {
+      styleOverrides: {
+        outlined: {
+          border: "2px solid #fff", // Set your desired outline color
+        },
+      },
+    },
+  },
 });
 
 const appStyles = {

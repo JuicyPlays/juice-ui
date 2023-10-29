@@ -63,7 +63,7 @@ const Correlation = () => {
 
   async function fetchData() {
     const queryParams = {
-      parlayBooks: sportsBooks.join(","),
+      parlayBooks: "PRIZEPICKS,UNDERDOG",
       sports: sports.join(","),
     };
 
@@ -71,28 +71,20 @@ const Correlation = () => {
       const response = await axios.get(paths.getCorrelationBasePath, {
         params: queryParams,
       });
-      console.log(response);
       setData(response.data);
     } catch (error) {
       console.error(error);
     }
   }
 
-  const getOverUnder = (book) => {
-    if (book.props[0].over) {
-      return "over";
-    }
-
-    return "under";
-  };
-
   const rows = data.map((sportsBook) => ({
     sportsBookName: sportsBook.sportsBookName,
-    over: getOverUnder(sportsBook),
-    subRows: sportsBook.props.map((prop) => ({
+    subRows: sportsBook.props.map((prop, i) => ({
       diff: prop.diffs,
       player: prop.player,
       line: prop.line,
+      stat_type: prop.stat_types.split("\n")[i % 2],
+      over: prop.over ? "over" : "under", // Fixed the conditional statement
     })),
   }));
 
