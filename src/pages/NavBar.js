@@ -11,9 +11,9 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import { pages } from "../common/constants";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import SettingsIcon from '@mui/icons-material/Settings';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import SettingsIcon from "@mui/icons-material/Settings";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -109,14 +109,14 @@ function NavBar() {
           </Box>
 
           {/* The profile, settings, and logout buttons */}
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton style={{ color: 'white' }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <IconButton style={{ color: "white" }}>
               <AccountCircleIcon />
             </IconButton>
-            <IconButton style={{ color: 'white' }}>
+            <IconButton style={{ color: "white" }}>
               <SettingsIcon />
             </IconButton>
-            <IconButton style={{ color: 'white' }}>
+            <IconButton style={{ color: "white" }}>
               <ExitToAppIcon />
             </IconButton>
           </div>
