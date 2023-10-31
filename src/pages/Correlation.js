@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { MaterialReactTable } from "material-react-table";
 
@@ -15,7 +15,7 @@ import { correlationColumns } from "../common/columns";
 const Correlation = () => {
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const [sportsBooks, setSportsBooks] = React.useState([]);
+  const [, setSportsBooks] = React.useState([]);
   const [sports, setSports] = React.useState([]);
   const [buttonDisabled, setButtonDisabled] = React.useState(false);
 
@@ -57,8 +57,14 @@ const Correlation = () => {
     }
   }
 
+  useEffect(() => {
+    handleClick();
+    // eslint-disable-next-line
+  }, []);
+
   const rows = data.map((sportsBook) => ({
     sportsBookName: sportsBook.sportsBookName,
+    diff: sportsBook.correlationScore,
     subRows: sportsBook.props.map((prop, i) => ({
       diff: prop.diffs,
       player: prop.player,

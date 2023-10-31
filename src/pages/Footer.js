@@ -1,7 +1,5 @@
 import React from "react";
 import { Twitter, MailOutline } from "@mui/icons-material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 
 const Footer = () => {
   return (
@@ -39,8 +37,8 @@ const iconStyles = {
   fontSize: "24px", // Match the Discord icon size with the other icons
 };
 
-const discordLink = {
-  textDecoration: "none",
-};
+// const discordLink = {
+//   textDecoration: "none",
+// };
 
 export default Footer;
