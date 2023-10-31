@@ -33,10 +33,10 @@ const appStyles = {
   minHeight: "100vh",
 };
 
-const containerStyles = {
-  minHeight: "100vh",
-  position: "relative",
-};
+// const containerStyles = {
+//   minHeight: "100vh",
+//   position: "relative",
+// };
 
 const contentStyles = {
   paddingBottom: "100px", // Adjust this value to account for the footer's height

@@ -12,8 +12,6 @@ import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import { pages } from "../common/constants";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import SettingsIcon from "@mui/icons-material/Settings";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Divider, ListItemIcon } from "@mui/material";
 import { Logout, Settings } from "@mui/icons-material";
 
