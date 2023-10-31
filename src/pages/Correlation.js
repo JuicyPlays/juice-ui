@@ -108,12 +108,15 @@ const Correlation = () => {
         enableColumnActions={false}
         enableColumnFilters={false}
         enablePagination={true}
-        pageSize={10} // Set the number of rows per page
+        paginateExpandedRows={false}
+        pageSize={2}
         enableSorting={false}
         enableBottomToolbar={true}
         enableTopToolbar={false}
         muiTableBodyRowProps={{ hover: false }}
-        initialState={{ expanded: true }}
+        enableHiding={true}
+        initialState={{ expanded: true, pagination: { pageSize: 2 } }}
+        muiPaginationProps={{ rowsPerPageOptions: ["2"] }}
       />
     </div>
   );

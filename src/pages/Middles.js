@@ -112,10 +112,14 @@ const Middles = () => {
     enableColumnResizing: false,
     enableColumnActions: false,
     enableColumnFilters: false,
-    enablePagination: false,
+    enablePagination: true,
     enableSorting: false,
-    enableBottomToolbar: false,
+    enableBottomToolbar: true,
     enableTopToolbar: false,
+    paginateExpandedRows: true,
+    pageSize: 10,
+    initialState: { expanded: true, pagination: { pageSize: 10 } },
+    muiPaginationProps: { rowsPerPageOptions: ["10"] },
     renderDetailPanel: ({ row }) => (
       <Box sx={{ flexGrow: 1 }}>
         <Box>
