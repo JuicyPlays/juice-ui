@@ -14,6 +14,8 @@ import { pages } from "../common/constants";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import { Divider, ListItemIcon } from "@mui/material";
+import { Logout, Settings } from "@mui/icons-material";
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -128,11 +130,18 @@ function NavBar() {
               <MenuItem onClick={handleClose} component={Link} to="/profile">
                 Account
               </MenuItem>
+              <Divider />
               <MenuItem onClick={handleClose}>
-                <SettingsIcon />
+                <ListItemIcon>
+                  <Settings fontSize="small" />
+                </ListItemIcon>
+                Settings
               </MenuItem>
               <MenuItem onClick={handleClose} component={Link} to="/">
-                <ExitToAppIcon />
+                <ListItemIcon>
+                  <Logout fontSize="small" />
+                </ListItemIcon>
+                Logout
               </MenuItem>
             </Menu>
           </div>
