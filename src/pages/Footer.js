@@ -5,7 +5,7 @@ import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 
 const Footer = () => {
   return (
-    <footer style={footerStyles}>
+    <footer>
       <div style={iconContainer}>
         <a
           href="https://twitter.com/pancakeparlay"
@@ -26,16 +26,6 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
-
-const footerStyles = {
-  backgroundColor: "#333",
-  color: "#fff",
-  padding: "20px",
-  textAlign: "center",
-  position: "fixed",
-  bottom: 0,
-  width: "100%",
 };
 
 const iconContainer = {

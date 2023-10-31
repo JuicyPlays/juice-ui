@@ -33,6 +33,26 @@ const appStyles = {
   minHeight: "100vh",
 };
 
+const containerStyles = {
+  minHeight: "100vh",
+  position: "relative",
+};
+
+const contentStyles = {
+  paddingBottom: "100px", // Adjust this value to account for the footer's height
+};
+
+const footerStyles = {
+  backgroundColor: "#333",
+  color: "#fff",
+  padding: "20px",
+  textAlign: "center",
+  position: "fixed",
+  bottom: 0,
+  left: 0,
+  width: "100%",
+};
+
 function App() {
   return (
     <Router>
@@ -65,12 +85,12 @@ function App() {
               element={
                 <div>
                   <NavBar />
-                  <Middles />
-                  <br />
-                  <br />
-                  <br />
-                  <br />
-                  <Footer />
+                  <div style={contentStyles}>
+                    <Middles />
+                  </div>
+                  <div style={footerStyles}>
+                    <Footer />
+                  </div>
                 </div>
               }
             />
@@ -88,12 +108,12 @@ function App() {
               element={
                 <div>
                   <NavBar />
-                  <Correlation />
-                  <br />
-                  <br />
-                  <br />
-                  <br />
-                  <Footer />
+                  <div style={contentStyles}>
+                    <Correlation />
+                  </div>
+                  <div style={footerStyles}>
+                    <Footer />
+                  </div>
                 </div>
               }
             />
