@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import {
   MaterialReactTable,
@@ -16,7 +16,6 @@ import {
   sportsSelectValues,
 } from "../common/constants";
 import { middlesColumnsV1, middlesColumnsV2 } from "../common/columns";
-import Footer from "./Footer";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -32,10 +31,10 @@ const Middles = () => {
   const [sportsBooks, setSportsBooks] = React.useState([]);
   const [sports, setSports] = React.useState([]);
   const [buttonDisabled, setButtonDisabled] = React.useState(false);
-  const [innerWidth, setInnerWidth] = React.useState(window.innerWidth);
+  // const [innerWidth, setInnerWidth] = React.useState(window.innerWidth);
   const [isMobile, setIsMobile] = React.useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
       const newInnerWidth = window.innerWidth;
       if (newInnerWidth < 1000) {
@@ -89,6 +88,11 @@ const Middles = () => {
       console.error(error);
     }
   }
+
+  useEffect(() => {
+    handleClick();
+    // eslint-disable-next-line
+  }, []);
 
   const tableV1 = useMaterialReactTable({
     columns: middlesColumnsV1,

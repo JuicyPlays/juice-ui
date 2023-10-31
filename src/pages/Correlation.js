@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { MaterialReactTable } from "material-react-table";
 
@@ -56,6 +56,11 @@ const Correlation = () => {
       console.error(error);
     }
   }
+
+  useEffect(() => {
+    handleClick();
+    // eslint-disable-next-line
+  }, []);
 
   const rows = data.map((sportsBook) => ({
     sportsBookName: sportsBook.sportsBookName,
