@@ -45,6 +45,7 @@ const Correlation = () => {
     const queryParams = {
       parlayBooks: "PRIZEPICKS,UNDERDOG",
       sports: sports.length === 0 ? "CSGO,VAL" : sports.join(","),
+      minCorrelationScore: 1.5 // TODO: Pass in as input on UI
     };
 
     try {
