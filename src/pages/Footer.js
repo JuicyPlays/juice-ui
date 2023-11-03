@@ -1,5 +1,13 @@
 import React from "react";
 import { Twitter, MailOutline } from "@mui/icons-material";
+import {
+  termsAndConditions, 
+  termsAndConditionsPDF
+} from "../common/constants";
+
+const openPdfInNewTab = () => {
+  window.open(termsAndConditionsPDF, '_blank');
+};
 
 const Footer = () => {
   return (
@@ -20,7 +28,7 @@ const Footer = () => {
         </a> */}
       </div>
       <div style={iconContainer}>
-        <div>Terms and Conditions</div>
+        <div onClick={openPdfInNewTab}>{termsAndConditions}</div>
       </div>
     </footer>
   );

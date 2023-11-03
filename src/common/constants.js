@@ -1,5 +1,3 @@
-import Cell from "./Cell";
-
 export const paths = {
   getMiddlesBasePath:
     "https://juicyplays-api-d887c104909f.herokuapp.com/v1/middles",
@@ -49,3 +47,6 @@ export const pages = [
   { title: "Correlation", link: "correlation" },
   { title: "Pricing", link: "pricing" },
 ];
+
+export const termsAndConditions = "Terms and Conditions"
+export const termsAndConditionsPDF = "http://localhost:3000/pdfs/JuicyPlaysTermsAndConditions.pdf"
