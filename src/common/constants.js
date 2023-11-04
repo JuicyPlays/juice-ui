@@ -48,5 +48,6 @@ export const pages = [
   { title: "Pricing", link: "pricing" },
 ];
 
-export const termsAndConditions = "Terms and Conditions"
-export const termsAndConditionsPDF = "http://localhost:3000/pdfs/JuicyPlaysTermsAndConditions.pdf"
+export const termsAndConditions = "Terms and Conditions";
+export const termsAndConditionsPDF =
+  "http://localhost:3000/pdfs/JuicyPlaysTermsAndConditions.pdf";
