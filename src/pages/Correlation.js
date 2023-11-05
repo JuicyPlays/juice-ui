@@ -66,10 +66,12 @@ const Correlation = () => {
     sportsBookName: sportsBook.sportsBookName,
     diff: sportsBook.correlationScore,
     subRows: sportsBook.props.map((prop, i) => ({
+      sport: prop.sport,
       diff: prop.diffs,
       player: prop.player,
       line: prop.line,
-      stat_type: prop.stat_types.split("\n")[i % 2],
+      teams: prop.teams,
+      stat_type: prop.statType,
       over: prop.over ? "over" : "under", // Fixed the conditional statement
     })),
   }));

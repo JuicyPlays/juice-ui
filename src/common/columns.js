@@ -101,6 +101,11 @@ export const correlationColumns = [
     size: 30,
   },
   {
+    accessorKey: "sport",
+    header: "SPORT",
+    size: 10,
+  },
+  {
     accessorKey: "line",
     header: "LINE",
     size: 10,
@@ -108,6 +113,11 @@ export const correlationColumns = [
   {
     accessorKey: "stat_type",
     header: "STAT",
+    size: 10,
+  },
+  {
+    accessorKey: "teams",
+    header: "TEAMS",
     size: 10,
   },
   {
