@@ -10,40 +10,38 @@ import Typography from "@mui/material/Typography";
 
 const tiers = [
   {
-    title: "Free",
-    price: "0",
+    title: "Monthly",
+    price: "20",
     description: ["Fantasy Screen", "Correlation Tool"],
-    buttonText: "Sign up for free",
+    buttonText: "Start Subscription",
     buttonVariant: "outlined",
+    link: "https://buy.stripe.com/test_3csbKi0lU9WD0KIaEE",
   },
   {
-    title: "Pro",
-    subheader: "Most popular",
+    title: "Yearly",
+    subheader: "Save 25% ($180 billed yearly)",
     price: "15",
-    description: [
-      "20 users included",
-      "10 GB of storage",
-      "Help center access",
-      "Priority email support",
-    ],
-    buttonText: "Get started",
-    buttonVariant: "contained",
+    description: ["Fantasy Screen", "Correlation Tool"],
+    buttonText: "Start Subscription",
+    buttonVariant: "outlined",
+    link: "https://buy.stripe.com/test_9AQ01AgkSecT6526oq",
   },
   {
-    title: "Enterprise",
-    price: "30",
-    description: [
-      "50 users included",
-      "30 GB of storage",
-      "Help center access",
-      "Phone & email support",
-    ],
-    buttonText: "Contact us",
+    title: "Quarterly",
+    subheader: "Save 15% ($51 billed quarterly)",
+    price: "17",
+    description: ["Fantasy Screen", "Correlation Tool"],
+    buttonText: "Start Subscription",
     buttonVariant: "outlined",
+    link: "https://buy.stripe.com/test_9AQaGe8Sq2ub6523cd",
   },
 ];
 
 export default function Pricing() {
+  const openLink = (url) => {
+    window.open(url, "_blank");
+  };
+
   return (
     <Container maxWidth="md" component="main" sx={{ paddingTop: 15 }}>
       <Grid container spacing={5} alignItems="center" justifyContent="center">
@@ -92,7 +90,11 @@ export default function Pricing() {
                 ))}
               </CardContent>
               <CardActions>
-                <Button fullWidth variant={tier.buttonVariant}>
+                <Button
+                  onClick={() => openLink(tier.link)}
+                  fullWidth
+                  variant={tier.buttonVariant}
+                >
                   {tier.buttonText}
                 </Button>
               </CardActions>
