@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import SignIn from "./pages/Login";
 import SignUp from "./pages/Register";
 import Pricing from "./pages/Pricing";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const theme = createTheme({
   palette: {
@@ -33,11 +34,6 @@ const appStyles = {
   minHeight: "100vh",
 };
 
-// const containerStyles = {
-//   minHeight: "100vh",
-//   position: "relative",
-// };
-
 const contentStyles = {
   paddingBottom: "100px", // Adjust this value to account for the footer's height
 };
@@ -55,93 +51,95 @@ const footerStyles = {
 
 function App() {
   return (
-    <Router>
-      <div style={appStyles}>
-        {" "}
-        {/* Apply the gradient background */}
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <div>
-                  <SignIn />
-                </div>
-              }
-            />
-            <Route path="/signup" element={<SignUp />} />
-            <Route
-              path="/home"
-              element={
-                <div>
-                  <NavBar />
-                  <div style={footerStyles}>
+    <GoogleOAuthProvider clientId="43154383117-7sgsrq0qpsts84ti9erjmp7pop22tol0.apps.googleusercontent.com">
+      <Router>
+        <div style={appStyles}>
+          {" "}
+          {/* Apply the gradient background */}
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <div>
+                    <SignIn />
+                  </div>
+                }
+              />
+              <Route path="/signup" element={<SignUp />} />
+              <Route
+                path="/home"
+                element={
+                  <div>
+                    <NavBar />
+                    <div style={footerStyles}>
+                      <Footer />
+                    </div>
+                  </div>
+                }
+              />
+              <Route
+                path="/middles"
+                element={
+                  <div>
+                    <NavBar />
+                    <div style={contentStyles}>
+                      <Middles />
+                    </div>
+                    <div style={footerStyles}>
+                      <Footer />
+                    </div>
+                  </div>
+                }
+              />
+              <Route
+                path="/pricing"
+                element={
+                  <div>
+                    <NavBar />
+                    <Pricing />
+                  </div>
+                }
+              />
+              <Route
+                path="/correlation"
+                element={
+                  <div>
+                    <NavBar />
+                    <div style={contentStyles}>
+                      <Correlation />
+                    </div>
+                    <div style={footerStyles}>
+                      <Footer />
+                    </div>
+                  </div>
+                }
+              />
+              <Route
+                path="/pricing"
+                element={
+                  <div>
+                    <NavBar />
                     <Footer />
                   </div>
-                </div>
-              }
-            />
-            <Route
-              path="/middles"
-              element={
-                <div>
-                  <NavBar />
-                  <div style={contentStyles}>
-                    <Middles />
-                  </div>
-                  <div style={footerStyles}>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <div>
+                    <NavBar />
+                    <Profile />
                     <Footer />
                   </div>
-                </div>
-              }
-            />
-            <Route
-              path="/pricing"
-              element={
-                <div>
-                  <NavBar />
-                  <Pricing />
-                </div>
-              }
-            />
-            <Route
-              path="/correlation"
-              element={
-                <div>
-                  <NavBar />
-                  <div style={contentStyles}>
-                    <Correlation />
-                  </div>
-                  <div style={footerStyles}>
-                    <Footer />
-                  </div>
-                </div>
-              }
-            />
-            <Route
-              path="/pricing"
-              element={
-                <div>
-                  <NavBar />
-                  <Footer />
-                </div>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <div>
-                  <NavBar />
-                  <Profile />
-                  <Footer />
-                </div>
-              }
-            />
-          </Routes>
-        </ThemeProvider>
-      </div>
-    </Router>
+                }
+              />
+            </Routes>
+          </ThemeProvider>
+        </div>
+      </Router>
+    </GoogleOAuthProvider>
   );
 }
 
