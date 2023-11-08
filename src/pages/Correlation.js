@@ -1,6 +1,9 @@
-import React, { Component, useEffect } from "react";
+import React, { Component, useEffect, useState } from "react";
 import axios from "axios";
-import { MaterialReactTable } from "material-react-table";
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
 
 import { Box, Button, CircularProgress } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -10,9 +13,10 @@ import {
   paths,
   sportsBooksSelectValues,
 } from "../common/constants";
-import { correlationColumns } from "../common/columns";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
+import ToggleSwitch from "./ToggleSwitch";
+import { correlationColumnsV1, correlationColumnsV2 } from "../common/columns";
 
 const Correlation = () => {
   const [data, setData] = React.useState([]);
@@ -20,6 +24,11 @@ const Correlation = () => {
   const [, setSportsBooks] = React.useState([]);
   const [sports, setSports] = React.useState([]);
   const [buttonDisabled, setButtonDisabled] = React.useState(false);
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleToggleChange = () => {
+    setIsChecked(!isChecked);
+  };
 
   const handleSportsBooksChange = (event) => {
     const {
@@ -79,6 +88,20 @@ const Correlation = () => {
     })),
   }));
 
+  const tableV1 = useMaterialReactTable({
+    columns: correlationColumnsV1,
+    data,
+    layoutMode: "semantic",
+    enableColumnResizing: false,
+    enableColumnActions: false,
+    enableColumnFilters: false,
+    enablePagination: false,
+    enableSorting: true,
+    enableBottomToolbar: false,
+    enableTopToolbar: false,
+    muiTableBodyRowProps: { hover: false },
+  });
+
   return (
     <div>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -107,28 +130,37 @@ const Correlation = () => {
             {loading ? <CircularProgress size={20} /> : "Refresh"}
           </Button>
         </Box>
+        <Box mr={10} margin="15px">
+          <ToggleSwitch
+            isChecked={isChecked}
+            onToggleChange={handleToggleChange}
+          />
+        </Box>
       </div>
-
-      <MaterialReactTable
-        columns={correlationColumns}
-        data={rows}
-        getSubRows={(row) => row.subRows}
-        expandSubRows={4}
-        enableExpandAll={true}
-        enableExpanding={true}
-        enableColumnActions={false}
-        enableColumnFilters={false}
-        enablePagination={true}
-        paginateExpandedRows={false}
-        pageSize={2}
-        enableSorting={false}
-        enableBottomToolbar={true}
-        enableTopToolbar={false}
-        muiTableBodyRowProps={{ hover: false }}
-        enableHiding={true}
-        initialState={{ expanded: true, pagination: { pageSize: 2 } }}
-        muiPaginationProps={{ rowsPerPageOptions: ["2"] }}
-      />
+      {isChecked ? (
+        <MaterialReactTable table={tableV1} />
+      ) : (
+        <MaterialReactTable
+          columns={correlationColumnsV2}
+          data={rows}
+          getSubRows={(row) => row.subRows}
+          expandSubRows={4}
+          enableExpandAll={true}
+          enableExpanding={true}
+          enableColumnActions={false}
+          enableColumnFilters={false}
+          enablePagination={true}
+          paginateExpandedRows={false}
+          pageSize={2}
+          enableSorting={false}
+          enableBottomToolbar={true}
+          enableTopToolbar={false}
+          muiTableBodyRowProps={{ hover: false }}
+          enableHiding={true}
+          initialState={{ expanded: true, pagination: { pageSize: 2 } }}
+          muiPaginationProps={{ rowsPerPageOptions: ["2"] }}
+        />
+      )}
     </div>
   );
 };

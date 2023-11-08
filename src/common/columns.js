@@ -83,7 +83,27 @@ export const rivalsColumns = [
   },
 ];
 
-export const correlationColumns = [
+export const middlesColumnsV2 = [
+  {
+    accessorKey: "difference",
+    header: "Diff",
+    Cell: Cell,
+    size: 70,
+  },
+  {
+    accessorKey: "percentDifference",
+    header: "% Diff",
+    Cell: Cell,
+    size: 70,
+  },
+  {
+    accessorKey: "player",
+    header: "Player",
+    enableClickToCopy: true,
+  },
+];
+
+export const correlationColumnsV1 = [
   {
     accessorKey: "sportsBookName",
     header: "BOOK",
@@ -128,22 +148,47 @@ export const correlationColumns = [
   },
 ];
 
-export const middlesColumnsV2 = [
+export const correlationColumnsV2 = [
   {
-    accessorKey: "difference",
-    header: "Diff",
-    Cell: Cell,
-    size: 70,
-  },
-  {
-    accessorKey: "percentDifference",
-    header: "% Diff",
-    Cell: Cell,
-    size: 70,
+    accessorKey: "sportsBookName",
+    header: "BOOK",
+    size: 30,
   },
   {
     accessorKey: "player",
-    header: "Player",
+    header: "PLAYER",
     enableClickToCopy: true,
+    size: 30,
+  },
+  {
+    accessorKey: "over",
+    header: "O / U",
+    size: 30,
+  },
+  {
+    accessorKey: "sport",
+    header: "SPORT",
+    size: 10,
+  },
+  {
+    accessorKey: "line",
+    header: "LINE",
+    size: 10,
+  },
+  {
+    accessorKey: "stat_type",
+    header: "STAT",
+    size: 10,
+  },
+  {
+    accessorKey: "teams",
+    header: "TEAMS",
+    size: 10,
+  },
+  {
+    accessorKey: "diff",
+    header: "DIFF",
+    Cell,
+    size: 30,
   },
 ];
