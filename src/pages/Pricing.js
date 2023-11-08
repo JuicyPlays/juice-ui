@@ -7,6 +7,8 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import StarIcon from "@mui/icons-material/StarBorder";
 import Typography from "@mui/material/Typography";
+import { Component } from "react";
+import NavBar from "./NavBar";
 
 const tiers = [
   {
@@ -37,7 +39,7 @@ const tiers = [
   },
 ];
 
-export default function Pricing() {
+const Pricing = () => {
   const openLink = (url) => {
     window.open(url, "_blank");
   };
@@ -104,4 +106,17 @@ export default function Pricing() {
       </Grid>
     </Container>
   );
+};
+
+class RenderPricing extends Component {
+  render() {
+    return (
+      <>
+        <NavBar />
+        <Pricing />
+      </>
+    );
+  }
 }
+
+export default RenderPricing;

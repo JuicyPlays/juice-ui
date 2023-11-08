@@ -90,11 +90,6 @@ export const correlationColumns = [
     size: 30,
   },
   {
-    accessorKey: "team",
-    header: "TEAM",
-    size: 10,
-  },
-  {
     accessorKey: "player",
     header: "PLAYER",
     enableClickToCopy: true,

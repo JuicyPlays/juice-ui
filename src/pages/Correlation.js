@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Component, useEffect } from "react";
 import axios from "axios";
 import { MaterialReactTable } from "material-react-table";
 
@@ -11,6 +11,8 @@ import {
   sportsBooksSelectValues,
 } from "../common/constants";
 import { correlationColumns } from "../common/columns";
+import NavBar from "./NavBar";
+import Footer from "./Footer";
 
 const Correlation = () => {
   const [data, setData] = React.useState([]);
@@ -44,7 +46,7 @@ const Correlation = () => {
   async function fetchData() {
     const queryParams = {
       parlayBooks: "PRIZEPICKS,UNDERDOG",
-      sports: sports.length === 0 ? "CSGO,VAL" : sports.join(","),
+      sports: sports.length === 0 ? "CSGO,VAL,NFL" : sports.join(","),
       minCorrelationScore: 1.0, // TODO: Pass in as input on UI
     };
 
@@ -131,4 +133,16 @@ const Correlation = () => {
   );
 };
 
-export default Correlation;
+class RenderCorrelation extends Component {
+  render() {
+    return (
+      <>
+        <NavBar />
+        <Correlation />
+        <Footer />
+      </>
+    );
+  }
+}
+
+export default RenderCorrelation;

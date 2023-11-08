@@ -50,4 +50,4 @@ export const pages = [
 
 export const termsAndConditions = "Terms and Conditions";
 export const termsAndConditionsPDF =
-  "http://localhost:3000/pdfs/JuicyPlaysTermsAndConditions.pdf";
+  "https://juicyplays.vercel.app/pdfs/JuicyPlaysTermsAndConditions.pdf";

@@ -15,7 +15,17 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Divider, ListItemIcon } from "@mui/material";
 import { Logout, Settings } from "@mui/icons-material";
 
-function NavBar() {
+const titleStyles = {
+  mr: 2,
+  display: { xs: "none", md: "flex" },
+  fontFamily: "monospace",
+  fontWeight: 1000,
+  letterSpacing: ".3rem",
+  color: "inherit",
+  textDecoration: "none",
+};
+
+const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -46,15 +56,7 @@ function NavBar() {
             noWrap
             component="a"
             href="/home"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 1000,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
+            sx={titleStyles}
           >
             JuicyPlays
           </Typography>
@@ -102,22 +104,7 @@ function NavBar() {
               ))}
             </Menu>
           </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {Array.from(pages).map((page) => (
-              <Button
-                key={page.title}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                <Link
-                  style={{ textDecoration: "none", color: "white" }}
-                  to={`/${page.link}`}
-                >
-                  {page.title}
-                </Link>
-              </Button>
-            ))}
-          </Box>
+          <RenderNavLinks closeNavMenu={handleCloseNavMenu} />
 
           {/* The profile, settings, and logout buttons */}
           <div style={{ display: "flex", alignItems: "center" }}>
@@ -127,9 +114,7 @@ function NavBar() {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose} component={Link} to="/profile">
-                Account
-              </MenuItem>
+              <MenuItem onClick={handleClose}>Account</MenuItem>
               <Divider />
               <MenuItem onClick={handleClose}>
                 <ListItemIcon>
@@ -149,6 +134,29 @@ function NavBar() {
       </Container>
     </AppBar>
   );
+};
+
+class RenderNavLinks extends React.Component {
+  render() {
+    return (
+      <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+        {Array.from(pages).map((page) => (
+          <Button
+            key={page.title}
+            onClick={this.props.closeNavMenu}
+            sx={{ my: 2, color: "white", display: "block" }}
+          >
+            <Link
+              style={{ textDecoration: "none", color: "white" }}
+              to={`/${page.link}`}
+            >
+              {page.title}
+            </Link>
+          </Button>
+        ))}
+      </Box>
+    );
+  }
 }
 
 export default NavBar;

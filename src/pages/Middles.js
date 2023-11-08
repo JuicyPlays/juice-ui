@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Component, useEffect } from "react";
 import axios from "axios";
 import {
   MaterialReactTable,
@@ -16,6 +16,8 @@ import {
   sportsSelectValues,
 } from "../common/constants";
 import { middlesColumnsV1, middlesColumnsV2 } from "../common/columns";
+import NavBar from "./NavBar";
+import Footer from "./Footer";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -192,4 +194,16 @@ const Middles = () => {
   );
 };
 
-export default Middles;
+class RenderMiddles extends Component {
+  render() {
+    return (
+      <>
+        <NavBar />
+        <Middles />
+        <Footer />
+      </>
+    );
+  }
+}
+
+export default RenderMiddles;

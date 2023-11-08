@@ -8,7 +8,9 @@ const openPdfInNewTab = () => {
 
 const Footer = () => {
   return (
-    <footer>
+    <footer
+      style={{ padding: "0px", paddingTop: "100px", paddingBottom: "100px" }}
+    >
       <div style={iconContainer}>
         <a
           href="https://twitter.com/pancakeparlay"
@@ -20,9 +22,6 @@ const Footer = () => {
         <a href="mailto:juicyplaysofficial@gmail.com">
           <MailOutline fontSize="large" style={iconStyles} />
         </a>
-        {/* <a href="https://discord.com/your-discord" target="_blank" rel="noopener noreferrer" style={discordLink}>
-          <FontAwesomeIcon icon={faDiscord} style={{ ...iconStyles, fontSize: '20px' }} />
-        </a> */}
       </div>
       <div style={iconContainer}>
         <div onClick={openPdfInNewTab}>{termsAndConditions}</div>
@@ -41,9 +40,5 @@ const iconStyles = {
   color: "#fff",
   fontSize: "24px", // Match the Discord icon size with the other icons
 };
-
-// const discordLink = {
-//   textDecoration: "none",
-// };
 
 export default Footer;
