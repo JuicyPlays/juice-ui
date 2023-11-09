@@ -47,6 +47,11 @@ const CorrelationCells = ({ cell }) => {
     val2 = cell.row.original.playerB;
   }
 
+  if (cell.column.id === "TEAM") {
+    val1 = cell.row.original.teamPlayerA;
+    val2 = cell.row.original.teamPlayerB;
+  }
+
   if (cell.column.id === "DIFF") {
     val1 = Math.abs(
       cell.row.original.ppLinePlayerA - cell.row.original.udLinePlayerA

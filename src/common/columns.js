@@ -156,13 +156,15 @@ export const correlationListColumns = [
     size: 10,
   },
   {
-    header: "STAT TYPE",
-    size: 10,
+    header: "PLAYERS",
     Cell: CorrelationCells,
   },
   {
-    header: "PLAYERS",
-    size: 30,
+    header: "STAT TYPE",
+    Cell: CorrelationCells,
+  },
+  {
+    header: "TEAM",
     Cell: CorrelationCells,
   },
   {
@@ -175,12 +177,10 @@ export const correlationListColumns = [
   },
   {
     header: "DIFF",
-    size: 30,
     Cell: CorrelationCells,
   },
   {
     accessorKey: "averageDiff",
     header: "AVG DIFF",
-    size: 30,
   },
 ];
