@@ -3,9 +3,10 @@ import { useState } from "react";
 
 const CopyToClipboardButton = (props) => {
   const [open, setOpen] = useState(false);
+
   const handleClick = () => {
     setOpen(true);
-    navigator.clipboard.writeText(window.location.toString());
+    navigator.clipboard.writeText(props.player);
   };
 
   const buttonStyle = {
@@ -23,3 +24,4 @@ const CopyToClipboardButton = (props) => {
 };
 
 export default CopyToClipboardButton;
+
