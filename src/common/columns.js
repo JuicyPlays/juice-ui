@@ -1,5 +1,6 @@
 import Cell from "./Cell";
 import CellLine from "./CellLine";
+import CorrelationCells from "./CorrelationCells";
 
 export const middlesColumnsV1 = [
   {
@@ -155,31 +156,30 @@ export const correlationListColumns = [
     size: 10,
   },
   {
-    accessorKey: "stat_type",
-    header: "STAT",
+    header: "STAT TYPE",
     size: 10,
+    Cell: CorrelationCells,
   },
   {
-    accessorKey: "player",
-    header: "PLAYER",
-    enableClickToCopy: true,
+    header: "PLAYERS",
     size: 30,
+    Cell: CorrelationCells,
   },
   {
-    accessorKey: "pp_line",
-    header: "PrizePicks",
+    header: "PRIZE PICKS",
+    Cell: CorrelationCells,
   },
   {
-    accessorKey: "ud_line",
-    header: "Underdog",
+    header: "UNDERDOG",
+    Cell: CorrelationCells,
   },
   {
-    accessorKey: "diff",
     header: "DIFF",
     size: 30,
+    Cell: CorrelationCells,
   },
   {
-    accessorKey: "avg_diff",
+    accessorKey: "averageDiff",
     header: "AVG DIFF",
     size: 30,
   },
