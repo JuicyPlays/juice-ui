@@ -16,10 +16,14 @@ import {
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import ToggleSwitch from "./ToggleSwitch";
-import { correlationColumnsV1, correlationColumnsV2 } from "../common/columns";
+import {
+  correlationSlipsColumns,
+  correlationListColumns,
+} from "../common/columns";
 
 const Correlation = () => {
-  const [data, setData] = React.useState([]);
+  const [correlationSlipsData, setCorrelationSlipsData] = React.useState([]);
+  const [correlationListData, setCorrelationListData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [, setSportsBooks] = React.useState([]);
   const [sports, setSports] = React.useState([]);
@@ -53,6 +57,7 @@ const Correlation = () => {
   }
 
   async function fetchData() {
+    console.log("sports", sports);
     const queryParams = {
       parlayBooks: "PRIZEPICKS,UNDERDOG",
       sports: sports.length === 0 ? "CSGO,VAL,NFL" : sports.join(","),
@@ -60,10 +65,21 @@ const Correlation = () => {
     };
 
     try {
-      const response = await axios.get(paths.getCorrelationBasePath, {
-        params: queryParams,
-      });
-      setData(response.data);
+      const correlationSlipsResponse = await axios.get(
+        paths.getCorrelationSlipsBasePath,
+        {
+          params: queryParams,
+        }
+      );
+      setCorrelationSlipsData(correlationSlipsResponse.data);
+
+      const correlationListResponse = await axios.get(
+        paths.getCorrelationListBasePath,
+        {
+          params: queryParams,
+        }
+      );
+      setCorrelationListData(correlationListResponse.data);
     } catch (error) {
       console.error(error);
     }
@@ -74,7 +90,7 @@ const Correlation = () => {
     // eslint-disable-next-line
   }, []);
 
-  const rows = data.map((sportsBook) => ({
+  const rows = correlationSlipsData.map((sportsBook) => ({
     sportsBookName: sportsBook.sportsBookName,
     diff: sportsBook.correlationScore,
     subRows: sportsBook.props.map((prop, i) => ({
@@ -88,9 +104,9 @@ const Correlation = () => {
     })),
   }));
 
-  const tableV1 = useMaterialReactTable({
-    columns: correlationColumnsV1,
-    data,
+  const correlationListTable = useMaterialReactTable({
+    columns: correlationListColumns,
+    data: correlationListData,
     layoutMode: "semantic",
     enableColumnResizing: false,
     enableColumnActions: false,
@@ -138,10 +154,10 @@ const Correlation = () => {
         </Box>
       </div>
       {isChecked ? (
-        <MaterialReactTable table={tableV1} />
+        <MaterialReactTable table={correlationListTable} />
       ) : (
         <MaterialReactTable
-          columns={correlationColumnsV2}
+          columns={correlationSlipsColumns}
           data={rows}
           getSubRows={(row) => row.subRows}
           expandSubRows={4}

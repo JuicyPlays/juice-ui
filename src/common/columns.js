@@ -103,7 +103,7 @@ export const middlesColumnsV2 = [
   },
 ];
 
-export const correlationColumnsV1 = [
+export const correlationSlipsColumns = [
   {
     accessorKey: "sportsBookName",
     header: "BOOK",
@@ -148,31 +148,10 @@ export const correlationColumnsV1 = [
   },
 ];
 
-export const correlationColumnsV2 = [
-  {
-    accessorKey: "sportsBookName",
-    header: "BOOK",
-    size: 30,
-  },
-  {
-    accessorKey: "player",
-    header: "PLAYER",
-    enableClickToCopy: true,
-    size: 30,
-  },
-  {
-    accessorKey: "over",
-    header: "O / U",
-    size: 30,
-  },
+export const correlationListColumns = [
   {
     accessorKey: "sport",
     header: "SPORT",
-    size: 10,
-  },
-  {
-    accessorKey: "line",
-    header: "LINE",
     size: 10,
   },
   {
@@ -181,13 +160,30 @@ export const correlationColumnsV2 = [
     size: 10,
   },
   {
-    accessorKey: "teams",
-    header: "TEAMS",
-    size: 10,
+    accessorKey: "player",
+    header: "PLAYER",
+    enableClickToCopy: true,
+    size: 30,
+  },
+  {
+    accessorKey: "pp_lines",
+    header: "PrizePicks",
+    Cell: CellLine,
+  },
+  {
+    accessorKey: "ud_line",
+    header: "Underdog",
+    Cell: CellLine,
   },
   {
     accessorKey: "diff",
     header: "DIFF",
+    Cell,
+    size: 30,
+  },
+  {
+    accessorKey: "avg_diff",
+    header: "AVG DIFF",
     Cell,
     size: 30,
   },
