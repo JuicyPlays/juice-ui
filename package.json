@@ -15,7 +15,7 @@
     "axios": "^1.6.0",
     "material-react-table": "^2.0.0",
     "react": "18.2.0",
-    "react-auth-kit": "^3.0.0-alpha.22",
+    "react-auth-kit": "2.12.7",
     "react-dom": "18.2.0",
     "react-router-dom": "6.17.0",
     "react-scripts": "5.0.1",

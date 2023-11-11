@@ -1,4 +1,3 @@
-import { Divider } from "@mui/material";
 import CopyToClipboardButton from "../pages/CopyToClipboard";
 
 function getColor(value) {

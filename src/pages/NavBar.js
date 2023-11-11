@@ -122,7 +122,7 @@ const NavBar = () => {
                 </ListItemIcon>
                 Settings
               </MenuItem>
-              <MenuItem onClick={handleClose} component={Link} to="/">
+              <MenuItem onClick={handleClose} component={Link} to="/logout">
                 <ListItemIcon>
                   <Logout fontSize="small" />
                 </ListItemIcon>

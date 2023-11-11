@@ -1,8 +1,8 @@
-import { Button, Snackbar } from "@mui/material";
+import { Button } from "@mui/material";
 import { useState } from "react";
 
 const CopyToClipboardButton = (props) => {
-  const [open, setOpen] = useState(false);
+  const [setOpen] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
@@ -24,4 +24,3 @@ const CopyToClipboardButton = (props) => {
 };
 
 export default CopyToClipboardButton;
-

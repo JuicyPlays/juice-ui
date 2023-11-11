@@ -5,7 +5,8 @@ export const paths = {
     "https://juicyplays-api-d887c104909f.herokuapp.com/v1/rivals",
   getCorrelationSlipsBasePath:
     "https://juicyplays-api-d887c104909f.herokuapp.com/v1/correlation",
-  getCorrelationListBasePath: "https://juicyplays-api-d887c104909f.herokuapp.com/v1/correlation/list",
+  getCorrelationListBasePath:
+    "https://juicyplays-api-d887c104909f.herokuapp.com/v1/correlation/list",
 };
 
 export const sportsBooksSelectValues = [
