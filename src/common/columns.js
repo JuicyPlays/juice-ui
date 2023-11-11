@@ -156,15 +156,15 @@ export const correlationListColumns = [
     size: 10,
   },
   {
-    header: "PLAYERS",
-    Cell: CorrelationCells,
-  },
-  {
     header: "STAT TYPE",
     Cell: CorrelationCells,
   },
   {
     header: "TEAM",
+    Cell: CorrelationCells,
+  },
+  {
+    header: "PLAYERS",
     Cell: CorrelationCells,
   },
   {

@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 
 const CopyToClipboardButton = (props) => {
-  const [setOpen] = useState(false);
+  const [, setOpen] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
