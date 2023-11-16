@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import { useIsAuthenticated, useSignIn } from "react-auth-kit";
 import { useEffect } from "react";
-import { getAuth, signInWithPopup, GoogleAuthProvider, getAdditionalUserInfo } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+// import { getAdditionalUserInfo } from "firebase/auth";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -21,11 +22,13 @@ const Login = () => {
       // The signed-in user info.
       const user = result.user;
 
-      if(signIn({
-        token: token,
-        expiresIn: 60,
-        tokenType: "Bearer",
-      })) {
+      if (
+        signIn({
+          token: token,
+          expiresIn: 60,
+          tokenType: "Bearer",
+        })
+      ) {
         // console.log("Additional  Info", getAdditionalUserInfo(result));
         // console.log(isAuthenticated());
         navigate("/home");
@@ -33,7 +36,7 @@ const Login = () => {
       // IdP data available using getAdditionalUserInfo(result)
       // ...
       // You can handle the signed-in user information or perform additional actions here.
-      console.log('Successfully signed in with Google:', user);
+      console.log("Successfully signed in with Google:", user);
     } catch (error) {
       // // Handle Errors here.
       // const errorCode = error.code;
@@ -45,7 +48,7 @@ const Login = () => {
       // ...
 
       // You can also display an error message to the user or perform other error handling.
-      console.error('Error signing in with Google:', errorMessage);
+      console.error("Error signing in with Google:", errorMessage);
     }
   };
 

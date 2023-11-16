@@ -7,6 +7,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
+import ClearIcon from "@mui/icons-material/Clear";
+import IconButton from "@mui/material/IconButton";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -43,6 +45,10 @@ export default function MultipleSelectChip({ options, label, handleChanges }) {
     handleChanges(event);
   };
 
+  const handleClearClick = () => {
+    setPersonName([]);
+  };
+
   return (
     <div>
       <FormControl sx={{ m: 1, width: 300 }}>
@@ -62,6 +68,14 @@ export default function MultipleSelectChip({ options, label, handleChanges }) {
             </Box>
           )}
           MenuProps={MenuProps}
+          endAdornment={
+            <IconButton
+              sx={{ visibility: personName ? "visible" : "hidden" }}
+              onClick={handleClearClick}
+            >
+              <ClearIcon />
+            </IconButton>
+          }
         >
           {options.map((name) => (
             <MenuItem
