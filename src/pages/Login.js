@@ -29,8 +29,9 @@ const Login = () => {
           tokenType: "Bearer",
         })
       ) {
-        // console.log("Additional  Info", getAdditionalUserInfo(result));
-        // console.log(isAuthenticated());
+        localStorage.setItem('token', token);
+        localStorage.setItem('expiresIn', 60);
+        localStorage.setItem('tokenType', "Bearer");
         navigate("/home");
       }
       // IdP data available using getAdditionalUserInfo(result)
@@ -53,7 +54,13 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (isAuthenticated()) {
+    const token = localStorage.getItem('token');
+    const expiresIn = localStorage.getItem('expiresIn');
+    const tokenType = localStorage.getItem('tokenType');
+    
+    if (token && expiresIn && tokenType) {
+      // Perform authentication with the stored token
+      signIn({ token, expiresIn, tokenType });
       navigate("/home");
     }
     // eslint-disable-next-line
