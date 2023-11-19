@@ -7,7 +7,6 @@ import {
 
 import { Box, Button, CircularProgress } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import MultipleSelectChip from "./Select";
 import {
   correlationSportValues,
   paths,
@@ -20,6 +19,17 @@ import {
   correlationSlipsColumns,
   correlationListColumns,
 } from "../common/columns";
+import MySelect from "./ReactSelect";
+
+const sportsOptions = correlationSportValues.map((value) => ({
+  value,
+  label: value,
+}));
+
+const sportsBooksOptions = sportsBooksSelectValues.map((value) => ({
+  value,
+  label: value,
+}));
 
 const Correlation = () => {
   const [correlationSlipsData, setCorrelationSlipsData] = React.useState([]);
@@ -34,18 +44,12 @@ const Correlation = () => {
     setIsChecked(!isChecked);
   };
 
-  const handleSportsBooksChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setSportsBooks(typeof value === "string" ? value.split(",") : value);
+  const handleSportsBooksChange = (selected) => {
+    setSportsBooks(selected.map((it) => it.value));
   };
 
-  const handleSportsChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setSports(typeof value === "string" ? value.split(",") : value);
+  const handleSportsChange = (selected) => {
+    setSports(selected.map((it) => it.value));
   };
 
   async function handleClick() {
@@ -121,25 +125,25 @@ const Correlation = () => {
   return (
     <div>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
-        <Box mr={2}>
-          <MultipleSelectChip
-            options={sportsBooksSelectValues}
-            label="Books"
+        <Box mr={2} margin="8px">
+          <MySelect
+            options={sportsBooksOptions}
             handleChanges={handleSportsBooksChange}
+            label={"Books"}
           />
         </Box>
-        <Box mr={2}>
-          <MultipleSelectChip
-            options={correlationSportValues}
-            label="Sports"
+        <Box mr={2} margin="8px">
+          <MySelect
+            options={sportsOptions}
             handleChanges={handleSportsChange}
+            label={"Sports"}
           />
         </Box>
         <Box mr={2} margin="8px">
           <Button
             variant="outlined"
             startIcon={<RefreshIcon />}
-            style={{ height: "55px" }}
+            style={{ height: "39px" }}
             onClick={handleClick}
             disabled={buttonDisabled}
           >

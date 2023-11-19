@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
-import { useIsAuthenticated, useSignIn } from "react-auth-kit";
+import { useSignIn } from "react-auth-kit";
 import { useEffect } from "react";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 // import { getAdditionalUserInfo } from "firebase/auth";
@@ -8,7 +8,6 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 const Login = () => {
   const navigate = useNavigate();
   const signIn = useSignIn();
-  const isAuthenticated = useIsAuthenticated();
 
   const signInWithGoogle = async () => {
     const auth = getAuth();
@@ -29,9 +28,9 @@ const Login = () => {
           tokenType: "Bearer",
         })
       ) {
-        localStorage.setItem('token', token);
-        localStorage.setItem('expiresIn', 60);
-        localStorage.setItem('tokenType', "Bearer");
+        localStorage.setItem("token", token);
+        localStorage.setItem("expiresIn", 60);
+        localStorage.setItem("tokenType", "Bearer");
         navigate("/home");
       }
       // IdP data available using getAdditionalUserInfo(result)
@@ -54,10 +53,10 @@ const Login = () => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const expiresIn = localStorage.getItem('expiresIn');
-    const tokenType = localStorage.getItem('tokenType');
-    
+    const token = localStorage.getItem("token");
+    const expiresIn = localStorage.getItem("expiresIn");
+    const tokenType = localStorage.getItem("tokenType");
+
     if (token && expiresIn && tokenType) {
       // Perform authentication with the stored token
       signIn({ token, expiresIn, tokenType });
