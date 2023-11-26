@@ -11,7 +11,6 @@ import {
   correlationSportValues,
   paths,
   sportsBooksSelectValues,
-  correlationStatSelectValues,
 } from "../common/constants";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
@@ -32,14 +31,10 @@ const sportsBooksOptions = sportsBooksSelectValues.map((value) => ({
   label: value,
 }));
 
-const statsOptions = correlationStatSelectValues.map((value) => ({
-  value,
-  label: value,
-}));
-
 const Correlation = () => {
   const [correlationSlipsData, setCorrelationSlipsData] = React.useState([]);
   const [correlationListData, setCorrelationListData] = React.useState([]);
+  const [statOptions, setStatOptions] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [, setSportsBooks] = React.useState([]);
   const [sports, setSports] = React.useState([]);
@@ -96,6 +91,16 @@ const Correlation = () => {
         }
       );
       setCorrelationListData(correlationListResponse.data);
+
+      const getMiddlesResponse = await axios.get(paths.getMiddlesBasePath, {
+        params: queryParams,
+      });
+      setStatOptions(
+        getMiddlesResponse.data.statTypes.map((value) => ({
+          value,
+          label: value,
+        }))
+      );
     } catch (error) {
       console.error(error);
     }
@@ -153,7 +158,7 @@ const Correlation = () => {
         </Box>
         <Box mr={2} margin="8px">
           <MySelect
-            options={statsOptions}
+            options={statOptions}
             handleChanges={handleStatChange}
             label={"Stat"}
           />
