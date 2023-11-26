@@ -9,11 +9,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import {
-  paths,
-  sportsBooksSelectValues,
-  sportsSelectValues,
-} from "../common/constants";
+import { paths } from "../common/constants";
 import { middlesColumnsV1, middlesColumnsV2 } from "../common/columns";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
@@ -27,19 +23,11 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const sportsOptions = sportsSelectValues.map((value) => ({
-  value,
-  label: value,
-}));
-
-const sportsBooksOptions = sportsBooksSelectValues.map((value) => ({
-  value,
-  label: value,
-}));
-
 const Middles = () => {
   const [data, setData] = React.useState([]);
+  const [sportsBooksOptions, setSportsBooksOptions] = React.useState([]);
   const [statOptions, setStatOptions] = React.useState([]);
+  const [sportsOptions, setSportsOptions] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [sportsBooks, setSportsBooks] = React.useState([]);
   const [sports, setSports] = React.useState([]);
@@ -74,12 +62,24 @@ const Middles = () => {
     };
 
     try {
-      const response = await axios.get(paths.getMiddlesBasePath, {
+      const getMiddlesResponse = await axios.get(paths.getMiddlesBasePath, {
         params: queryParams,
       });
-      setData(response.data.props);
+      setData(getMiddlesResponse.data.props);
       setStatOptions(
-        response.data.statTypes.map((value) => ({
+        getMiddlesResponse.data.statTypes.map((value) => ({
+          value,
+          label: value,
+        }))
+      );
+      setSportsOptions(
+        getMiddlesResponse.data.sports.map((value) => ({
+          value,
+          label: value,
+        }))
+      );
+      setSportsBooksOptions(
+        getMiddlesResponse.data.sportsBooks.map((value) => ({
           value,
           label: value,
         }))

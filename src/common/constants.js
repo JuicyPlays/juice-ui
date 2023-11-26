@@ -9,37 +9,6 @@ export const paths = {
     "https://juicyplays-api-d887c104909f.herokuapp.com/v1/correlation/list",
 };
 
-export const sportsBooksSelectValues = [
-  "PRIZEPICKS",
-  "UNDERDOG",
-  // "PARLAYPLAY",
-  // "HOTSTREAK",
-];
-
-export const sportsSelectValues = [
-  "CBB",
-  "CFB",
-  "COD",
-  "CSGO",
-  "Dota2",
-  "HALO",
-  "LoL",
-  "MMA",
-  "NBA",
-  "NBA1H",
-  "NBA1Q",
-  "NBA2H",
-  "NBASZN",
-  "NFL",
-  "NHL",
-  "PGA",
-  "SOCCER",
-  "TENNIS",
-  "VAL",
-  "WNBA",
-  "MLB",
-];
-
 export const colourOptions = [
   { value: "ocean", label: "Ocean", color: "#00B8D9", isFixed: true },
   { value: "blue", label: "Blue", color: "#0052CC", disabled: true },
@@ -72,10 +41,6 @@ export const colourOptions = [
   { value: "slate", label: "Slate", color: "#253858" },
   { value: "silver", label: "Silver", color: "#666666" },
 ];
-
-export const correlationSportValues = ["CSGO", "VAL", "NFL", "CFB"];
-
-export const marketsportsBooksSelectValues = [];
 
 export const pages = [
   { title: "Fantasy Screen", link: "middles" },

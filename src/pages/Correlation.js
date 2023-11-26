@@ -7,11 +7,7 @@ import {
 
 import { Box, Button, CircularProgress } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import {
-  correlationSportValues,
-  paths,
-  sportsBooksSelectValues,
-} from "../common/constants";
+import { paths } from "../common/constants";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import ToggleSwitch from "./ToggleSwitch";
@@ -21,20 +17,12 @@ import {
 } from "../common/columns";
 import MySelect from "./ReactSelect";
 
-const sportsOptions = correlationSportValues.map((value) => ({
-  value,
-  label: value,
-}));
-
-const sportsBooksOptions = sportsBooksSelectValues.map((value) => ({
-  value,
-  label: value,
-}));
-
 const Correlation = () => {
   const [correlationSlipsData, setCorrelationSlipsData] = React.useState([]);
   const [correlationListData, setCorrelationListData] = React.useState([]);
+  const [sportsBooksOptions, setSportsBooksOptions] = React.useState([]);
   const [statOptions, setStatOptions] = React.useState([]);
+  const [sportsOptions, setSportsOptions] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [, setSportsBooks] = React.useState([]);
   const [sports, setSports] = React.useState([]);
@@ -97,6 +85,18 @@ const Correlation = () => {
       });
       setStatOptions(
         getMiddlesResponse.data.statTypes.map((value) => ({
+          value,
+          label: value,
+        }))
+      );
+      setSportsOptions(
+        getMiddlesResponse.data.sports.map((value) => ({
+          value,
+          label: value,
+        }))
+      );
+      setSportsBooksOptions(
+        getMiddlesResponse.data.sportsBooks.map((value) => ({
           value,
           label: value,
         }))
