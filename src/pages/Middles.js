@@ -82,7 +82,7 @@ const Middles = () => {
       const response = await axios.get(paths.getMiddlesBasePath, {
         params: queryParams,
       });
-      setData(response.data);
+      setData(response.data.props);
     } catch (error) {
       console.error(error);
     }
