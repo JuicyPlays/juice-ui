@@ -93,7 +93,13 @@ const Pricing = () => {
               </CardContent>
               <CardActions>
                 <Button
-                  onClick={() => openLink(tier.link)}
+                  onClick={() =>
+                    openLink(
+                      tier.link +
+                        "?client_reference_id=" +
+                        localStorage.getItem("uid")
+                    )
+                  }
                   fullWidth
                   variant={tier.buttonVariant}
                 >

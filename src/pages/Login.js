@@ -28,6 +28,7 @@ const Login = () => {
           tokenType: "Bearer",
         })
       ) {
+        localStorage.setItem("uid", user.uid);
         localStorage.setItem("token", token);
         localStorage.setItem("expiresIn", 60);
         localStorage.setItem("tokenType", "Bearer");
