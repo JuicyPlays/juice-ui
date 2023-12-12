@@ -11,7 +11,7 @@ const CopyToClipboardButton = (props) => {
 
   const buttonStyle = {
     textAlign: "left",
-    // Add any additional styles you need here
+    fontSize: "12px",
   };
 
   return (

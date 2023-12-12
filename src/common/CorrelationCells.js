@@ -25,40 +25,35 @@ const CorrelationCells = ({ cell }) => {
   let isPlayer = false;
 
   if (cell.column.id === "PRIZE PICKS") {
-    val1 = cell.row.original.ppLinePlayerA;
-    val2 = cell.row.original.ppLinePlayerB;
+    val1 = cell.row.original.a.prizepicksLine;
+    val2 = cell.row.original.b.prizepicksLine;
   }
 
   if (cell.column.id === "UNDERDOG") {
-    val1 = cell.row.original.udLinePlayerA;
-    val2 = cell.row.original.udLinePlayerB;
+    val1 = cell.row.original.a.udLine;
+    val2 = cell.row.original.b.udLine;
   }
 
   if (cell.column.id === "STAT TYPE") {
-    val1 = cell.row.original.statTypePlayerA;
-    val2 = cell.row.original.statTypePlayerB;
+    val1 = cell.row.original.a.statType;
+    val2 = cell.row.original.b.statType;
   }
 
   if (cell.column.id === "PLAYERS") {
-    // console.log(cell, cell.row);
     isPlayer = true;
-    val1 = cell.row.original.playerA;
-    val2 = cell.row.original.playerB;
+    val1 = cell.row.original.a.player;
+    val2 = cell.row.original.b.player;
   }
 
   if (cell.column.id === "TEAM") {
-    val1 = cell.row.original.teamPlayerA;
-    val2 = cell.row.original.teamPlayerB;
+    val1 = cell.row.original.a.team;
+    val2 = cell.row.original.b.team;
   }
 
   if (cell.column.id === "DIFF") {
-    val1 = Math.abs(
-      cell.row.original.ppLinePlayerA - cell.row.original.udLinePlayerA
-    );
+    val1 = cell.row.original.a.difference;
+    val2 = cell.row.original.b.difference;
     backgroundColor1 = getColor(val1);
-    val2 = Math.abs(
-      cell.row.original.ppLinePlayerB - cell.row.original.udLinePlayerB
-    );
     backgroundColor2 = getColor(val2);
   }
 
@@ -70,7 +65,7 @@ const CorrelationCells = ({ cell }) => {
           borderRadius: "0.25rem",
           color: "#fff",
           maxWidth: "9ch",
-          padding: "0.50rem",
+          padding: "3px",
           display: "inline-block",
           fontWeight: "bold",
         }}
@@ -78,14 +73,13 @@ const CorrelationCells = ({ cell }) => {
         {isPlayer ? <CopyToClipboardButton player={val1} /> : val1}
       </span>
       <br />
-      <br />
       <span
         style={{
           backgroundColor: backgroundColor2,
           borderRadius: "0.25rem",
           color: "#fff",
           maxWidth: "9ch",
-          padding: "0.50rem",
+          padding: "3px",
           display: "inline-block",
           fontWeight: "bold",
         }}
