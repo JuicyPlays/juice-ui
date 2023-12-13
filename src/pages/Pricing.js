@@ -9,11 +9,13 @@ import StarIcon from "@mui/icons-material/StarBorder";
 import Typography from "@mui/material/Typography";
 import { Component } from "react";
 import NavBar from "./NavBar";
+import axios from "axios";
 import {
   useAuthUser,
   useIsAuthenticated,
   withIsAuthenticated,
 } from "react-auth-kit";
+import { paths } from "../common/constants";
 
 const tiers = [
   {
@@ -49,6 +51,11 @@ const Pricing = () => {
   const openLink = (url) => {
     window.open(url, "_blank");
   };
+
+  async function isUserSubscribed() {
+    const user = await axios.get(paths.getUserPath + auth().uid);
+    return user.data.subscribed ?? false;
+  }
 
   return (
     <Container maxWidth="md" component="main" sx={{ paddingTop: 15 }}>
@@ -98,21 +105,36 @@ const Pricing = () => {
                 ))}
               </CardContent>
               <CardActions>
-                <Button
-                  onClick={() =>
-                    openLink(
-                      tier.link +
-                        "?client_reference_id=" +
-                        auth().uid +
-                        "&prefilled_email=" +
-                        auth().email
-                    )
-                  }
-                  fullWidth
-                  variant={tier.buttonVariant}
-                >
-                  {tier.buttonText}
-                </Button>
+                {!isUserSubscribed() ? (
+                  <Button
+                    onClick={() =>
+                      openLink(
+                        tier.link +
+                          "?client_reference_id=" +
+                          auth().uid +
+                          "&prefilled_email=" +
+                          auth().email
+                      )
+                    }
+                    fullWidth
+                    variant={tier.buttonVariant}
+                  >
+                    {tier.buttonText}
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() =>
+                      openLink(
+                        "https://billing.stripe.com/p/login/test_dR6g2g6mg6W1bcY4gg?prefilled_email=" +
+                          auth().email
+                      )
+                    }
+                    fullWidth
+                    variant={tier.buttonVariant}
+                  >
+                    Manage Account
+                  </Button>
+                )}
               </CardActions>
             </Card>
           </Grid>

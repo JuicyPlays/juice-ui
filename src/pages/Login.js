@@ -47,6 +47,7 @@ const Login = () => {
           authState: {
             uid: user.uid,
             email: user.email,
+            name: user.displayName,
           },
         })
       ) {

@@ -7,7 +7,9 @@ export const paths = {
     "https://juicyplays-api-d887c104909f.herokuapp.com/v1/correlation/slips",
   getCorrelationListBasePath:
     "https://juicyplays-api-d887c104909f.herokuapp.com/v1/correlation/props",
-  createNewUserPath: "https://juicyplays-api-d887c104909f.herokuapp.com/v1/user/",
+  createNewUserPath:
+    "https://juicyplays-api-d887c104909f.herokuapp.com/v1/user/",
+  getUserPath: "https://juicyplays-api-d887c104909f.herokuapp.com/v1/user/",
 };
 
 export const pages = [

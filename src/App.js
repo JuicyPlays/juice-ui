@@ -3,6 +3,7 @@ import NavBar from "./pages/NavBar";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Login from "./pages/Login";
+import RenderHome from "./pages/Home";
 import RenderMiddles from "./pages/Middles";
 import RenderPricing from "./pages/Pricing";
 import RenderCorrelation from "./pages/Correlation";
@@ -34,7 +35,7 @@ function App() {
         path="/home"
         element={
           <RequireAuth loginPath="/">
-            <NavBar />
+            <RenderHome />
           </RequireAuth>
         }
       />
