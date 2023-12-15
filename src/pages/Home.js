@@ -1,11 +1,14 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { Box } from "@mui/material";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { useAuthUser } from "react-auth-kit";
 
 const Home = () => {
+  const user = useAuthUser();
+
   return (
     <div>
       <Box
@@ -23,10 +26,8 @@ const Home = () => {
             color="text.primary"
             gutterBottom
           >
-            Welcome { }!
+            Welcome {user().name}!
           </Typography>
-
-
         </Container>
       </Box>
     </div>
