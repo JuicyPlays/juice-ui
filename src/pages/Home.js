@@ -436,7 +436,7 @@ const LandingPage = () => {
 
       {/* 1. Esports Hero Section */}
       <section style={styles.sectionLarge}>
-        <div style={styles.heroGrid}>
+        <div className="hero-grid" style={styles.heroGrid}>
           <div style={styles.heroContent}>
             <h1 style={styles.headline}>Data-Driven <br /> <span style={styles.gradientText}>Esports Value</span></h1>
             <p style={styles.subheadline}>
@@ -490,7 +490,7 @@ const LandingPage = () => {
           <h2 style={styles.sectionTitle}>Why Data &gt; Gut Feelings</h2>
         </div>
 
-        <div style={styles.comparisonWrapper}>
+        <div className="comparison-wrapper" style={styles.comparisonWrapper}>
           <div style={{ ...styles.compCol, backgroundColor: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.1)' }}>
             <h3 style={{ ...styles.compHeader, color: '#ef4444' }}>Traditional Handicapping</h3>
             <ul style={styles.compList}>
@@ -521,7 +521,7 @@ const LandingPage = () => {
 
         </div>
 
-        <div style={styles.pricingGrid}>
+        <div className="pricing-grid" style={styles.pricingGrid}>
           <Elements stripe={stripePromise}>
             {plans.map((plan) => (
               <PricingCard key={plan.name} plan={plan} />
@@ -624,9 +624,6 @@ const styles = {
     gridTemplateColumns: "1fr 1fr",
     gap: "64px",
     alignItems: "center",
-    '@media (max-width: 900px)': {
-      gridTemplateColumns: "1fr",
-    }
   },
   heroContent: {
     display: "flex",

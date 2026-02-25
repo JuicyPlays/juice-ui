@@ -26,7 +26,7 @@ const MySelect = ({ options, handleChanges, label, defaultSelected = [], isMulti
         // Let CSS classes handle the rest — only override width to stretch within parent
         control: (base) => ({
           ...base,
-          minWidth: "180px",
+          width: "100%",
         }),
       }}
     />

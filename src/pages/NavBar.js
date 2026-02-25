@@ -32,7 +32,7 @@ const NavBar = () => {
           </Link>
 
           {/* Desktop nav links */}
-          <div style={styles.navLinks}>
+          <div className="nav-links" style={styles.navLinks}>
             {pages.map((page) => (
               <Link
                 key={page.title}
@@ -49,7 +49,7 @@ const NavBar = () => {
           </div>
 
           {/* Right side: profile + mobile hamburger */}
-          <div style={styles.rightSide}>
+          <div className="nav-right-side" style={styles.rightSide}>
             {/* Profile button */}
             <div style={{ position: "relative" }}>
               <button
@@ -170,7 +170,6 @@ const styles = {
     display: "flex",
     alignItems: "center",
     gap: "4px",
-    "@media (maxWidth: 768px)": { display: "none" },
   },
   navLink: {
     display: "flex",

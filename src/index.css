@@ -47,6 +47,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -57,12 +58,14 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 #root {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 code {
@@ -552,4 +555,53 @@ code {
 .juice-toggle input:checked+.juice-toggle-slider::before {
   left: 23px;
   background: var(--accent-light);
+}
+
+/* ── Responsive Layout Overrides ──────────────────────────────────── */
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pricing-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .comparison-wrapper {
+    flex-direction: column !important;
+  }
+
+  .slip-card-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+
+  .nav-links {
+    display: none !important;
+  }
+
+  .filter-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .filter-bar>div,
+  .filter-bar>button {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    margin-bottom: 8px;
+  }
+
+  .slip-header-right {
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    justify-content: flex-start !important;
+  }
+}
+
+.table-scroll-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }

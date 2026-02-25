@@ -108,7 +108,7 @@ const Slips = () => {
             </div>
 
             {/* Filter bar */}
-            <div style={styles.filterBar}>
+            <div className="filter-bar" style={styles.filterBar}>
                 <div style={styles.selectWrap}>
                     <MySelect
                         options={sportsbookOptions}
@@ -136,7 +136,7 @@ const Slips = () => {
                     className="btn-gradient"
                     onClick={handleClick}
                     disabled={buttonDisabled}
-                    style={{ minWidth: "120px" }}
+                    style={{ width: "100%" }}
                 >
                     {loading ? (
                         <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -208,7 +208,6 @@ const styles = {
         marginBottom: "20px",
     },
     selectWrap: {
-        minWidth: "200px",
         flex: "1 1 200px",
     },
     content: {

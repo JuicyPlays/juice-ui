@@ -40,7 +40,7 @@ const SlipComponent = ({ slips }) => {
                     return (
                         <div key={i} style={styles.card}>
                             {/* Card Header */}
-                            <div style={styles.cardHeader}>
+                            <div className="slip-card-header" style={styles.cardHeader}>
                                 <div style={styles.headerLeft}>
                                     <div style={styles.headerTypeInfo}>
                                         <div style={styles.slipTypeHead}>
@@ -54,7 +54,7 @@ const SlipComponent = ({ slips }) => {
                                         </div>
                                     </div>
                                 </div>
-                                <div style={styles.headerRight}>
+                                <div className="slip-header-right" style={styles.headerRight}>
                                     <div style={styles.evPill}>
                                         {slip.evPercent !== undefined && slip.evPercent !== null
                                             ? `${Math.max(0.1, slip.evPercent).toFixed(1)}% EV`
@@ -76,50 +76,52 @@ const SlipComponent = ({ slips }) => {
                                 </div>
                             </div>
 
-                            <div style={styles.tableHeader}>
-                                <div style={{ ...styles.th, flex: 1.5 }}>Player</div>
-                                <div style={{ ...styles.th, flex: 1 }}>Prop</div>
-                                <div style={{ ...styles.th, width: '90px', textAlign: 'center' }}>Sportsbook</div>
-                                <div style={{ ...styles.th, width: '70px', textAlign: 'center' }}>Model</div>
-                                <div style={{ ...styles.th, width: '80px', textAlign: 'center' }}>Lean</div>
-                                <div style={{ ...styles.th, width: '80px', textAlign: 'center' }}>Prob</div>
-                                <div style={{ ...styles.th, width: '80px', textAlign: 'center' }}>EV</div>
-                            </div>
+                            <div className="table-scroll-container">
+                                <div style={styles.tableHeader}>
+                                    <div style={{ ...styles.th, flex: 1.5 }}>Player</div>
+                                    <div style={{ ...styles.th, flex: 1 }}>Prop</div>
+                                    <div style={{ ...styles.th, width: '90px', textAlign: 'center' }}>Sportsbook</div>
+                                    <div style={{ ...styles.th, width: '70px', textAlign: 'center' }}>Model</div>
+                                    <div style={{ ...styles.th, width: '80px', textAlign: 'center' }}>Lean</div>
+                                    <div style={{ ...styles.th, width: '80px', textAlign: 'center' }}>Prob</div>
+                                    <div style={{ ...styles.th, width: '80px', textAlign: 'center' }}>EV</div>
+                                </div>
 
-                            {/* Card Body - Table Rows */}
-                            <div style={styles.picksContainer}>
-                                {slip.picks.map((pick, j) => (
-                                    <div key={j} style={{ ...styles.tableRow, borderBottom: j < slip.picks.length - 1 ? "1px solid #1f1f2e" : "none" }}>
-                                        <div style={{ ...styles.td, flex: 1.5, flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}>
-                                            <div style={styles.playerWrap}>
-                                                <span style={styles.playerName}>{pick.player}</span>
-                                                <CopyToClipboardButton player={pick.player} hideText={true} />
-                                                <span style={styles.sportBadge}>{pick.sport}</span>
+                                {/* Card Body - Table Rows */}
+                                <div style={styles.picksContainer}>
+                                    {slip.picks.map((pick, j) => (
+                                        <div key={j} style={{ ...styles.tableRow, borderBottom: j < slip.picks.length - 1 ? "1px solid #1f1f2e" : "none" }}>
+                                            <div style={{ ...styles.td, flex: 1.5, flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}>
+                                                <div style={styles.playerWrap}>
+                                                    <span style={styles.playerName}>{pick.player}</span>
+                                                    <CopyToClipboardButton player={pick.player} hideText={true} />
+                                                    <span style={styles.sportBadge}>{pick.sport}</span>
+                                                </div>
+                                                <div style={styles.matchupText}>{pick.teams}</div>
                                             </div>
-                                            <div style={styles.matchupText}>{pick.teams}</div>
+                                            <div style={{ ...styles.td, flex: 1 }}>
+                                                <span style={styles.propText}>{pick.statType}</span>
+                                            </div>
+                                            <div style={{ ...styles.td, width: '90px', justifyContent: 'center' }}>
+                                                <div style={styles.targetLinePill}>{pick.sportsbookLine}</div>
+                                            </div>
+                                            <div style={{ ...styles.td, width: '70px', justifyContent: 'center' }}>
+                                                <div style={styles.modelLinePill}>{pick.modelLine}</div>
+                                            </div>
+                                            <div style={{ ...styles.td, width: '80px', justifyContent: 'center' }}>
+                                                <span style={pick.over ? styles.leanOver : styles.leanUnder}>
+                                                    {pick.over ? "OVER" : "UNDER"}
+                                                </span>
+                                            </div>
+                                            <div style={{ ...styles.td, width: '80px', justifyContent: 'center' }}>
+                                                <span style={styles.diffText}>{pick.prob ? `${pick.prob.toFixed(1)}%` : "-"}</span>
+                                            </div>
+                                            <div style={{ ...styles.td, width: '80px', justifyContent: 'center' }}>
+                                                <span style={styles.diffText}>{pick.evPercent ? `${pick.evPercent.toFixed(1)}%` : "-"}</span>
+                                            </div>
                                         </div>
-                                        <div style={{ ...styles.td, flex: 1 }}>
-                                            <span style={styles.propText}>{pick.statType}</span>
-                                        </div>
-                                        <div style={{ ...styles.td, width: '90px', justifyContent: 'center' }}>
-                                            <div style={styles.targetLinePill}>{pick.sportsbookLine}</div>
-                                        </div>
-                                        <div style={{ ...styles.td, width: '70px', justifyContent: 'center' }}>
-                                            <div style={styles.modelLinePill}>{pick.modelLine}</div>
-                                        </div>
-                                        <div style={{ ...styles.td, width: '80px', justifyContent: 'center' }}>
-                                            <span style={pick.over ? styles.leanOver : styles.leanUnder}>
-                                                {pick.over ? "OVER" : "UNDER"}
-                                            </span>
-                                        </div>
-                                        <div style={{ ...styles.td, width: '80px', justifyContent: 'center' }}>
-                                            <span style={styles.diffText}>{pick.prob ? `${pick.prob.toFixed(1)}%` : "-"}</span>
-                                        </div>
-                                        <div style={{ ...styles.td, width: '80px', justifyContent: 'center' }}>
-                                            <span style={styles.diffText}>{pick.evPercent ? `${pick.evPercent.toFixed(1)}%` : "-"}</span>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     );
@@ -159,11 +161,13 @@ const styles = {
         display: "flex",
         flexDirection: "column",
         gap: "24px",
+        minWidth: 0,
     },
     list: {
         display: "flex",
         flexDirection: "column",
         gap: "20px",
+        minWidth: 0,
     },
     card: {
         backgroundColor: "#13131a",
@@ -172,6 +176,8 @@ const styles = {
         overflow: "hidden",
         fontFamily: "'Inter', sans-serif",
         boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+        minWidth: 0,
+        width: "100%",
     },
     cardHeader: {
         display: "flex",
@@ -277,6 +283,7 @@ const styles = {
         padding: "12px 24px",
         borderBottom: "1px solid #1f1f2e",
         backgroundColor: "#0d0d14",
+        minWidth: "700px",
     },
     th: {
         fontSize: "13px",
@@ -292,7 +299,8 @@ const styles = {
         alignItems: "center",
         padding: "16px 24px",
         transition: "background 0.2s ease",
-        backgroundColor: "#13131a"
+        backgroundColor: "#13131a",
+        minWidth: "700px",
     },
     td: {
         display: "flex",
