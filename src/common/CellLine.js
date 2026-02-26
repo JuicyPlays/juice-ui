@@ -4,28 +4,26 @@ const CellLine = ({ cell }) => {
 
   if (cell.column.id === "JuicyLine") {
     cellValue = cell.row.original?.juicyLine;
-    if (!cell.row.original?.over) {
-      backgroundColor = "#388E3C";
-    }
+    backgroundColor = "#9333ea"; // Model Purple
   }
 
   if (cell.column.id === "BookLine") {
     cellValue = cell.row.original?.sportsbookLine;
-    if (cell.row.original?.over) {
-      backgroundColor = "#388E3C";
-    }
+    backgroundColor = "#2563eb"; // Sportsbook Blue
   }
 
   return (
     <span
       style={{
         backgroundColor: backgroundColor,
-        borderRadius: "0.25rem",
+        borderRadius: "6px",
         color: "#fff",
-        maxWidth: "9ch",
-        padding: "0.50rem",
+        minWidth: "48px",
+        padding: "4px 12px",
         display: "inline-block",
-        fontWeight: "bold",
+        fontWeight: "700",
+        textAlign: "center",
+        fontSize: "13px",
       }}
     >
       {cellValue}

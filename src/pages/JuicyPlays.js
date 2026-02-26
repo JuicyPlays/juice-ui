@@ -102,6 +102,9 @@ const JuicyPlays = () => {
     enableColumnFilters: false,
     enablePagination: false,
     enableSorting: true,
+    initialState: {
+      sorting: [{ id: "diffs", desc: true }],
+    },
     enableBottomToolbar: false,
     enableTopToolbar: false,
     muiTableBodyRowProps: { hover: false },
@@ -112,12 +115,16 @@ const JuicyPlays = () => {
         whiteSpace: "normal",
         wordBreak: "break-word",
         lineHeight: 1.25,
-        padding: "8px 10px",
-        fontSize: "11px",
+        padding: "12px 16px",
+        fontSize: "13px",
+        fontWeight: "700",
+        color: "var(--text-muted)",
+        textTransform: "uppercase",
+        letterSpacing: "0.05em",
       },
     },
     muiTableBodyCellProps: {
-      sx: { padding: "8px 10px" },
+      sx: { padding: "4px 16px" },
     },
   });
 
@@ -135,7 +142,11 @@ const JuicyPlays = () => {
     enableTopToolbar: false,
     paginateExpandedRows: true,
     pageSize: 10,
-    initialState: { expanded: true, pagination: { pageSize: 10 } },
+    initialState: {
+      expanded: true,
+      pagination: { pageSize: 10 },
+      sorting: [{ id: "diffs", desc: true }]
+    },
     muiPaginationProps: { rowsPerPageOptions: ["10"] },
     renderDetailPanel: ({ row }) => (
       <Box sx={{ flexGrow: 1, p: 1 }}>
@@ -145,8 +156,11 @@ const JuicyPlays = () => {
           <span style={mobileDetailStyles.chip}>{row.original.sport}</span>
         </div>
         <div style={{ ...mobileDetailStyles.grid, marginTop: "8px" }}>
-          <span style={mobileDetailStyles.lineChip}>Book: {row.original?.sportsbookLine}</span>
-          <span style={mobileDetailStyles.lineChip}>Juicy: {row.original?.juicyLine}</span>
+          <span style={mobileDetailStyles.bookChip}>Book: {row.original?.sportsbookLine}</span>
+          <span style={mobileDetailStyles.juicyChip}>Juicy: {row.original?.juicyLine}</span>
+          <span style={row.original?.over ? mobileDetailStyles.leanOver : mobileDetailStyles.leanUnder}>
+            {row.original?.over ? "OVER" : "UNDER"}
+          </span>
         </div>
       </Box>
     ),
@@ -292,14 +306,44 @@ const mobileDetailStyles = {
     fontFamily: "'Inter', sans-serif",
     border: "1px solid var(--border-subtle)",
   },
-  lineChip: {
+  bookChip: {
     padding: "4px 10px",
-    background: "rgba(99,102,241,0.12)",
+    background: "rgba(37, 99, 235, 0.12)",
     borderRadius: "6px",
     fontSize: "12px",
-    color: "var(--accent-light)",
+    color: "#60a5fa",
     fontFamily: "'Inter', sans-serif",
     fontWeight: 600,
-    border: "1px solid rgba(99,102,241,0.2)",
+    border: "1px solid rgba(37, 99, 235, 0.2)",
+  },
+  juicyChip: {
+    padding: "4px 10px",
+    background: "rgba(147, 51, 234, 0.12)",
+    borderRadius: "6px",
+    fontSize: "12px",
+    color: "#a855f7",
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: 600,
+    border: "1px solid rgba(147, 51, 234, 0.2)",
+  },
+  leanOver: {
+    padding: "4px 10px",
+    background: "rgba(16, 185, 129, 0.12)",
+    borderRadius: "6px",
+    fontSize: "12px",
+    color: "#10b981",
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: 800,
+    border: "1px solid rgba(16, 185, 129, 0.2)",
+  },
+  leanUnder: {
+    padding: "4px 10px",
+    background: "rgba(239, 68, 68, 0.12)",
+    borderRadius: "6px",
+    fontSize: "12px",
+    color: "#ef4444",
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: 800,
+    border: "1px solid rgba(239, 68, 68, 0.2)",
   },
 };

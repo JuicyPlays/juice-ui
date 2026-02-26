@@ -58,23 +58,30 @@ const SlipComponent = ({ slips }) => {
                             <div className="slip-card-header" style={styles.cardHeader}>
                                 <div style={styles.headerLeft}>
                                     <div style={styles.headerTypeInfo}>
-                                        <div style={styles.slipTypeHead}>
-                                            <span style={styles.powerIcon}>🔮</span> POWER {slip.size}
+                                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                            <div style={styles.slipTypeHead}>
+                                                <span style={styles.powerIcon}>🔮</span> POWER {slip.size}
+                                            </div>
+                                            <div style={{
+                                                ...styles.evPill,
+                                                background: slip.evPercent >= 10 ? "linear-gradient(90deg, #059669 0%, #10b981 100%)" : styles.evPill.background,
+                                                boxShadow: slip.evPercent >= 10 ? "0 0 12px rgba(16, 185, 129, 0.4)" : styles.evPill.boxShadow
+                                            }}>
+                                                {slip.evPercent !== undefined && slip.evPercent !== null
+                                                    ? `${Math.max(0.1, slip.evPercent).toFixed(1)}% EV`
+                                                    : "High EV"}
+                                            </div>
                                         </div>
                                         <div style={styles.slipTypeSub}>{slip.size}-leg parlay</div>
                                     </div>
                                     <div style={styles.headerPlayersInfo}>
                                         <div style={styles.playersList}>
-                                            <span style={styles.iconGray}>👥</span> {playersStr}
+                                            <span style={styles.iconGray}>👥</span>
+                                            <span style={styles.playersText}>{playersStr}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="slip-header-right" style={styles.headerRight}>
-                                    <div style={styles.evPill}>
-                                        {slip.evPercent !== undefined && slip.evPercent !== null
-                                            ? `${Math.max(0.1, slip.evPercent).toFixed(1)}% EV`
-                                            : "High EV"}
-                                    </div>
                                     <div style={styles.payoutCol}>
                                         <div style={styles.payoutVal}>
                                             {(slip.picks.reduce((acc, p) => acc * ((p.prob || 50) / 100), 1) * 100).toFixed(1)}%
@@ -105,8 +112,8 @@ const SlipComponent = ({ slips }) => {
                                                 <span style={styles.mobileChip}>{pick.statType}</span>
                                             </div>
                                             <div style={{ ...styles.mobileDetailGrid, marginTop: "4px" }}>
-                                                <span style={styles.mobileLineChip}>Book: {pick.sportsbookLine}</span>
-                                                <span style={styles.mobileLineChip}>Model: {pick.modelLine}</span>
+                                                <span style={styles.mobileBookChip}>Book: {pick.sportsbookLine}</span>
+                                                <span style={styles.mobileModelChip}>Model: {pick.modelLine}</span>
                                                 <span style={pick.over ? styles.mobileLeanOver : styles.mobileLeanUnder}>{pick.over ? "OVER" : "UNDER"}</span>
                                             </div>
                                             <div style={{ ...styles.mobileDetailGrid, marginTop: "8px", justifyContent: "space-between", borderTop: "1px solid #2d2d3d", paddingTop: "8px" }}>
@@ -233,12 +240,16 @@ const styles = {
         alignItems: "center",
         padding: "16px 24px",
         borderBottom: "1px solid #2d2d3d",
-        backgroundColor: "#171721"
+        backgroundColor: "#171721",
+        gap: "24px",
+        minWidth: 0,
     },
     headerLeft: {
         display: "flex",
         alignItems: "center",
-        gap: "40px",
+        gap: "24px",
+        minWidth: 0,
+        flex: 1,
     },
     headerTypeInfo: {
         display: "flex",
@@ -267,7 +278,9 @@ const styles = {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        marginTop: "2px"
+        marginTop: "2px",
+        minWidth: 0,
+        flex: 1,
     },
     playersList: {
         fontSize: "14px",
@@ -276,6 +289,13 @@ const styles = {
         display: "flex",
         alignItems: "center",
         gap: "8px",
+        minWidth: 0,
+    },
+    playersText: {
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        flex: 1,
     },
     iconGray: {
         opacity: 0.6,
@@ -289,12 +309,13 @@ const styles = {
     evPill: {
         background: "linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%)",
         color: "#ffffff",
-        padding: "8px 16px",
+        padding: "4px 10px",
         borderRadius: "20px",
-        fontSize: "14px",
+        fontSize: "12px",
         fontWeight: "800",
-        boxShadow: "0 0 16px rgba(99, 102, 241, 0.4)",
-        letterSpacing: "0.02em"
+        boxShadow: "0 0 12px rgba(99, 102, 241, 0.3)",
+        letterSpacing: "0.02em",
+        whiteSpace: "nowrap",
     },
     payoutCol: {
         display: "flex",
@@ -383,7 +404,7 @@ const styles = {
         fontWeight: "600",
     },
     targetLinePill: {
-        backgroundColor: "#9333ea",
+        backgroundColor: "#2563eb",
         color: "white",
         fontWeight: "700",
         fontSize: "13px",
@@ -391,7 +412,7 @@ const styles = {
         borderRadius: "6px",
     },
     modelLinePill: {
-        backgroundColor: "#2563eb",
+        backgroundColor: "#9333ea",
         color: "white",
         fontWeight: "700",
         fontSize: "13px",
@@ -498,14 +519,23 @@ const styles = {
         fontWeight: "500",
         border: "1px solid #2d2d3d",
     },
-    mobileLineChip: {
+    mobileBookChip: {
         padding: "4px 10px",
-        backgroundColor: "rgba(99,102,241,0.12)",
+        backgroundColor: "rgba(37, 99, 235, 0.12)",
         borderRadius: "6px",
         fontSize: "12px",
-        color: "#818cf8",
+        color: "#60a5fa",
         fontWeight: "600",
-        border: "1px solid rgba(99,102,241,0.2)",
+        border: "1px solid rgba(37, 99, 235, 0.2)",
+    },
+    mobileModelChip: {
+        padding: "4px 10px",
+        backgroundColor: "rgba(147, 51, 234, 0.12)",
+        borderRadius: "6px",
+        fontSize: "12px",
+        color: "#a855f7",
+        fontWeight: "600",
+        border: "1px solid rgba(147, 51, 234, 0.2)",
     },
     mobileLeanOver: {
         padding: "4px 10px",
