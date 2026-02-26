@@ -27,7 +27,7 @@ const plans = [
     period: "/ 2 weeks",
     discount: null,
     featured: false,
-    priceId: "price_1O8YG6FbPaDvi0T0X9SNBYN8",
+    priceId: "price_1T4yqfFbPaDvi0T07mimbuDg",
     ctaText: "Select Plan",
   },
   {
@@ -40,7 +40,7 @@ const plans = [
     period: "/ month",
     discount: "40% off",
     featured: true,
-    priceId: "price_1O8YG6FbPaDvi0T0X9SNBYN8",
+    priceId: "price_1T4yrMFbPaDvi0T0f6CRfOB0",
     ctaText: "Start Winning Now",
   },
   {
@@ -53,7 +53,7 @@ const plans = [
     period: "/ year",
     discount: "58% off",
     featured: false,
-    priceId: "price_1O8YG6FbPaDvi0T0X9SNBYN8",
+    priceId: "price_1T4ypsFbPaDvi0T0wpLJcxRI",
     ctaText: "Select Plan",
   },
 ];
@@ -435,8 +435,30 @@ const FAQSection = () => (
 
 // -------------- Main Landing Page --------------
 const LandingPage = () => {
+  const location = useLocation();
+  const subscriptionRequired = location.state?.subscriptionRequired;
+
   return (
     <div style={styles.container}>
+      {/* Subscription Required Alert */}
+      {subscriptionRequired && (
+        <div style={{
+          background: 'rgba(239, 68, 68, 0.1)',
+          border: '1px solid rgba(239, 68, 68, 0.2)',
+          borderRadius: '12px',
+          padding: '16px',
+          marginTop: '24px',
+          textAlign: 'center',
+          color: '#ef4444',
+          fontWeight: 600,
+          fontFamily: "'Inter', sans-serif",
+          zIndex: 10,
+          position: 'relative'
+        }}>
+          ⚠️ Subscription required to access Juicy Screen or Slip Generator. Please choose a plan below.
+        </div>
+      )}
+
       {/* Background Orbs */}
       <div style={styles.bgOrbTop} />
       <div style={styles.bgOrbBottom} />

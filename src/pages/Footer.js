@@ -24,7 +24,7 @@ const Footer = () => {
           {/* Social icons — right */}
           <div style={styles.socials}>
             <a
-              href="https://twitter.com/pancakeparlay"
+              href="https://twitter.com/"
               target="_blank"
               rel="noopener noreferrer"
               style={styles.iconLink}

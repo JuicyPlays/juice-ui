@@ -1,6 +1,6 @@
 import "./index.css";
 import { createClient } from "@supabase/supabase-js";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate, Navigate } from "react-router-dom";
 import SupabaseLogin from "./pages/SupabaseLogin";
 import RenderHome from "./pages/Home";
 import RenderJuicyPlays from "./pages/JuicyPlays";
@@ -11,8 +11,9 @@ import { loadStripe } from "@stripe/stripe-js";
 import RenderAccount from "./pages/Account";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
+import { CircularProgress } from "@mui/material";
 
 // The supabase client
 export const supabase = createClient(
@@ -21,6 +22,47 @@ export const supabase = createClient(
 );
 
 export const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK, {});
+
+function SubscriptionGuard({ children }) {
+  const user = useAuthUser();
+  const [status, setStatus] = React.useState({ loading: true, hasAccess: false });
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  React.useEffect(() => {
+    async function checkAccess() {
+      if (!user()) return;
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_JUICE_API_USERS}/userId/${user().userId}`
+        );
+        setStatus({
+          loading: false,
+          hasAccess: response.data.subscribed || response.data.hasAccess,
+        });
+      } catch (error) {
+        console.error("Error checking subscription", error);
+        setStatus({ loading: false, hasAccess: false });
+      }
+    }
+    checkAccess();
+  }, [user]);
+
+  if (status.loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'var(--bg-primary)' }}>
+        <CircularProgress style={{ color: 'var(--accent)' }} />
+      </div>
+    );
+  }
+
+  if (!status.hasAccess) {
+    // Redirect to home with state to show pricing or error
+    return <Navigate to="/" state={{ from: location, subscriptionRequired: true }} replace />;
+  }
+
+  return children;
+}
 
 function MainContent() {
   const navigate = useNavigate();
@@ -109,7 +151,9 @@ function MainContent() {
         path="/juicy"
         element={
           <RequireAuth loginPath="/login">
-            <RenderJuicyPlays />
+            <SubscriptionGuard>
+              <RenderJuicyPlays />
+            </SubscriptionGuard>
           </RequireAuth>
         }
       />
@@ -117,7 +161,9 @@ function MainContent() {
         path="/slips"
         element={
           <RequireAuth loginPath="/login">
-            <RenderSlips />
+            <SubscriptionGuard>
+              <RenderSlips />
+            </SubscriptionGuard>
           </RequireAuth>
         }
       />
