@@ -12,6 +12,20 @@ import Footer from "./Footer";
 import MySelect from "./ReactSelect";
 import { useAuthUser } from "react-auth-kit";
 
+const useMediaQuery = (query) => {
+  const [matches, setMatches] = useState(false);
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+    const listener = () => setMatches(media.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, [matches, query]);
+  return matches;
+};
+
 const JuicyPlays = () => {
   const [data, setData] = useState([]);
   const [sportsbook, setSportsbook] = useState("underdog");
@@ -22,6 +36,7 @@ const JuicyPlays = () => {
   const [statOptions, setStatOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const user = useAuthUser();
+  const isMobile = useMediaQuery("(max-width: 900px)");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { handleClick(); }, []);
@@ -84,14 +99,6 @@ const JuicyPlays = () => {
     }
   };
 
-  function detectMob() {
-    const toMatch = [
-      /Android/i, /webOS/i, /iPhone/i,
-      /iPad/i, /iPod/i, /BlackBerry/i, /Windows Phone/i,
-    ];
-    return toMatch.some((m) => navigator.userAgent.match(m));
-  }
-
   const tableV1 = useMaterialReactTable({
     columns: juicyColumnsV1,
     data,
@@ -131,7 +138,7 @@ const JuicyPlays = () => {
   const tableV2 = useMaterialReactTable({
     columns: juicyColumnsV2,
     data,
-    layoutMode: "semantic",
+    layoutMode: "grid",
     enableColumnOrdering: false,
     enableColumnResizing: false,
     enableColumnActions: false,
@@ -149,7 +156,7 @@ const JuicyPlays = () => {
     },
     muiPaginationProps: { rowsPerPageOptions: ["10"] },
     renderDetailPanel: ({ row }) => (
-      <Box sx={{ flexGrow: 1, p: 1 }}>
+      <Box sx={{ flexGrow: 1, p: 1, minWidth: 0 }}>
         <div style={mobileDetailStyles.grid}>
           <span style={mobileDetailStyles.chip}>{row.original.teams}</span>
           <span style={mobileDetailStyles.chip}>{row.original.statType}</span>
@@ -164,13 +171,27 @@ const JuicyPlays = () => {
         </div>
       </Box>
     ),
+    muiTablePaperProps: {
+      sx: {
+        width: "100%",
+        boxShadow: "none",
+        border: "none",
+        background: "transparent"
+      }
+    },
+    muiTableBodyCellProps: {
+      sx: {
+        padding: "8px 8px",
+        fontSize: "11px"
+      }
+    }
   });
 
   return (
-    <div style={styles.page}>
+    <div style={{ ...styles.page, padding: isMobile ? "16px 8px 60px" : styles.page.padding }}>
       {/* Page header */}
       <div style={styles.header}>
-        <div>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <h2 style={styles.title}>⚡ Juicy Screen</h2>
           <p style={styles.subtitle}>Live line discrepancies across sportsbooks</p>
         </div>
@@ -178,7 +199,7 @@ const JuicyPlays = () => {
       </div>
 
       {/* Filter bar */}
-      <div style={styles.filterBar}>
+      <div style={{ ...styles.filterBar, padding: isMobile ? "12px" : styles.filterBar.padding }}>
         <div style={styles.selectWrap}>
           <MySelect options={bookOptions} handleChanges={handleBookChange} label={"Sportsbook"} defaultSelected={sportsbook ? { value: sportsbook, label: sportsbook.charAt(0).toUpperCase() + sportsbook.slice(1) } : null} isMulti={false} />
         </div>
@@ -192,7 +213,7 @@ const JuicyPlays = () => {
           className="btn-gradient"
           onClick={handleClick}
           disabled={loading}
-          style={{ minWidth: "110px", flexShrink: 0 }}
+          style={{ minWidth: isMobile ? "100%" : "110px", flexShrink: 0 }}
         >
           {loading ? (
             <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -207,8 +228,10 @@ const JuicyPlays = () => {
 
       {/* Table */}
       <div style={styles.tableWrap}>
-        {detectMob() ? (
-          <MaterialReactTable table={tableV2} />
+        {isMobile ? (
+          <div style={{ width: "100%", overflowX: "hidden" }}>
+            <MaterialReactTable table={tableV2} />
+          </div>
         ) : (
           <MaterialReactTable table={tableV1} />
         )}

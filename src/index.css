@@ -304,6 +304,14 @@ code {
   transition: var(--transition) !important;
 }
 
+@media (max-width: 900px) {
+  .react-select-dark__control {
+    min-height: 36px !important;
+    font-size: 12px !important;
+    border-radius: 8px !important;
+  }
+}
+
 .react-select-dark__control:hover,
 .react-select-dark__control--is-focused {
   border-color: var(--accent) !important;

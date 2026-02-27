@@ -81,16 +81,19 @@ export const juicyColumnsV2 = [
     accessorKey: "player",
     header: "Player",
     Cell: CellPlayer,
+    size: 160,
   },
   {
     accessorKey: "expectedValue",
     header: "EV",
     Cell: CellEV,
+    size: 70,
   },
   {
     accessorKey: "diffs",
     header: "Diff",
     Cell: Cell,
+    size: 60,
   },
 ];
 
