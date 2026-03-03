@@ -157,7 +157,25 @@ const SlipComponent = ({ slips }) => {
             fontWeight: "700",
             cursor: "pointer",
             transition: "background 0.2s ease",
-            boxShadow: "0 4px 12px rgba(37, 99, 235, 0.3)"
+            boxShadow: "0 4px 12px rgba(37, 99, 235, 0.3)",
+            textDecoration: "none",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
+        },
+        placeSlipBtnDisabled: {
+            backgroundColor: "#1c1c27",
+            color: "#4b4b60",
+            border: "1px solid #2d2d3d",
+            padding: "10px 20px",
+            borderRadius: "8px",
+            fontSize: "14px",
+            fontWeight: "700",
+            cursor: "not-allowed",
+            boxShadow: "none",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
         },
         // Desktop Table Styles
         tableHeader: {
@@ -445,17 +463,28 @@ const SlipComponent = ({ slips }) => {
                                 <div className="slip-header-right" style={styles.headerRight}>
                                     <div style={styles.payoutCol}>
                                         <div style={styles.payoutVal}>
-                                            {(slip.picks.reduce((acc, p) => acc * ((p.prob || 50) / 100), 1) * 100).toFixed(1)}%
+                                            {slip.hitProb !== undefined ? slip.hitProb.toFixed(1) : (slip.picks.reduce((acc, p) => acc * ((p.prob || 50) / 100), 1) * 100).toFixed(1)}%
                                         </div>
                                         <div style={styles.payoutLabel}>HIT PROB</div>
                                     </div>
                                     <div style={styles.payoutCol}>
-                                        <div style={styles.payoutVal}>{getPayout(slip.size)}</div>
+                                        <div style={styles.payoutVal}>{slip.payout ? `${slip.payout}x` : getPayout(slip.size)}</div>
                                         <div style={styles.payoutLabel}>PAYOUT</div>
                                     </div>
-                                    <button style={styles.placeSlipBtn} onClick={() => alert("Auto-place functionality coming soon!")}>
-                                        Place Slip
-                                    </button>
+                                    {slip.shareLink ? (
+                                        <a
+                                            href={slip.shareLink}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={styles.placeSlipBtn}
+                                        >
+                                            🔗 Place Slip
+                                        </a>
+                                    ) : (
+                                        <button style={styles.placeSlipBtnDisabled} disabled>
+                                            ⏳ Generating...
+                                        </button>
+                                    )}
                                 </div>
                             </div>
 
