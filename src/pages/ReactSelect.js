@@ -4,6 +4,10 @@ import Select from "react-select";
 const MySelect = ({ options, handleChanges, label, defaultSelected = [], isMulti = true }) => {
   const [selectedOptions, setSelectedOptions] = React.useState(defaultSelected);
 
+  React.useEffect(() => {
+    setSelectedOptions(defaultSelected);
+  }, [JSON.stringify(defaultSelected)]);
+
   const onInputChange = (selected) => {
     setSelectedOptions(selected);
     handleChanges(selected);
@@ -12,7 +16,7 @@ const MySelect = ({ options, handleChanges, label, defaultSelected = [], isMulti
   return (
     <Select
       isMulti={isMulti}
-      defaultValue={selectedOptions}
+      value={selectedOptions}
       onChange={onInputChange}
       name={label}
       classNamePrefix="react-select-dark"

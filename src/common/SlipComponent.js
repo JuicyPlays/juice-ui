@@ -471,7 +471,7 @@ const SlipComponent = ({ slips }) => {
                                         <div style={styles.payoutVal}>{slip.payout ? `${slip.payout}x` : getPayout(slip.size)}</div>
                                         <div style={styles.payoutLabel}>PAYOUT</div>
                                     </div>
-                                    {slip.shareLink ? (
+                                    {slip.shareLink && (
                                         <a
                                             href={slip.shareLink}
                                             target="_blank"
@@ -480,10 +480,6 @@ const SlipComponent = ({ slips }) => {
                                         >
                                             🔗 Place Slip
                                         </a>
-                                    ) : (
-                                        <button style={styles.placeSlipBtnDisabled} disabled>
-                                            ⏳ Generating...
-                                        </button>
                                     )}
                                 </div>
                             </div>

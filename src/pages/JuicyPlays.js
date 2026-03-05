@@ -29,9 +29,11 @@ const useMediaQuery = (query) => {
 const JuicyPlays = () => {
   const [data, setData] = useState([]);
   const [sportsbook, setSportsbook] = useState("underdog");
+  const [baselineBook, setBaselineBook] = useState("prizepicks");
   const [sports, setSports] = useState([]);
   const [stats, setStats] = useState([]);
   const [bookOptions, setBookOptions] = useState([]);
+  const [baselineOptions, setBaselineOptions] = useState([]);
   const [sportsOptions, setSportsOptions] = useState([]);
   const [statOptions, setStatOptions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -61,15 +63,20 @@ const JuicyPlays = () => {
     }
   };
 
+  const handleBaselineBookChange = (selected) => {
+    setBaselineBook(selected ? selected.value : "");
+  };
+
   const handleStatChange = (selected) => {
     setStats(selected.map((it) => it.value).join(","));
   };
 
-  const fetchJuicyPlaysData = async (currentBook = sportsbook) => {
+  const fetchJuicyPlaysData = async (currentBook = sportsbook, currentBaseline = baselineBook) => {
     const queryParams = {
       sportsbook: currentBook,
       sports: sports,
       stats: stats,
+      baselineBook: currentBaseline,
     };
     const headers = {
       "x-customer-id": "",
@@ -83,15 +90,23 @@ const JuicyPlays = () => {
       setData(res.data.plays);
       setStatOptions(res.data.statTypes.map((v) => ({ value: v, label: v })));
       setSportsOptions(res.data.sports.map((v) => ({ value: v, label: v })));
-      if (res.data.sportsbooks && res.data.sportsbooks.length > 0) {
-        const books = res.data.sportsbooks.map((v) => ({ value: v, label: v.charAt(0).toUpperCase() + v.slice(1) }));
-        setBookOptions(books);
+      if (res.data.sportsbooks) {
+        let books = [...res.data.sportsbooks];
+        if (!books.includes("underdog")) books.push("underdog");
+        if (!books.includes("prizepicks")) books.push("prizepicks");
+
+        const targetBooks = books.filter(b => b.toLowerCase() !== "juice_ml" && b.toLowerCase() !== "juiceml");
+        const mappedBooks = targetBooks.map((v) => ({ value: v.toLowerCase(), label: v.toLowerCase() === "prizepicks" ? "PrizePicks" : v.charAt(0).toUpperCase() + v.slice(1) }));
+        setBookOptions(mappedBooks);
+
+        const baselineOpts = [...mappedBooks, { value: "juice_ml", label: "Juicy" }];
+        setBaselineOptions(baselineOpts);
 
         // Auto-select the first sportsbook on initial load if none is selected yet
-        if (!currentBook) {
-          setSportsbook(books[0].value);
+        if (!currentBook && mappedBooks.length > 0) {
+          setSportsbook(mappedBooks[0].value);
           // Re-fetch implicitly using the newly selected default book to calculate plays
-          fetchJuicyPlaysData(books[0].value);
+          fetchJuicyPlaysData(mappedBooks[0].value, currentBaseline);
         }
       }
     } catch (error) {
@@ -201,12 +216,19 @@ const JuicyPlays = () => {
       {/* Filter bar */}
       <div style={{ ...styles.filterBar, padding: isMobile ? "12px" : styles.filterBar.padding }}>
         <div style={styles.selectWrap}>
-          <MySelect options={bookOptions} handleChanges={handleBookChange} label={"Sportsbook"} defaultSelected={sportsbook ? { value: sportsbook, label: sportsbook.charAt(0).toUpperCase() + sportsbook.slice(1) } : null} isMulti={false} />
+          <div style={styles.dropdownLabel}>Sportsbook</div>
+          <MySelect options={bookOptions} handleChanges={handleBookChange} label={"Sportsbook"} defaultSelected={sportsbook ? { value: sportsbook, label: sportsbook === "prizepicks" ? "PrizePicks" : sportsbook.charAt(0).toUpperCase() + sportsbook.slice(1) } : null} isMulti={false} />
         </div>
         <div style={styles.selectWrap}>
+          <div style={styles.dropdownLabel}>Model</div>
+          <MySelect options={baselineOptions} handleChanges={handleBaselineBookChange} label={"Baseline Model"} defaultSelected={baselineBook ? { value: baselineBook, label: (baselineBook === "juice_ml" || baselineBook === "juiceml") ? "Juicy" : baselineBook === "prizepicks" ? "PrizePicks" : baselineBook.charAt(0).toUpperCase() + baselineBook.slice(1) } : null} isMulti={false} />
+        </div>
+        <div style={styles.selectWrap}>
+          <div style={styles.dropdownLabel}>Sport</div>
           <MySelect options={sportsOptions} handleChanges={handleSportsChange} label={"Sports"} />
         </div>
         <div style={styles.selectWrap}>
+          <div style={styles.dropdownLabel}>Market</div>
           <MySelect options={statOptions} handleChanges={handleStatChange} label={"Stat"} />
         </div>
         <button
@@ -309,8 +331,16 @@ const styles = {
     marginBottom: "20px",
   },
   selectWrap: {
-    minWidth: "180px",
-    flex: "1 1 180px",
+    flex: "1 1 200px",
+    minWidth: "150px"
+  },
+  dropdownLabel: {
+    fontSize: "12px",
+    fontWeight: "600",
+    marginBottom: "6px",
+    color: "var(--text-muted)",
+    textTransform: "uppercase",
+    letterSpacing: "0.05em",
   },
   tableWrap: {
     borderRadius: "14px",
