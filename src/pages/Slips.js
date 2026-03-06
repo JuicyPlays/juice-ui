@@ -90,7 +90,6 @@ const Slips = () => {
         if (sports.length > 0) queryParams.sports = sports.join(",");
         if (stats.length > 0) queryParams.stats = stats.join(",");
         if (baselineBook) queryParams.baselineBook = baselineBook;
-        if (baselineBook) queryParams.baselineBook = baselineBook;
         const headers = { "x-user-id": user().userId };
         try {
             const slipsRes = await axios.get(paths.getSlipsBasePath, {
@@ -184,19 +183,15 @@ const Slips = () => {
     );
 };
 
-class RenderSlips extends Component {
-    render() {
-        return (
-            <>
-                <NavBar />
-                <Slips />
-                <Footer />
-            </>
-        );
-    }
+export default function SlipsPage() {
+    return (
+        <>
+            <NavBar />
+            <Slips />
+            <Footer />
+        </>
+    );
 }
-
-export default RenderSlips;
 
 const styles = {
     page: {

@@ -11,20 +11,7 @@ import NavBar from "./NavBar";
 import Footer from "./Footer";
 import MySelect from "./ReactSelect";
 import { useAuthUser } from "react-auth-kit";
-
-const useMediaQuery = (query) => {
-  const [matches, setMatches] = useState(false);
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    if (media.matches !== matches) {
-      setMatches(media.matches);
-    }
-    const listener = () => setMatches(media.matches);
-    media.addEventListener("change", listener);
-    return () => media.removeEventListener("change", listener);
-  }, [matches, query]);
-  return matches;
-};
+import { useMediaQuery } from "../hooks/useMediaQuery";
 
 const JuicyPlays = () => {
   const [data, setData] = useState([]);
@@ -262,19 +249,15 @@ const JuicyPlays = () => {
   );
 };
 
-class RenderJuicyPlays extends Component {
-  render() {
-    return (
-      <>
-        <NavBar />
-        <JuicyPlays />
-        <Footer />
-      </>
-    );
-  }
+export default function JuicyPlaysPage() {
+  return (
+    <>
+      <NavBar />
+      <JuicyPlays />
+      <Footer />
+    </>
+  );
 }
-
-export default RenderJuicyPlays;
 
 const styles = {
   page: {

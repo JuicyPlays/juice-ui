@@ -2,9 +2,9 @@ import "./index.css";
 import { createClient } from "@supabase/supabase-js";
 import { Route, Routes, useLocation, useNavigate, Navigate } from "react-router-dom";
 import SupabaseLogin from "./pages/SupabaseLogin";
-import RenderHome from "./pages/Home";
-import RenderJuicyPlays from "./pages/JuicyPlays";
-import RenderSlips from "./pages/Slips";
+import Home from "./pages/Home";
+import JuicyPlaysPage from "./pages/JuicyPlays";
+import SlipsPage from "./pages/Slips";
 import Logout from "./pages/Logout";
 import { AuthProvider, RequireAuth, useAuthUser, useIsAuthenticated, useSignIn, useSignOut } from "react-auth-kit";
 import { loadStripe } from "@stripe/stripe-js";
@@ -134,16 +134,26 @@ function MainContent() {
 
   return (
     <Routes>
-      <Route path="/" Component={RenderHome} />
-      <Route path="/login" Component={SupabaseLogin} />
-      <Route path="/logout" Component={Logout} />
-      <Route path="/privacy" Component={Privacy} />
-      <Route path="/terms" Component={Terms} />
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<SupabaseLogin />} />
+      <Route path="/logout" element={<Logout />} />
+      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/terms" element={<Terms />} />
       <Route
         path="/home"
         element={
           <RequireAuth loginPath="/login">
-            <RenderHome />
+            <Home />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/juicyplays"
+        element={
+          <RequireAuth loginPath="/login">
+            <SubscriptionGuard>
+              <JuicyPlaysPage />
+            </SubscriptionGuard>
           </RequireAuth>
         }
       />
@@ -152,7 +162,7 @@ function MainContent() {
         element={
           <RequireAuth loginPath="/login">
             <SubscriptionGuard>
-              <RenderJuicyPlays />
+              <JuicyPlaysPage />
             </SubscriptionGuard>
           </RequireAuth>
         }
@@ -162,7 +172,7 @@ function MainContent() {
         element={
           <RequireAuth loginPath="/login">
             <SubscriptionGuard>
-              <RenderSlips />
+              <SlipsPage />
             </SubscriptionGuard>
           </RequireAuth>
         }
