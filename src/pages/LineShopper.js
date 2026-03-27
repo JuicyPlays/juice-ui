@@ -17,6 +17,7 @@ import { useMediaQuery } from "../hooks/useMediaQuery";
 const bookDisplayName = (key) => {
   if (!key) return "";
   const lower = key.toLowerCase();
+  if (lower === "juice_ml") return "Juicy";
   if (lower === "prizepicks") return "PrizePicks";
   if (lower === "underdog") return "Underdog";
   if (lower === "sleeper") return "Sleeper";
