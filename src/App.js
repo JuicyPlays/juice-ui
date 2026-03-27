@@ -4,6 +4,7 @@ import { Route, Routes, useLocation, useNavigate, Navigate } from "react-router-
 import SupabaseLogin from "./pages/SupabaseLogin";
 import Home from "./pages/Home";
 import JuicyPlaysPage from "./pages/JuicyPlays";
+import LineShopperPage from "./pages/LineShopper";
 import SlipsPage from "./pages/Slips";
 import Logout from "./pages/Logout";
 import { AuthProvider, RequireAuth, useAuthUser, useIsAuthenticated, useSignIn, useSignOut } from "react-auth-kit";
@@ -148,7 +149,7 @@ function MainContent() {
         }
       />
       <Route
-        path="/juicyplays"
+        path="/ev-plays"
         element={
           <RequireAuth loginPath="/login">
             <SubscriptionGuard>
@@ -158,15 +159,18 @@ function MainContent() {
         }
       />
       <Route
-        path="/juicy"
+        path="/juicy-screen"
         element={
           <RequireAuth loginPath="/login">
             <SubscriptionGuard>
-              <JuicyPlaysPage />
+              <LineShopperPage />
             </SubscriptionGuard>
           </RequireAuth>
         }
       />
+      {/* Backward-compat redirects for old routes */}
+      <Route path="/juicyplays" element={<Navigate to="/ev-plays" replace />} />
+      <Route path="/juicy" element={<Navigate to="/ev-plays" replace />} />
       <Route
         path="/slips"
         element={

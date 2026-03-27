@@ -194,8 +194,8 @@ const JuicyPlays = () => {
       {/* Page header */}
       <div style={styles.header}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <h2 style={styles.title}>⚡ Juicy Screen</h2>
-          <p style={styles.subtitle}>Live line discrepancies across sportsbooks</p>
+          <h2 style={styles.title}>⚡ EV Plays</h2>
+          <p style={styles.subtitle}>Model-based +EV plays across sportsbooks</p>
         </div>
         <div style={styles.countBadge}>{data.length} props</div>
       </div>
