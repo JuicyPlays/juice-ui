@@ -13,6 +13,21 @@ import MySelect from "./ReactSelect";
 import { useAuthUser } from "react-auth-kit";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 
+const bookDisplayName = (key) => {
+  if (!key) return "";
+  const lower = key.toLowerCase();
+  if (lower === "juice_ml") return "Juicy";
+  if (lower === "prizepicks") return "PrizePicks";
+  if (lower === "underdog") return "Underdog";
+  if (lower === "sleeper") return "Sleeper";
+  if (lower === "thunderpick") return "Thunderpick";
+  if (lower === "parlayplay") return "ParlayPlay";
+  if (lower === "betr") return "Betr";
+  if (lower === "boom") return "BOOM";
+  if (lower === "draftkings_pick6" || lower === "draftkings-pick6") return "DK Pick6";
+  return key.charAt(0).toUpperCase() + key.slice(1);
+};
+
 const JuicyPlays = () => {
   const [data, setData] = useState([]);
   const [sportsbook, setSportsbook] = useState("underdog");
@@ -83,7 +98,10 @@ const JuicyPlays = () => {
         if (!books.includes("prizepicks")) books.push("prizepicks");
 
         const targetBooks = books.filter(b => b.toLowerCase() !== "juice_ml" && b.toLowerCase() !== "juiceml");
-        const mappedBooks = targetBooks.map((v) => ({ value: v.toLowerCase(), label: v.toLowerCase() === "prizepicks" ? "PrizePicks" : v.charAt(0).toUpperCase() + v.slice(1) }));
+        const mappedBooks = targetBooks.map((v) => ({
+          value: v.toLowerCase(),
+          label: bookDisplayName(v)
+        }));
         setBookOptions(mappedBooks);
 
         const baselineOpts = [...mappedBooks, { value: "juice_ml", label: "Juicy" }];

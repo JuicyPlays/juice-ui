@@ -22,6 +22,10 @@ const bookDisplayName = (key) => {
   if (lower === "underdog") return "Underdog";
   if (lower === "sleeper") return "Sleeper";
   if (lower === "thunderpick") return "Thunderpick";
+  if (lower === "parlayplay") return "ParlayPlay";
+  if (lower === "betr") return "Betr";
+  if (lower === "boom") return "BOOM";
+  if (lower === "draftkings_pick6" || lower === "draftkings-pick6") return "DK Pick6";
   return key.charAt(0).toUpperCase() + key.slice(1);
 };
 

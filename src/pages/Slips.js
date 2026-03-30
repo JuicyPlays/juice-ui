@@ -8,6 +8,21 @@ import MySelect from "./ReactSelect";
 import SlipComponent from "../common/SlipComponent";
 import { useAuthUser } from "react-auth-kit";
 
+const bookDisplayName = (key) => {
+  if (!key) return "";
+  const lower = key.toLowerCase();
+  if (lower === "juice_ml") return "Juicy";
+  if (lower === "prizepicks") return "PrizePicks";
+  if (lower === "underdog") return "Underdog";
+  if (lower === "sleeper") return "Sleeper";
+  if (lower === "thunderpick") return "Thunderpick";
+  if (lower === "parlayplay") return "ParlayPlay";
+  if (lower === "betr") return "Betr";
+  if (lower === "boom") return "BOOM";
+  if (lower === "draftkings_pick6" || lower === "draftkings-pick6") return "DK Pick6";
+  return key.charAt(0).toUpperCase() + key.slice(1);
+};
+
 const Slips = () => {
     const [sportsbookOptions, setSportsbookOptions] = useState([]);
     const [baselineOptions, setBaselineOptions] = useState([]);

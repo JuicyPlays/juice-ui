@@ -2,6 +2,21 @@ import { useState, useCallback } from "react";
 import axios from "axios";
 import { paths } from "../common/constants";
 
+const bookDisplayName = (key) => {
+  if (!key) return "";
+  const lower = key.toLowerCase();
+  if (lower === "juice_ml") return "Juicy";
+  if (lower === "prizepicks") return "PrizePicks";
+  if (lower === "underdog") return "Underdog";
+  if (lower === "sleeper") return "Sleeper";
+  if (lower === "thunderpick") return "Thunderpick";
+  if (lower === "parlayplay") return "ParlayPlay";
+  if (lower === "betr") return "Betr";
+  if (lower === "boom") return "BOOM";
+  if (lower === "draftkings_pick6" || lower === "draftkings-pick6") return "DK Pick6";
+  return key.charAt(0).toUpperCase() + key.slice(1);
+};
+
 export function useJuicyPlaysData(userId) {
   const [data, setData] = useState([]);
   const [bookOptions, setBookOptions] = useState([]);
@@ -44,7 +59,7 @@ export function useJuicyPlaysData(userId) {
         const targetBooks = books.filter(b => b.toLowerCase() !== "juice_ml" && b.toLowerCase() !== "juiceml");
         const mappedBooks = targetBooks.map((v) => ({
           value: v.toLowerCase(),
-          label: v.toLowerCase() === "prizepicks" ? "PrizePicks" : v.charAt(0).toUpperCase() + v.slice(1)
+          label: bookDisplayName(v)
         }));
         setBookOptions(mappedBooks);
 
