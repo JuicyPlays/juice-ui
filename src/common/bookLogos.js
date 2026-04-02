@@ -16,7 +16,6 @@ export const BOOK_CONFIG = {
   underdog: { name: "Underdog", logo: "/logos/underdog.svg" },
   parlayplay: { name: "ParlayPlay", logo: "/logos/parlayplay.svg" },
   dabble: { name: "Dabble", logo: "/logos/dabble.svg" },
-  epick: { name: "Epick", logo: "/logos/epick.svg" },
   draftkings_pick6: { name: "Pick6", logo: "/logos/pick6.png" },
   sleeper: { name: "Sleeper", logo: "/logos/sleeper.jpg" },
   boom: { name: "BOOM", logo: "/logos/boom.webp" },
