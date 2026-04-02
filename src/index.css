@@ -617,3 +617,31 @@ code {
 .table-scroll-container>div {
   min-width: 700px;
 }
+
+/* ── Bookie Settings ─────────────────────────────────────────────── */
+.bookie-settings-trigger:hover {
+  background: rgba(99, 102, 241, 0.12) !important;
+  border-color: var(--accent) !important;
+}
+
+/* MUI Tooltip override for sportsbook logos */
+.MuiTooltip-tooltip {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  background: rgba(19, 19, 43, 0.95) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+.MuiTooltip-arrow::before {
+  background: rgba(19, 19, 43, 0.95) !important;
+  border: 1px solid var(--border) !important;
+}
+
+/* Center logo headers in MRT table */
+.MuiTableHead-root .MuiTableCell-head .Mui-TableHeadCell-Content {
+  justify-content: center;
+}

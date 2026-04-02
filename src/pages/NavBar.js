@@ -26,7 +26,6 @@ const NavBar = () => {
         <div style={styles.inner}>
           {/* Logo */}
           <Link to="/" style={styles.logoLink} onClick={closeMobile}>
-            <span style={styles.logoIcon}>⚡</span>
             <span style={styles.logoText}>
               <span style={styles.logoJuicy}>Juicy</span>
               <span style={styles.logoPlays}>Plays</span>

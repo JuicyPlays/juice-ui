@@ -4,40 +4,27 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { CircularProgress, TextField, InputAdornment } from "@mui/material";
+import { CircularProgress, TextField, InputAdornment, Tooltip } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
 import { paths } from "../common/constants";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
-import MySelect from "./ReactSelect";
+import FilterSelect from "../common/FilterSelect";
 import CellPlayer from "../common/CellPlayer";
+import BookieSettings from "../common/BookieSettings";
+import { ALL_BOOK_KEYS, BOOK_CONFIG, bookDisplayName, bookLogo } from "../common/bookLogos";
 import { useAuthUser } from "react-auth-kit";
 import { useMediaQuery } from "../hooks/useMediaQuery";
-
-const bookDisplayName = (key) => {
-  if (!key) return "";
-  const lower = key.toLowerCase();
-  if (lower === "juice_ml") return "Juicy";
-  if (lower === "prizepicks") return "PrizePicks";
-  if (lower === "underdog") return "Underdog";
-  if (lower === "sleeper") return "Sleeper";
-  if (lower === "thunderpick") return "Thunderpick";
-  if (lower === "parlayplay") return "ParlayPlay";
-  if (lower === "betr") return "Betr";
-  if (lower === "boom") return "BOOM";
-  if (lower === "draftkings_pick6" || lower === "draftkings-pick6") return "DK Pick6";
-  return key.charAt(0).toUpperCase() + key.slice(1);
-};
 
 const LineShopper = () => {
   const [data, setData] = useState([]);
   const [sports, setSports] = useState([]);
   const [stats, setStats] = useState([]);
-  const [bookOptions, setBookOptions] = useState([]);
-  const [selectedBooks, setSelectedBooks] = useState([]);
+  const [selectedBooks, setSelectedBooks] = useState([...ALL_BOOK_KEYS]);
   const [sportsOptions, setSportsOptions] = useState([]);
   const [statOptions, setStatOptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [playerSearch, setPlayerSearch] = useState("");
   const user = useAuthUser();
   const isMobile = useMediaQuery("(max-width: 900px)");
@@ -51,22 +38,42 @@ const LineShopper = () => {
     setLoading(false);
   }
 
-  const handleSportsChange = (selected) => {
-    setSports(selected.map((it) => it.value).join(","));
+  const handleToggleSport = (val) => {
+    setSports((prev) =>
+      prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]
+    );
   };
 
-  const handleStatChange = (selected) => {
-    setStats(selected.map((it) => it.value).join(","));
+  const handleToggleAllSports = (selectAll) => {
+    setSports(selectAll ? sportsOptions.map((o) => o.value) : []);
   };
 
-  const handleBooksChange = (selected) => {
-    setSelectedBooks(selected ? selected.map((it) => it.value) : []);
+  const handleToggleStat = (val) => {
+    setStats((prev) =>
+      prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]
+    );
+  };
+
+  const handleToggleAllStats = (selectAll) => {
+    setStats(selectAll ? statOptions.map((o) => o.value) : []);
+  };
+
+  const handleToggleBook = (bookKey) => {
+    setSelectedBooks((prev) =>
+      prev.includes(bookKey)
+        ? prev.filter((b) => b !== bookKey)
+        : [...prev, bookKey]
+    );
+  };
+
+  const handleToggleAll = (selectAll) => {
+    setSelectedBooks(selectAll ? [...ALL_BOOK_KEYS] : []);
   };
 
   const fetchLineShopperData = async () => {
     const queryParams = {
-      sports: sports,
-      stats: stats,
+      sports: sports.join(","),
+      stats: stats.join(","),
     };
     const headers = {
       "x-customer-id": "",
@@ -78,20 +85,15 @@ const LineShopper = () => {
         headers,
       });
       setData(res.data.rows || []);
-      setStatOptions((res.data.statTypes || []).map((v) => ({ value: v, label: v })));
-      setSportsOptions((res.data.sports || []).map((v) => ({ value: v, label: v })));
-      if (res.data.availableBooks) {
-        const books = [...res.data.availableBooks];
-        const mappedBooks = books.map((v) => ({
-          value: v.toLowerCase(),
-          label: bookDisplayName(v),
-        }));
-        setBookOptions(mappedBooks);
-        
-        // Default: select all books
-        if (selectedBooks.length === 0) {
-          setSelectedBooks(books.map(b => b.toLowerCase()));
-        }
+      const retrievedStats = res.data.statTypes || [];
+      const retrievedSports = res.data.sports || [];
+      setStatOptions(retrievedStats.map((v) => ({ value: v, label: v })));
+      setSportsOptions(retrievedSports.map((v) => ({ value: v, label: v })));
+
+      if (isInitialLoad) {
+        setStats(retrievedStats);
+        setSports(retrievedSports);
+        setIsInitialLoad(false);
       }
     } catch (error) {
       console.error(error);
@@ -101,9 +103,9 @@ const LineShopper = () => {
   // Filter data based on player search
   const filteredData = useMemo(() => {
     if (!playerSearch.trim()) return data;
-    
+
     const searchTerm = playerSearch.toLowerCase().trim();
-    return data.filter(row => 
+    return data.filter(row =>
       row.player && row.player.toLowerCase().includes(searchTerm)
     );
   }, [data, playerSearch]);
@@ -111,14 +113,15 @@ const LineShopper = () => {
   // Add min/max line values per row for highlighting
   const processedData = useMemo(() => {
     return filteredData.map(row => {
-      const lines = Object.entries(row.bookLines || {})
-        .filter(([book]) => selectedBooks.includes(book))
+      // Collect all lines from selected books (excluding juice_ml for min/max)
+      const sportsbookLines = Object.entries(row.bookLines || {})
+        .filter(([book]) => selectedBooks.includes(book) && book !== "juice_ml")
         .map(([_, line]) => line)
         .filter(line => line != null);
-      
-      const minLine = lines.length > 0 ? Math.min(...lines) : null;
-      const maxLine = lines.length > 0 ? Math.max(...lines) : null;
-      
+
+      const minLine = sportsbookLines.length > 0 ? Math.min(...sportsbookLines) : null;
+      const maxLine = sportsbookLines.length > 0 ? Math.max(...sportsbookLines) : null;
+
       return {
         ...row,
         _minLine: minLine,
@@ -127,7 +130,100 @@ const LineShopper = () => {
     });
   }, [filteredData, selectedBooks]);
 
-  // Build dynamic columns based on selected books
+  // Logo header renderer
+  const LogoHeader = ({ bookKey }) => {
+    const logo = bookLogo(bookKey);
+    const name = bookDisplayName(bookKey);
+
+    if (!logo) {
+      return (
+        <span style={{ fontSize: "12px", fontWeight: 700, color: "var(--text-muted)" }}>
+          {name}
+        </span>
+      );
+    }
+
+    return (
+      <Tooltip title={name} arrow placement="top">
+        <img
+          src={logo}
+          alt={name}
+          style={{
+            width: "24px",
+            height: "24px",
+            borderRadius: "50%",
+            objectFit: "cover",
+            background: "rgba(255,255,255,0.08)",
+            cursor: "pointer",
+          }}
+        />
+      </Tooltip>
+    );
+  };
+
+  // Line cell renderer
+  const BookLineCell = ({ cell, row, bookKey }) => {
+    const val = cell.getValue();
+    if (val == null) return <span style={{ color: "var(--text-muted)", fontSize: "12px" }}>—</span>;
+
+    const minLine = row.original._minLine;
+    const maxLine = row.original._maxLine;
+
+    let bgColor = "#6366f1"; // Default indigo
+
+    // Highlight lowest line in green, highest in red (only when there's a spread)
+    if (val === minLine && val !== maxLine) {
+      bgColor = "#22c55e"; // Green for lowest
+    } else if (val === maxLine && val !== minLine) {
+      bgColor = "#ef4444"; // Red for highest
+    }
+
+    return (
+      <span
+        style={{
+          backgroundColor: bgColor,
+          borderRadius: "6px",
+          color: "#fff",
+          minWidth: "44px",
+          padding: "4px 10px",
+          display: "inline-block",
+          fontWeight: "700",
+          textAlign: "center",
+          fontSize: "13px",
+        }}
+      >
+        {val}
+      </span>
+    );
+  };
+
+  // Model line cell renderer (distinct purple styling)
+  const ModelLineCell = ({ cell }) => {
+    const val = cell.getValue();
+    if (val == null) return <span style={{ color: "var(--text-muted)", fontSize: "12px" }}>—</span>;
+
+    return (
+      <span
+        style={{
+          backgroundColor: "#9333ea",
+          borderRadius: "6px",
+          color: "#fff",
+          minWidth: "44px",
+          padding: "4px 10px",
+          display: "inline-block",
+          fontWeight: "700",
+          textAlign: "center",
+          fontSize: "13px",
+          boxShadow: "0 0 8px rgba(147, 51, 234, 0.3)",
+        }}
+      >
+        {val}
+      </span>
+    );
+  };
+
+  // Build columns — always render ALL book columns for stable table width.
+  // Data is only shown for selected books; unselected columns show "—".
   const columns = useMemo(() => {
     const cols = [
       {
@@ -145,53 +241,58 @@ const LineShopper = () => {
       },
     ];
 
-    // One column per selected book
-    for (const bookKey of selectedBooks.sort()) {
+    // Always render all sportsbook columns (sorted alphabetically)
+    for (const bookKey of ALL_BOOK_KEYS) {
+      const isSelected = selectedBooks.includes(bookKey);
       cols.push({
         id: `book_${bookKey}`,
         header: bookDisplayName(bookKey),
-        accessorFn: (row) =>
-          row.bookLines ? row.bookLines[bookKey] : null,
-        size: 100,
-        minSize: 80,
-        Cell: ({ cell, row }) => {
-          const val = cell.getValue();
-          if (val == null) return <span style={{ color: "var(--text-muted)", fontSize: "12px" }}>—</span>;
-
-          const minLine = row.original._minLine;
-          const maxLine = row.original._maxLine;
-          
-          let bgColor = "#6366f1"; // Default blue
-          
-          // Highlight lowest line in green, highest in red
-          if (val === minLine && val !== maxLine) {
-            bgColor = "#22c55e"; // Green for lowest
-          } else if (val === maxLine && val !== minLine) {
-            bgColor = "#ef4444"; // Red for highest
-          }
-
-          return (
-            <span
-              style={{
-                backgroundColor: bgColor,
-                borderRadius: "6px",
-                color: "#fff",
-                minWidth: "48px",
-                padding: "4px 12px",
-                display: "inline-block",
-                fontWeight: "700",
-                textAlign: "center",
-                fontSize: "13px",
-              }}
-            >
-              {val}
-            </span>
-          );
+        Header: () => <LogoHeader bookKey={bookKey} />,
+        accessorFn: (row) => {
+          if (!isSelected) return null; // Hide data for deselected books
+          return row.bookLines ? row.bookLines[bookKey] : null;
         },
+        size: 80,
+        minSize: 65,
+        muiTableBodyCellProps: { align: 'center' },
+        muiTableHeadCellProps: { align: 'center' },
+        Cell: ({ cell, row }) => (
+          <BookLineCell cell={cell} row={row} bookKey={bookKey} />
+        ),
       });
     }
 
+    // Juicy model column — always last, visually distinct
+    cols.push({
+      id: "book_juice_ml",
+      header: "Juicy",
+      Header: () => (
+        <Tooltip title="JuicyPlays Model" arrow placement="top">
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              fontWeight: 800,
+              fontSize: "13px",
+              color: "#a855f7",
+              cursor: "pointer",
+              letterSpacing: "0.02em",
+            }}
+          >
+            Juicy
+          </span>
+        </Tooltip>
+      ),
+      accessorFn: (row) => (row.bookLines ? row.bookLines["juice_ml"] : null),
+      size: 80,
+      minSize: 65,
+      muiTableBodyCellProps: { align: 'center' },
+      muiTableHeadCellProps: { align: 'center' },
+      Cell: ModelLineCell,
+    });
+
     return cols;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBooks]);
 
   // Mobile columns (simplified)
@@ -211,30 +312,31 @@ const LineShopper = () => {
     ];
 
     // Add first selected book for mobile view
-    if (selectedBooks.length > 0) {
-      const firstBook = selectedBooks[0];
+    const mobileSportsbooks = selectedBooks.filter((b) => b !== "juice_ml");
+    if (mobileSportsbooks.length > 0) {
+      const firstBook = mobileSportsbooks[0];
       cols.push({
         id: `book_${firstBook}`,
         header: bookDisplayName(firstBook),
+        Header: () => <LogoHeader bookKey={firstBook} />,
         accessorFn: (row) =>
           row.bookLines ? row.bookLines[firstBook] : null,
         size: 70,
         Cell: ({ cell, row }) => {
           const val = cell.getValue();
-          if (val == null) return "-";
-          
+          if (val == null) return "—";
+
           const minLine = row.original._minLine;
           const maxLine = row.original._maxLine;
-          
+
           let textColor = "#a78bfa"; // Default purple
-          
-          // Highlight lowest line in green, highest in red
+
           if (val === minLine && val !== maxLine) {
-            textColor = "#22c55e"; // Green for lowest
+            textColor = "#22c55e";
           } else if (val === maxLine && val !== minLine) {
-            textColor = "#ef4444"; // Red for highest
+            textColor = "#ef4444";
           }
-          
+
           return (
             <span style={{ color: textColor, fontWeight: 700, fontSize: "13px" }}>
               {val}
@@ -244,7 +346,30 @@ const LineShopper = () => {
       });
     }
 
+    // Always show model on mobile too
+    cols.push({
+      id: "book_juice_ml_mobile",
+      header: "Juicy",
+      Header: () => (
+        <span style={{ color: "#a855f7", fontWeight: 800, fontSize: "11px" }}>
+          Juicy
+        </span>
+      ),
+      accessorFn: (row) => (row.bookLines ? row.bookLines["juice_ml"] : null),
+      size: 60,
+      Cell: ({ cell }) => {
+        const val = cell.getValue();
+        if (val == null) return "—";
+        return (
+          <span style={{ color: "#a855f7", fontWeight: 700, fontSize: "13px" }}>
+            {val}
+          </span>
+        );
+      },
+    });
+
     return cols;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBooks]);
 
   const table = useMaterialReactTable({
@@ -256,7 +381,7 @@ const LineShopper = () => {
     enableColumnActions: false,
     enableColumnFilters: false,
     enablePagination: !isMobile,
-    enableSorting: true,
+    enableSorting: false,
     initialState: {
       pagination: { pageSize: 25 },
     },
@@ -270,16 +395,20 @@ const LineShopper = () => {
         whiteSpace: "normal",
         wordBreak: "break-word",
         lineHeight: 1.25,
-        padding: "12px 16px",
+        padding: "10px 8px",
         fontSize: "13px",
         fontWeight: "700",
         color: "var(--text-muted)",
         textTransform: "uppercase",
         letterSpacing: "0.05em",
+        textAlign: "center",
+        "& .Mui-TableHeadCell-Content": {
+          justifyContent: "center",
+        },
       },
     },
     muiTableBodyCellProps: {
-      sx: { padding: "4px 16px" },
+      sx: { padding: "4px 8px" },
     },
     ...(isMobile && {
       renderDetailPanel: ({ row }) => {
@@ -294,11 +423,29 @@ const LineShopper = () => {
               <span style={mobileDetailStyles.chip}>{row.original.sport}</span>
             </div>
             <div style={{ ...mobileDetailStyles.grid, marginTop: "8px" }}>
-              {bookEntries.map(([book, line]) => (
-                <span key={book} style={mobileDetailStyles.otherChip}>
-                  {bookDisplayName(book)}: {line != null ? line : "—"}
-                </span>
-              ))}
+              {bookEntries.map(([book, line]) => {
+                const logo = bookLogo(book);
+                const name = bookDisplayName(book);
+                return (
+                  <span key={book} style={book === "juice_ml" ? mobileDetailStyles.modelChip : mobileDetailStyles.otherChip}>
+                    {logo && (
+                      <img
+                        src={logo}
+                        alt={name}
+                        style={{
+                          width: "14px",
+                          height: "14px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                          verticalAlign: "middle",
+                          marginRight: "4px",
+                        }}
+                      />
+                    )}
+                    {name}: {line != null ? line : "—"}
+                  </span>
+                );
+              })}
             </div>
           </div>
         );
@@ -311,8 +458,8 @@ const LineShopper = () => {
       {/* Page header */}
       <div style={styles.header}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <h2 style={styles.title}>🔍 Juicy Screen</h2>
-          <p style={styles.subtitle}>Cross-book line comparison — find market discrepancies</p>
+          <h2 style={styles.title}>Juicy Screen</h2>
+          <p style={styles.subtitle}>Compare lines against different platforms</p>
         </div>
         <div style={styles.countBadge}>{data.length} props</div>
       </div>
@@ -350,29 +497,39 @@ const LineShopper = () => {
             }}
           />
         </div>
-        <div style={styles.selectWrap}>
+        <div style={{ ...styles.selectWrap, flex: "0 1 200px" }}>
           <div style={styles.dropdownLabel}>Sportsbooks</div>
-          <MySelect
-            options={bookOptions}
-            handleChanges={handleBooksChange}
-            label={"Sportsbooks"}
-            defaultSelected={bookOptions}
-            isMulti={true}
+          <BookieSettings
+            selectedBooks={selectedBooks}
+            onToggleBook={handleToggleBook}
+            onToggleAll={handleToggleAll}
           />
         </div>
         <div style={styles.selectWrap}>
           <div style={styles.dropdownLabel}>Sport</div>
-          <MySelect options={sportsOptions} handleChanges={handleSportsChange} label={"Sports"} />
+          <FilterSelect
+            label="Sports"
+            options={sportsOptions}
+            selected={sports}
+            onToggle={handleToggleSport}
+            onToggleAll={handleToggleAllSports}
+          />
         </div>
         <div style={styles.selectWrap}>
           <div style={styles.dropdownLabel}>Market</div>
-          <MySelect options={statOptions} handleChanges={handleStatChange} label={"Stat"} />
+          <FilterSelect
+            label="Market"
+            options={statOptions}
+            selected={stats}
+            onToggle={handleToggleStat}
+            onToggleAll={handleToggleAllStats}
+          />
         </div>
         <button
           className="btn-gradient"
           onClick={handleRefresh}
           disabled={loading}
-          style={{ minWidth: isMobile ? "100%" : "110px", flexShrink: 0 }}
+          style={{ minWidth: isMobile ? "100%" : "110px", flexShrink: 0, height: "40px" }}
         >
           {loading ? (
             <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -448,7 +605,7 @@ const styles = {
   filterBar: {
     display: "flex",
     flexWrap: "wrap",
-    alignItems: "center",
+    alignItems: "flex-end",
     gap: "12px",
     padding: "16px 20px",
     background: "rgba(19,19,43,0.7)",
@@ -486,16 +643,6 @@ const mobileDetailStyles = {
     fontFamily: "'Inter', sans-serif",
     border: "1px solid var(--border-subtle)",
   },
-  primaryChip: {
-    padding: "4px 10px",
-    background: "rgba(99, 102, 241, 0.12)",
-    borderRadius: "6px",
-    fontSize: "12px",
-    color: "#a78bfa",
-    fontFamily: "'Inter', sans-serif",
-    fontWeight: 600,
-    border: "1px solid rgba(99, 102, 241, 0.2)",
-  },
   otherChip: {
     padding: "4px 10px",
     background: "rgba(37, 99, 235, 0.12)",
@@ -505,5 +652,19 @@ const mobileDetailStyles = {
     fontFamily: "'Inter', sans-serif",
     fontWeight: 600,
     border: "1px solid rgba(37, 99, 235, 0.2)",
+    display: "inline-flex",
+    alignItems: "center",
+  },
+  modelChip: {
+    padding: "4px 10px",
+    background: "rgba(147, 51, 234, 0.12)",
+    borderRadius: "6px",
+    fontSize: "12px",
+    color: "#a855f7",
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: 600,
+    border: "1px solid rgba(147, 51, 234, 0.2)",
+    display: "inline-flex",
+    alignItems: "center",
   },
 };

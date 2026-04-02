@@ -9,24 +9,11 @@ import { paths } from "../common/constants";
 import { juicyColumnsV1, juicyColumnsV2 } from "../common/columns";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
-import MySelect from "./ReactSelect";
+import FilterSelect from "../common/FilterSelect";
+import BookieSettings from "../common/BookieSettings";
 import { useAuthUser } from "react-auth-kit";
 import { useMediaQuery } from "../hooks/useMediaQuery";
-
-const bookDisplayName = (key) => {
-  if (!key) return "";
-  const lower = key.toLowerCase();
-  if (lower === "juice_ml") return "Juicy";
-  if (lower === "prizepicks") return "PrizePicks";
-  if (lower === "underdog") return "Underdog";
-  if (lower === "sleeper") return "Sleeper";
-  if (lower === "thunderpick") return "Thunderpick";
-  if (lower === "parlayplay") return "ParlayPlay";
-  if (lower === "betr") return "Betr";
-  if (lower === "boom") return "BOOM";
-  if (lower === "draftkings_pick6" || lower === "draftkings-pick6") return "DK Pick6";
-  return key.charAt(0).toUpperCase() + key.slice(1);
-};
+import { bookDisplayName } from "../common/bookLogos";
 
 const JuicyPlays = () => {
   const [data, setData] = useState([]);
@@ -39,6 +26,7 @@ const JuicyPlays = () => {
   const [sportsOptions, setSportsOptions] = useState([]);
   const [statOptions, setStatOptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const user = useAuthUser();
   const isMobile = useMediaQuery("(max-width: 900px)");
 
@@ -51,33 +39,35 @@ const JuicyPlays = () => {
     setLoading(false);
   }
 
-  const handleSportsChange = (selected) => {
-    setSports(selected.map((it) => it.value).join(","));
+  const handleToggleSport = (val) => {
+    setSports((prev) => prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]);
   };
 
-  const handleBookChange = (selected) => {
-    if (!selected) {
-      setSportsbook("");
-    } else if (Array.isArray(selected)) {
-      setSportsbook(selected.map((it) => it.value).join(","));
-    } else {
-      setSportsbook(selected.value);
-    }
+  const handleToggleAllSports = (selectAll) => {
+    setSports(selectAll ? sportsOptions.map((o) => o.value) : []);
   };
 
-  const handleBaselineBookChange = (selected) => {
-    setBaselineBook(selected ? selected.value : "");
+  const handleBookChange = (val) => {
+    setSportsbook(val);
   };
 
-  const handleStatChange = (selected) => {
-    setStats(selected.map((it) => it.value).join(","));
+  const handleBaselineBookChange = (val) => {
+    setBaselineBook(val);
+  };
+
+  const handleToggleStat = (val) => {
+    setStats((prev) => prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]);
+  };
+
+  const handleToggleAllStats = (selectAll) => {
+    setStats(selectAll ? statOptions.map((o) => o.value) : []);
   };
 
   const fetchJuicyPlaysData = async (currentBook = sportsbook, currentBaseline = baselineBook) => {
     const queryParams = {
       sportsbook: currentBook,
-      sports: sports,
-      stats: stats,
+      sports: typeof sports === "string" ? sports : sports.join(","),
+      stats: typeof stats === "string" ? stats : stats.join(","),
       baselineBook: currentBaseline,
     };
     const headers = {
@@ -92,6 +82,13 @@ const JuicyPlays = () => {
       setData(res.data.plays);
       setStatOptions(res.data.statTypes.map((v) => ({ value: v, label: v })));
       setSportsOptions(res.data.sports.map((v) => ({ value: v, label: v })));
+      
+      if (isInitialLoad) {
+        setStats(res.data.statTypes);
+        setSports(res.data.sports);
+        setIsInitialLoad(false);
+      }
+
       if (res.data.sportsbooks) {
         let books = [...res.data.sportsbooks];
         if (!books.includes("underdog")) books.push("underdog");
@@ -212,35 +209,59 @@ const JuicyPlays = () => {
       {/* Page header */}
       <div style={styles.header}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <h2 style={styles.title}>⚡ EV Plays</h2>
+          <h2 style={styles.title}>EV Plays</h2>
           <p style={styles.subtitle}>Model-based +EV plays across sportsbooks</p>
         </div>
         <div style={styles.countBadge}>{data.length} props</div>
       </div>
 
       {/* Filter bar */}
-      <div style={{ ...styles.filterBar, padding: isMobile ? "12px" : styles.filterBar.padding }}>
+      <div style={{ ...styles.filterBar, padding: isMobile ? "12px" : styles.filterBar.padding, alignItems: "flex-end" }}>
         <div style={styles.selectWrap}>
           <div style={styles.dropdownLabel}>Sportsbook</div>
-          <MySelect options={bookOptions} handleChanges={handleBookChange} label={"Sportsbook"} defaultSelected={sportsbook ? { value: sportsbook, label: sportsbook === "prizepicks" ? "PrizePicks" : sportsbook.charAt(0).toUpperCase() + sportsbook.slice(1) } : null} isMulti={false} />
+          <BookieSettings
+            label="Sportsbook"
+            options={bookOptions}
+            selectedBooks={[sportsbook]}
+            onToggleBook={handleBookChange}
+            singleMode={true}
+          />
         </div>
         <div style={styles.selectWrap}>
           <div style={styles.dropdownLabel}>Model</div>
-          <MySelect options={baselineOptions} handleChanges={handleBaselineBookChange} label={"Baseline Model"} defaultSelected={baselineBook ? { value: baselineBook, label: (baselineBook === "juice_ml" || baselineBook === "juiceml") ? "Juicy" : baselineBook === "prizepicks" ? "PrizePicks" : baselineBook.charAt(0).toUpperCase() + baselineBook.slice(1) } : null} isMulti={false} />
+          <BookieSettings
+            label="Baseline"
+            options={baselineOptions}
+            selectedBooks={[baselineBook]}
+            onToggleBook={handleBaselineBookChange}
+            singleMode={true}
+          />
         </div>
         <div style={styles.selectWrap}>
           <div style={styles.dropdownLabel}>Sport</div>
-          <MySelect options={sportsOptions} handleChanges={handleSportsChange} label={"Sports"} />
+          <FilterSelect
+            label="Sport"
+            options={sportsOptions}
+            selected={sports}
+            onToggle={handleToggleSport}
+            onToggleAll={handleToggleAllSports}
+          />
         </div>
         <div style={styles.selectWrap}>
           <div style={styles.dropdownLabel}>Market</div>
-          <MySelect options={statOptions} handleChanges={handleStatChange} label={"Stat"} />
+          <FilterSelect
+            label="Market"
+            options={statOptions}
+            selected={stats}
+            onToggle={handleToggleStat}
+            onToggleAll={handleToggleAllStats}
+          />
         </div>
         <button
           className="btn-gradient"
           onClick={handleClick}
           disabled={loading}
-          style={{ minWidth: isMobile ? "100%" : "110px", flexShrink: 0 }}
+          style={{ minWidth: isMobile ? "100%" : "110px", flexShrink: 0, height: "40px" }}
         >
           {loading ? (
             <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>

@@ -4,23 +4,24 @@ import { CircularProgress } from "@mui/material";
 import { paths } from "../common/constants";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
-import MySelect from "./ReactSelect";
+import FilterSelect from "../common/FilterSelect";
+import BookieSettings from "../common/BookieSettings";
 import SlipComponent from "../common/SlipComponent";
 import { useAuthUser } from "react-auth-kit";
 
 const bookDisplayName = (key) => {
-  if (!key) return "";
-  const lower = key.toLowerCase();
-  if (lower === "juice_ml") return "Juicy";
-  if (lower === "prizepicks") return "PrizePicks";
-  if (lower === "underdog") return "Underdog";
-  if (lower === "sleeper") return "Sleeper";
-  if (lower === "thunderpick") return "Thunderpick";
-  if (lower === "parlayplay") return "ParlayPlay";
-  if (lower === "betr") return "Betr";
-  if (lower === "boom") return "BOOM";
-  if (lower === "draftkings_pick6" || lower === "draftkings-pick6") return "DK Pick6";
-  return key.charAt(0).toUpperCase() + key.slice(1);
+    if (!key) return "";
+    const lower = key.toLowerCase();
+    if (lower === "juice_ml") return "Juicy";
+    if (lower === "prizepicks") return "PrizePicks";
+    if (lower === "underdog") return "Underdog";
+    if (lower === "sleeper") return "Sleeper";
+    if (lower === "thunderpick") return "Thunderpick";
+    if (lower === "parlayplay") return "ParlayPlay";
+    if (lower === "betr") return "Betr";
+    if (lower === "boom") return "BOOM";
+    if (lower === "draftkings_pick6" || lower === "draftkings-pick6") return "DK Pick6";
+    return key.charAt(0).toUpperCase() + key.slice(1);
 };
 
 const Slips = () => {
@@ -36,20 +37,17 @@ const Slips = () => {
     const [totalPlays, setTotalPlays] = useState(0);
     const [loading, setLoading] = useState(false);
     const [buttonDisabled, setButtonDisabled] = useState(false);
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
     const user = useAuthUser();
 
-    const handleSportsbookChange = (selected) => {
-        if (!selected) {
-            setSportsbooks([]);
-        } else if (Array.isArray(selected)) {
-            setSportsbooks(selected.map((it) => it.value));
-        } else {
-            setSportsbooks([selected.value]);
-        }
-    };
-    const handleSportsChange = (selected) => setSports(selected.map((it) => it.value));
-    const handleStatChange = (selected) => setStats(selected.map((it) => it.value));
-    const handleBaselineBookChange = (selected) => setBaselineBook(selected ? selected.value : "");
+    const handleSportsbookChange = (val) => setSportsbooks([val]);
+    const handleBaselineBookChange = (val) => setBaselineBook(val);
+
+    const handleToggleSport = (val) => setSports((prev) => prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]);
+    const handleToggleAllSports = (selectAll) => setSports(selectAll ? sportsOptions.map((o) => o.value) : []);
+
+    const handleToggleStat = (val) => setStats((prev) => prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]);
+    const handleToggleAllStats = (selectAll) => setStats(selectAll ? statOptions.map((o) => o.value) : []);
 
     async function handleClick() {
         setLoading(true);
@@ -76,6 +74,12 @@ const Slips = () => {
 
             setStatOptions(slipsRes.data.statTypes?.map((v) => ({ value: v, label: v })) || []);
             setSportsOptions(slipsRes.data.sports?.map((v) => ({ value: v, label: v })) || []);
+
+            if (isInitialLoad) {
+                setStats(slipsRes.data.statTypes || []);
+                setSports(slipsRes.data.sports || []);
+                setIsInitialLoad(false);
+            }
 
             if (slipsRes.data.sportsbooks) {
                 let books = [...slipsRes.data.sportsbooks];
@@ -128,7 +132,7 @@ const Slips = () => {
             {/* Page header */}
             <div style={styles.header}>
                 <div>
-                    <h2 style={styles.title}>🚀 Slip Generator</h2>
+                    <h2 style={styles.title}>Slip Generator</h2>
                     <p style={styles.subtitle}>
                         Auto-generated, highly profitable parlays across any sportsbook ({totalPlays} profitable plays found)
                     </p>
@@ -139,45 +143,49 @@ const Slips = () => {
             <div className="filter-bar" style={styles.filterBar}>
                 <div style={styles.selectWrap}>
                     <div style={styles.dropdownLabel}>Sportsbook</div>
-                    <MySelect
+                    <BookieSettings
+                        label="Sportsbook"
                         options={sportsbookOptions}
-                        handleChanges={handleSportsbookChange}
-                        label={"Sportsbook"}
-                        defaultSelected={sportsbooks.length > 0 ? { value: sportsbooks[0], label: sportsbooks[0] === "prizepicks" ? "PrizePicks" : sportsbooks[0].charAt(0).toUpperCase() + sportsbooks[0].slice(1) } : null}
-                        isMulti={false}
+                        selectedBooks={sportsbooks.length > 0 ? [sportsbooks[0]] : []}
+                        onToggleBook={handleSportsbookChange}
+                        singleMode={true}
                     />
                 </div>
                 <div style={styles.selectWrap}>
                     <div style={styles.dropdownLabel}>Model</div>
-                    <MySelect
+                    <BookieSettings
+                        label="Baseline"
                         options={baselineOptions}
-                        handleChanges={handleBaselineBookChange}
-                        label={"Baseline Model"}
-                        defaultSelected={baselineBook ? { value: baselineBook, label: (baselineBook === "juice_ml" || baselineBook === "juiceml") ? "Juicy" : baselineBook === "prizepicks" ? "PrizePicks" : baselineBook.charAt(0).toUpperCase() + baselineBook.slice(1) } : null}
-                        isMulti={false}
+                        selectedBooks={[baselineBook]}
+                        onToggleBook={handleBaselineBookChange}
+                        singleMode={true}
                     />
                 </div>
                 <div style={styles.selectWrap}>
                     <div style={styles.dropdownLabel}>Sport</div>
-                    <MySelect
+                    <FilterSelect
+                        label="Sport"
                         options={sportsOptions}
-                        handleChanges={handleSportsChange}
-                        label={"Sports"}
+                        selected={sports}
+                        onToggle={handleToggleSport}
+                        onToggleAll={handleToggleAllSports}
                     />
                 </div>
                 <div style={styles.selectWrap}>
                     <div style={styles.dropdownLabel}>Market</div>
-                    <MySelect
+                    <FilterSelect
+                        label="Market"
                         options={statOptions}
-                        handleChanges={handleStatChange}
-                        label={"Stat"}
+                        selected={stats}
+                        onToggle={handleToggleStat}
+                        onToggleAll={handleToggleAllStats}
                     />
                 </div>
                 <button
                     className="btn-gradient"
                     onClick={handleClick}
                     disabled={buttonDisabled}
-                    style={{ width: "100%" }}
+                    style={{ width: "100%", height: "40px" }}
                 >
                     {loading ? (
                         <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -235,7 +243,7 @@ const styles = {
     filterBar: {
         display: "flex",
         flexWrap: "wrap",
-        alignItems: "center",
+        alignItems: "flex-end",
         gap: "12px",
         padding: "16px 20px",
         background: "rgba(19,19,43,0.7)",
