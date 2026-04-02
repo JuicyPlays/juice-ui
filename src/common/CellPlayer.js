@@ -61,9 +61,8 @@ const CellPlayer = ({ cell }) => {
                 display: 'flex',
                 gap: '4px',
                 alignItems: 'center',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
+                flexWrap: 'wrap',
+                lineHeight: '1.3'
             }}>
                 <span>{teams}</span>
                 {startTime && (
