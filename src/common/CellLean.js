@@ -6,19 +6,6 @@ const CellLean = ({ cell }) => {
     const underEnabled = cell.row.original?.underEnabled !== false; // Default to true if undefined
     const isSingleOption = !overEnabled || !underEnabled;
 
-    // Debug logging for EFFORt or single-option props
-    if (cell.row.original?.player?.toLowerCase().includes('effort') || isSingleOption) {
-        console.log('CellLean Debug:', {
-            player: cell.row.original?.player,
-            statType: cell.row.original?.statType,
-            over,
-            overEnabled,
-            underEnabled,
-            isSingleOption,
-            sportsbook: cell.row.original?.sportsbook
-        });
-    }
-
     const getLeanText = () => {
         if (isSingleOption) {
             return over ? "OVER (ONLY)" : "UNDER (ONLY)";

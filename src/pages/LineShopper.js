@@ -239,6 +239,47 @@ const LineShopper = () => {
         size: 130,
         minSize: 100,
       },
+      {
+        header: "Options",
+        id: "options",
+        size: 80,
+        minSize: 70,
+        Cell: ({ row }) => {
+          const overEnabled = row.original?.overEnabled !== false;
+          const underEnabled = row.original?.underEnabled !== false;
+          const isSingleOption = !overEnabled || !underEnabled;
+          
+          if (!isSingleOption) {
+            return <span style={{ color: "#10b981", fontWeight: "600" }}>Both</span>;
+          }
+          
+          const style = {
+            backgroundColor: overEnabled ? "#059669" : "#dc2626",
+            color: "#fff",
+            fontWeight: "800",
+            fontSize: "11px",
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+            borderRadius: "6px",
+            padding: "3px 8px",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "4px",
+          };
+
+          const iconStyle = {
+            fontSize: "10px",
+            opacity: "0.8",
+          };
+
+          return (
+            <span style={style} title="Limited options available">
+              {overEnabled ? "OVER" : "UNDER"} (ONLY)
+              <span style={iconStyle}>⚠️</span>
+            </span>
+          );
+        },
+      },
     ];
 
     // Always render all sportsbook columns (sorted alphabetically)
@@ -308,6 +349,46 @@ const LineShopper = () => {
         accessorKey: "statType",
         header: "Prop",
         size: 90,
+      },
+      {
+        header: "Options",
+        id: "options",
+        size: 70,
+        Cell: ({ row }) => {
+          const overEnabled = row.original?.overEnabled !== false;
+          const underEnabled = row.original?.underEnabled !== false;
+          const isSingleOption = !overEnabled || !underEnabled;
+          
+          if (!isSingleOption) {
+            return <span style={{ color: "#10b981", fontWeight: "600", fontSize: "11px" }}>Both</span>;
+          }
+          
+          const style = {
+            backgroundColor: overEnabled ? "#059669" : "#dc2626",
+            color: "#fff",
+            fontWeight: "800",
+            fontSize: "10px",
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+            borderRadius: "4px",
+            padding: "2px 4px",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "2px",
+          };
+
+          const iconStyle = {
+            fontSize: "8px",
+            opacity: "0.8",
+          };
+
+          return (
+            <span style={style} title="Limited options available">
+              {overEnabled ? "OVER" : "UNDER"}
+              <span style={iconStyle}>⚠️</span>
+            </span>
+          );
+        },
       },
     ];
 
