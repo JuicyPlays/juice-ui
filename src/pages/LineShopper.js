@@ -168,6 +168,18 @@ const LineShopper = () => {
 
     const minLine = row.original._minLine;
     const maxLine = row.original._maxLine;
+    
+    // Check if this is a single-option prop
+    const overEnabled = row.original?.overEnabled !== false;
+    const underEnabled = row.original?.underEnabled !== false;
+    const isSingleOption = !overEnabled || !underEnabled;
+    
+    // Create tooltip content for single-option props
+    const getTooltipTitle = () => {
+      if (!isSingleOption) return "";
+      const availableOption = overEnabled ? "OVER" : "UNDER";
+      return `Only ${availableOption} option available for this prop`;
+    };
 
     let bgColor = "#6366f1"; // Default indigo
 
@@ -178,23 +190,68 @@ const LineShopper = () => {
       bgColor = "#ef4444"; // Red for highest
     }
 
-    return (
-      <span
-        style={{
-          backgroundColor: bgColor,
-          borderRadius: "6px",
-          color: "#fff",
-          minWidth: "44px",
-          padding: "4px 10px",
-          display: "inline-block",
-          fontWeight: "700",
-          textAlign: "center",
-          fontSize: "13px",
-        }}
-      >
-        {val}
-      </span>
+    const lineStyle = {
+      backgroundColor: bgColor,
+      borderRadius: "6px",
+      color: "#fff",
+      minWidth: "44px",
+      padding: "4px 10px",
+      display: "inline-block",
+      fontWeight: "700",
+      textAlign: "center",
+      fontSize: "13px",
+      cursor: "help", // Changes cursor to question mark/help cursor
+      // Add subtle indicator for single-option props
+      ...(isSingleOption && {
+        border: "1px dashed rgba(255, 255, 255, 0.5)",
+        position: "relative",
+        // Add a subtle glow/pulse effect
+        boxShadow: "0 0 0 1px rgba(255, 255, 255, 0.2)",
+        // Add a subtle animation to draw attention
+        animation: "pulse 2s infinite",
+      }),
+    };
+
+    const lineContent = (
+      <div style={{ position: "relative", display: "inline-block" }}>
+        <span style={lineStyle}>{val}</span>
+        {isSingleOption && (
+          <span
+            style={{
+              position: "absolute",
+              top: "-6px",
+              right: "-6px",
+              background: "#fbbf24",
+              color: "#000",
+              borderRadius: "50%",
+              width: "14px",
+              height: "14px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "8px",
+              fontWeight: "bold",
+              border: "1px solid #fff",
+              cursor: "help",
+            }}
+            title={getTooltipTitle()}
+          >
+            !
+          </span>
+        )}
+      </div>
     );
+
+    // Wrap in tooltip only for single-option props
+    if (isSingleOption) {
+      return (
+        <Tooltip title={getTooltipTitle()} arrow placement="top">
+          {lineContent}
+        </Tooltip>
+      );
+    }
+
+    return lineContent;
   };
 
   // Model line cell renderer (distinct purple styling)
@@ -238,47 +295,6 @@ const LineShopper = () => {
         header: "Prop",
         size: 130,
         minSize: 100,
-      },
-      {
-        header: "Options",
-        id: "options",
-        size: 80,
-        minSize: 70,
-        Cell: ({ row }) => {
-          const overEnabled = row.original?.overEnabled !== false;
-          const underEnabled = row.original?.underEnabled !== false;
-          const isSingleOption = !overEnabled || !underEnabled;
-          
-          if (!isSingleOption) {
-            return <span style={{ color: "#10b981", fontWeight: "600" }}>Both</span>;
-          }
-          
-          const style = {
-            backgroundColor: overEnabled ? "#059669" : "#dc2626",
-            color: "#fff",
-            fontWeight: "800",
-            fontSize: "11px",
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
-            borderRadius: "6px",
-            padding: "3px 8px",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "4px",
-          };
-
-          const iconStyle = {
-            fontSize: "10px",
-            opacity: "0.8",
-          };
-
-          return (
-            <span style={style} title="Limited options available">
-              {overEnabled ? "OVER" : "UNDER"} (ONLY)
-              <span style={iconStyle}>⚠️</span>
-            </span>
-          );
-        },
       },
     ];
 
@@ -350,46 +366,6 @@ const LineShopper = () => {
         header: "Prop",
         size: 90,
       },
-      {
-        header: "Options",
-        id: "options",
-        size: 70,
-        Cell: ({ row }) => {
-          const overEnabled = row.original?.overEnabled !== false;
-          const underEnabled = row.original?.underEnabled !== false;
-          const isSingleOption = !overEnabled || !underEnabled;
-          
-          if (!isSingleOption) {
-            return <span style={{ color: "#10b981", fontWeight: "600", fontSize: "11px" }}>Both</span>;
-          }
-          
-          const style = {
-            backgroundColor: overEnabled ? "#059669" : "#dc2626",
-            color: "#fff",
-            fontWeight: "800",
-            fontSize: "10px",
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
-            borderRadius: "4px",
-            padding: "2px 4px",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "2px",
-          };
-
-          const iconStyle = {
-            fontSize: "8px",
-            opacity: "0.8",
-          };
-
-          return (
-            <span style={style} title="Limited options available">
-              {overEnabled ? "OVER" : "UNDER"}
-              <span style={iconStyle}>⚠️</span>
-            </span>
-          );
-        },
-      },
     ];
 
     // Add first selected book for mobile view
@@ -409,6 +385,18 @@ const LineShopper = () => {
 
           const minLine = row.original._minLine;
           const maxLine = row.original._maxLine;
+          
+          // Check if this is a single-option prop
+          const overEnabled = row.original?.overEnabled !== false;
+          const underEnabled = row.original?.underEnabled !== false;
+          const isSingleOption = !overEnabled || !underEnabled;
+          
+          // Create tooltip content for single-option props
+          const getTooltipTitle = () => {
+            if (!isSingleOption) return "";
+            const availableOption = overEnabled ? "OVER" : "UNDER";
+            return `Only ${availableOption} option available for this prop`;
+          };
 
           let textColor = "#a78bfa"; // Default purple
 
@@ -418,11 +406,59 @@ const LineShopper = () => {
             textColor = "#ef4444";
           }
 
-          return (
-            <span style={{ color: textColor, fontWeight: 700, fontSize: "13px" }}>
-              {val}
-            </span>
+          const textStyle = {
+            color: textColor,
+            fontWeight: 700,
+            fontSize: "13px",
+            cursor: "help", // Changes cursor to question mark/help cursor
+            // Add subtle indicator for single-option props
+            ...(isSingleOption && {
+              borderBottom: "1px dashed",
+              borderBottomColor: textColor,
+              position: "relative",
+            }),
+          };
+
+          const textContent = (
+            <div style={{ position: "relative", display: "inline-block" }}>
+              <span style={textStyle}>{val}</span>
+              {isSingleOption && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-4px",
+                    right: "-8px",
+                    background: "#fbbf24",
+                    color: "#000",
+                    borderRadius: "50%",
+                    width: "12px",
+                    height: "12px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "7px",
+                    fontWeight: "bold",
+                    border: "1px solid #fff",
+                    cursor: "help",
+                  }}
+                  title={getTooltipTitle()}
+                >
+                  !
+                </span>
+              )}
+            </div>
           );
+
+          // Wrap in tooltip only for single-option props
+          if (isSingleOption) {
+            return (
+              <Tooltip title={getTooltipTitle()} arrow placement="top">
+                {textContent}
+              </Tooltip>
+            );
+          }
+
+          return textContent;
         },
       });
     }

@@ -6,45 +6,69 @@ const CellLean = ({ cell }) => {
     const underEnabled = cell.row.original?.underEnabled !== false; // Default to true if undefined
     const isSingleOption = !overEnabled || !underEnabled;
 
-    const getLeanText = () => {
-        if (isSingleOption) {
-            return over ? "OVER (ONLY)" : "UNDER (ONLY)";
-        }
-        return over ? "OVER" : "UNDER";
-    };
-
-    const getBackgroundColor = () => {
-        if (isSingleOption) {
-            return over ? "#059669" : "#dc2626"; // Darker green/red for single options
-        }
-        return over ? "#10b981" : "#ef4444"; // Normal colors
+    const getTooltipTitle = () => {
+        if (!isSingleOption) return "";
+        const availableOption = over ? "OVER" : "UNDER";
+        return `Only ${availableOption} option available for this prop`;
     };
 
     const style = {
-        backgroundColor: getBackgroundColor(),
-        color: "#fff",
+        color: over ? "#10b981" : "#ef4444",
         fontWeight: "800",
-        fontSize: isSingleOption ? "11px" : "13px",
+        fontSize: "13px",
         textTransform: "uppercase",
         letterSpacing: "0.05em",
-        borderRadius: "6px",
-        padding: isSingleOption ? "3px 8px" : "4px 12px",
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "4px",
+        cursor: isSingleOption ? "help" : "default",
+        // Add subtle indicator for single-option props
+        ...(isSingleOption && {
+            borderBottom: "1px dashed",
+            borderBottomColor: over ? "#10b981" : "#ef4444",
+            position: "relative",
+        }),
     };
 
-    const iconStyle = {
-        fontSize: "10px",
-        opacity: "0.8",
-    };
-
-    return (
-        <span style={style} title={isSingleOption ? "Limited options available" : ""}>
-            {getLeanText()}
-            {isSingleOption && <span style={iconStyle}>⚠️</span>}
-        </span>
+    const leanContent = (
+        <div style={{ position: "relative", display: "inline-block" }}>
+            <span style={style}>
+                {over ? "OVER" : "UNDER"}
+            </span>
+            {isSingleOption && (
+                <span
+                    style={{
+                        position: "absolute",
+                        top: "-4px",
+                        right: "-8px",
+                        background: "#fbbf24",
+                        color: "#000",
+                        borderRadius: "50%",
+                        width: "12px",
+                        height: "12px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "7px",
+                        fontWeight: "bold",
+                        border: "1px solid #fff",
+                        cursor: "help",
+                    }}
+                    title={getTooltipTitle()}
+                >
+                    !
+                </span>
+            )}
+        </div>
     );
+
+    // Wrap in tooltip only for single-option props
+    if (isSingleOption) {
+        return (
+            <span title={getTooltipTitle()}>
+                {leanContent}
+            </span>
+        );
+    }
+
+    return leanContent;
 };
 
 export default CellLean;
