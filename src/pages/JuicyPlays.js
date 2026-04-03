@@ -79,7 +79,7 @@ const JuicyPlays = () => {
         params: queryParams,
         headers,
       });
-      setData(res.data.plays);
+      setData(res.data.plays.sort((a, b) => b.diffs - a.diffs));
       setStatOptions(res.data.statTypes.map((v) => ({ value: v, label: v })));
       setSportsOptions(res.data.sports.map((v) => ({ value: v, label: v })));
       
@@ -125,7 +125,7 @@ const JuicyPlays = () => {
     enableColumnActions: false,
     enableColumnFilters: false,
     enablePagination: false,
-    enableSorting: true,
+    enableSorting: false,
     initialState: {
       sorting: [{ id: "diffs", desc: true }],
     },
