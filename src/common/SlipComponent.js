@@ -413,6 +413,26 @@ const SlipComponent = ({ slips }) => {
         return "-";
     };
 
+    const formatDate = (dateStr) => {
+        if (!dateStr) return '';
+        try {
+            const utcDateStr = dateStr.endsWith('Z') ? dateStr : dateStr + 'Z';
+            const date = new Date(utcDateStr);
+            const now = new Date();
+            
+            const isToday = date.toDateString() === now.toDateString();
+            const timeStr = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+            
+            if (isToday) {
+                return `Today ${timeStr}`;
+            } else {
+                return date.toLocaleDateString([], { weekday: 'short' }) + ' ' + timeStr;
+            }
+        } catch (e) {
+            return '';
+        }
+    };
+
     return (
         <div style={styles.wrap}>
             <div style={styles.list}>
@@ -482,6 +502,7 @@ const SlipComponent = ({ slips }) => {
                                             </div>
                                             <div style={styles.mobileDetailGrid}>
                                                 <span style={styles.mobileChip}>{pick.teams}</span>
+                                                {pick.startTime && <span style={styles.mobileChip}>{formatDate(pick.startTime)}</span>}
                                                 <span style={styles.mobileChip}>{pick.statType}</span>
                                             </div>
                                             <div style={{ ...styles.mobileDetailGrid, marginTop: "4px" }}>
@@ -525,6 +546,11 @@ const SlipComponent = ({ slips }) => {
                                                         <span style={styles.sportBadge}>{pick.sport}</span>
                                                     </div>
                                                     <div style={styles.matchupText}>{pick.teams}</div>
+                                                    {pick.startTime && (
+                                                        <div style={{ ...styles.matchupText, fontSize: '10px', color: '#6b6b7b' }}>
+                                                            {formatDate(pick.startTime)}
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 <div style={{ ...styles.td, flex: 1 }}>
                                                     <span style={styles.propText}>{pick.statType}</span>
