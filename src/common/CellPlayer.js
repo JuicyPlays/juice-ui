@@ -76,13 +76,17 @@ const CellPlayer = ({ cell }) => {
                 lineHeight: '1.3'
             }}>
                 <span>{teams}</span>
-                {startTime && (
-                    <>
-                        <span style={{ opacity: 0.5 }}>•</span>
-                        <span>{formatDate(startTime)}</span>
-                    </>
-                )}
             </div>
+            {startTime && (
+                <div style={{
+                    fontSize: isMobile ? '10px' : '12px',
+                    color: '#8b8b9e',
+                    fontWeight: '500',
+                    lineHeight: '1.3'
+                }}>
+                    <span>{formatDate(startTime)}</span>
+                </div>
+            )}
         </div>
     );
 };
