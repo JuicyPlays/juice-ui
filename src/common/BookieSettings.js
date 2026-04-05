@@ -27,7 +27,9 @@ const BookieSettings = ({ selectedBooks, onToggleBook, onToggleAll, label = "Spo
   const bookList = options || ALL_BOOK_KEYS.map((k) => ({ value: k, label: BOOK_CONFIG[k].name }));
   const allSelected = !singleMode && bookList.every((o) => selectedBooks.includes(o.value));
   const singleSelectedLabel = singleMode && selectedBooks.length > 0
-    ? bookList.find((o) => selectedBooks.includes(o.value))?.label || ""
+    ? (bookList.find((o) => selectedBooks.includes(o.value))?.label 
+       || BOOK_CONFIG[selectedBooks[0]?.toLowerCase()]?.name 
+       || "")
     : "";
 
   // Calculate panel position from trigger button rect

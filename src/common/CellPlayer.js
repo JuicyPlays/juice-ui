@@ -22,8 +22,19 @@ const CellPlayer = ({ cell }) => {
     const formatDate = (dateStr) => {
         if (!dateStr) return '';
         try {
-            const date = new Date(dateStr);
-            return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+            // Backend sends UTC times - append 'Z' to ensure proper UTC parsing
+            const utcDateStr = dateStr.endsWith('Z') ? dateStr : dateStr + 'Z';
+            const date = new Date(utcDateStr);
+            const now = new Date();
+            
+            const isToday = date.toDateString() === now.toDateString();
+            const timeStr = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+            
+            if (isToday) {
+                return `Today ${timeStr}`;
+            } else {
+                return date.toLocaleDateString([], { weekday: 'short' }) + ' ' + timeStr;
+            }
         } catch (e) {
             return '';
         }
