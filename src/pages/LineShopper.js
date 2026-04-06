@@ -26,7 +26,6 @@ const LineShopper = () => {
   const [loading, setLoading] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [playerSearch, setPlayerSearch] = useState("");
-  const user = useAuthUser();
   const isMobile = useMediaQuery("(max-width: 900px)");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,14 +74,9 @@ const LineShopper = () => {
       sports: sports.join(","),
       stats: stats.join(","),
     };
-    const headers = {
-      "x-customer-id": "",
-      "x-user-id": user().userId,
-    };
     try {
       const res = await axios.get(paths.getLineShopperBasePath, {
         params: queryParams,
-        headers,
       });
       setData(res.data.rows || []);
       const retrievedStats = res.data.statTypes || [];

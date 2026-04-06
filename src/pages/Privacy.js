@@ -63,8 +63,8 @@ const sections = [
                 items: [
                     "Directly from you when you register or update your profile",
                     "Automatically when you interact with our platform (e.g., pages visited, features used)",
-                    "From our third-party authentication provider (Supabase) during login",
-                    "From Stripe when processing or managing your subscription",
+                    "From our third-party authentication provider (Whop) during login",
+                    "From Whop when processing or managing your subscription",
                 ],
             },
         ],
@@ -82,7 +82,7 @@ const sections = [
                 type: "list",
                 items: [
                     "We never sell your personal data — ever",
-                    "Data is shared with service providers (Stripe, Supabase) only to the extent needed to deliver the service",
+                    "Data is shared with service providers (Whop) only to the extent needed to deliver the service",
                     "Aggregated, anonymized statistics may be used internally to improve our EV models",
                     "We may disclose data if required by law or to defend our legal rights",
                 ],
@@ -102,8 +102,8 @@ const sections = [
                 type: "list",
                 items: [
                     "All data is transmitted over HTTPS/TLS encryption",
-                    "Passwords are never stored — authentication is handled via Supabase",
-                    "Payment data is fully tokenized and managed by Stripe (PCI-DSS Level 1)",
+                    "Authentication is handled via secure session cookies managed by Whop",
+                    "Payment data is fully tokenized and managed by Whop",
                     "Access to production systems is restricted and logged",
                     "We regularly review and harden our infrastructure",
                 ],
@@ -125,7 +125,7 @@ const sections = [
                     "Correct inaccurate information in your account",
                     "Delete your account and all associated personal data",
                     "Opt out of non-essential email communications",
-                    "Cancel your subscription at any time via the billing portal",
+                    "Cancel your subscription at any time via your Whop account",
                 ],
             },
             {
@@ -158,8 +158,7 @@ const sections = [
             {
                 type: "list",
                 items: [
-                    "Stripe — payment processing (stripe.com/privacy)",
-                    "Supabase — authentication and database (supabase.com/privacy)",
+                    "Whop — authentication, payments, and membership management (whop.com/privacy)",
                 ],
             },
             {

@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useStripe } from "@stripe/react-stripe-js";
 import { useAuthUser } from "react-auth-kit";
-import axios from "axios";
 import { useSubscriptionStatus } from "../../../hooks/useSubscriptionStatus";
 
 export default function PricingCard({ plan }) {
-  const stripe = useStripe();
   const user = useAuthUser();
   const navigate = useNavigate();
   const location = useLocation();
@@ -14,27 +11,19 @@ export default function PricingCard({ plan }) {
 
   const { subscribed, setSubscribed } = useSubscriptionStatus(user()?.userId);
 
-  const handleClick = async () => {
+  useEffect(() => {
+    setSubscribed(Boolean(subscribed));
+  }, [setSubscribed, subscribed]);
+
+  const handleClick = () => {
     if (!user()) {
       navigate("/login", { state: { from: location } });
       return;
     }
     if (!subscribed) {
-      const response = await axios.post(
-        import.meta.env.VITE_JUICE_API_BASE_URL + "/checkout-session",
-        {
-          priceId: plan.priceId,
-          userId: user().userId,
-          email: user().email,
-          successUrl: import.meta.env.VITE_BASE_URL + "/",
-          cancelUrl: import.meta.env.VITE_BASE_URL + "/",
-        }
-      );
-      const sessionUrl = response.data;
-      const result = await stripe.redirectToCheckout({ sessionId: sessionUrl });
-      if (result.error) console.error(result.error.message);
+      window.open(plan.checkoutUrl, "_blank", "noopener,noreferrer");
     } else {
-      window.open("https://billing.stripe.com/p/login/test_dR6g2g6mg6W1bcY4gg", "_blank");
+      navigate("/ev-plays");
     }
   };
 
@@ -221,7 +210,7 @@ export default function PricingCard({ plan }) {
           onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85'; }}
           onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
         >
-          {!subscribed ? plan.ctaText : 'Manage Subscription'}
+          {!subscribed ? plan.ctaText : 'Open Dashboard'}
         </button>
       </div>
     </div>

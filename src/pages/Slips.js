@@ -7,7 +7,6 @@ import Footer from "./Footer";
 import FilterSelect from "../common/FilterSelect";
 import BookieSettings from "../common/BookieSettings";
 import SlipComponent from "../common/SlipComponent";
-import { useAuthUser } from "react-auth-kit";
 
 const bookDisplayName = (key) => {
     if (!key) return "";
@@ -38,7 +37,6 @@ const Slips = () => {
     const [loading, setLoading] = useState(false);
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
-    const user = useAuthUser();
 
     const handleSportsbookChange = (val) => setSportsbooks([val]);
     const handleBaselineBookChange = (val) => setBaselineBook(val);
@@ -63,11 +61,9 @@ const Slips = () => {
         if (sports.length > 0) queryParams.sports = sports.join(",");
         if (stats.length > 0) queryParams.stats = stats.join(",");
         if (baselineBook) queryParams.baselineBook = baselineBook;
-        const headers = { "x-user-id": user().userId };
         try {
             const slipsRes = await axios.get(paths.getSlipsBasePath, {
                 params: queryParams,
-                headers,
             });
             setSlipsData(slipsRes.data.slips || []);
             setTotalPlays(slipsRes.data.totalProfitablePlays || 0);
@@ -109,11 +105,9 @@ const Slips = () => {
         if (sports.length > 0) queryParams.sports = sports.join(",");
         if (stats.length > 0) queryParams.stats = stats.join(",");
         if (baselineBook) queryParams.baselineBook = baselineBook;
-        const headers = { "x-user-id": user().userId };
         try {
             const slipsRes = await axios.get(paths.getSlipsBasePath, {
                 params: queryParams,
-                headers,
             });
             setSlipsData(slipsRes.data.slips || []);
             setTotalPlays(slipsRes.data.totalProfitablePlays || 0);

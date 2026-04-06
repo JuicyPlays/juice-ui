@@ -1,6 +1,5 @@
 import "./index.css";
-import { createClient } from "@supabase/supabase-js";
-import { Route, Routes, useLocation, useNavigate, Navigate } from "react-router-dom";
+import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import SupabaseLogin from "./pages/SupabaseLogin";
 import Home from "./pages/Home";
 import JuicyPlaysPage from "./pages/JuicyPlays";
@@ -8,130 +7,148 @@ import LineShopperPage from "./pages/LineShopper";
 import SlipsPage from "./pages/Slips";
 import Logout from "./pages/Logout";
 import { AuthProvider, RequireAuth, useAuthUser, useIsAuthenticated, useSignIn, useSignOut } from "react-auth-kit";
-import { loadStripe } from "@stripe/stripe-js";
 import RenderAccount from "./pages/Account";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
 
-// The supabase client
-export const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON
-);
+axios.defaults.withCredentials = true;
 
-export const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK, {});
+function FullScreenLoader() {
+  return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", background: "var(--bg-primary)" }}>
+      <CircularProgress style={{ color: "var(--accent)" }} />
+    </div>
+  );
+}
+
+// Global cache for auth/me to prevent duplicate calls across components
+let globalAuthMeCache = { promise: null, timestamp: 0, data: null };
+const CACHE_TTL_MS = 5000; // 5 second cache
+
+function getCachedAuthMe() {
+  const now = Date.now();
+  if (globalAuthMeCache.data && (now - globalAuthMeCache.timestamp) < CACHE_TTL_MS) {
+    return Promise.resolve({ data: globalAuthMeCache.data });
+  }
+  if (!globalAuthMeCache.promise) {
+    globalAuthMeCache.promise = axios.get(
+      `${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/me`
+    ).then(response => {
+      globalAuthMeCache.data = response.data;
+      globalAuthMeCache.timestamp = Date.now();
+      globalAuthMeCache.promise = null;
+      return response;
+    }).catch(error => {
+      globalAuthMeCache.promise = null;
+      throw error;
+    });
+  }
+  return globalAuthMeCache.promise;
+}
 
 function SubscriptionGuard({ children }) {
   const user = useAuthUser();
+  const signOut = useSignOut();
   const [status, setStatus] = React.useState({ loading: true, hasAccess: false });
-  const navigate = useNavigate();
   const location = useLocation();
 
   React.useEffect(() => {
     async function checkAccess() {
-      if (!user()) return;
+      if (!user()) {
+        setStatus({ loading: false, hasAccess: false });
+        return;
+      }
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_JUICE_API_USERS}/userId/${user().userId}`
-        );
+        const response = await getCachedAuthMe();
         setStatus({
           loading: false,
           hasAccess: response.data.subscribed || response.data.hasAccess,
         });
       } catch (error) {
+        if (error?.response?.status === 401) {
+          signOut();
+        }
         console.error("Error checking subscription", error);
         setStatus({ loading: false, hasAccess: false });
       }
     }
     checkAccess();
-  }, [user()?.userId]);
+  }, [signOut, user()?.userId]);
 
   if (status.loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'var(--bg-primary)' }}>
-        <CircularProgress style={{ color: 'var(--accent)' }} />
-      </div>
-    );
+    return <FullScreenLoader />;
   }
 
   if (!status.hasAccess) {
-    // Redirect to home with state to show pricing or error
     return <Navigate to="/" state={{ from: location, subscriptionRequired: true }} replace />;
   }
 
   return children;
 }
 
+// Cache for auth/me to prevent duplicate in-flight requests
+let authMePromise = null;
+
 function MainContent() {
-  const navigate = useNavigate();
   const location = useLocation();
   const authenticated = useIsAuthenticated();
   const signIn = useSignIn();
   const signOut = useSignOut();
+  const [bootstrapping, setBootstrapping] = useState(true);
 
   useEffect(() => {
-    async function handleSignIn(userId, session) {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_JUICE_API_USERS}/userId/${userId}`
-        );
-        if (response?.data?.userId === userId) {
-          const redirectPath = location.state?.from?.pathname || "/";
-          navigate(redirectPath, { replace: true });
-          return;
-        }
-      } catch (error) {
-        console.error("Error fetching user. Will try to create.", userId, error);
-      }
+    let cancelled = false;
 
+    async function bootstrapSession() {
+      // Deduplicate concurrent auth/me requests
+      if (!authMePromise) {
+        authMePromise = axios.get(
+          `${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/me`
+        );
+      }
+      
       try {
-        const response = await axios.post(import.meta.env.VITE_JUICE_API_USERS, {
-          userId: userId,
-        });
-        if (response?.data?.userId === userId) {
-          const redirectPath = location.state?.from?.pathname || "/";
-          navigate(redirectPath, { replace: true });
+        const response = await authMePromise;
+        if (cancelled) {
           return;
         }
+
+        signIn({
+          token: "whop-session",
+          expiresIn: 60 * 24 * 7,
+          tokenType: "Bearer",
+          authState: {
+            userId: response.data.userId,
+            email: response.data.email,
+            name: response.data.name,
+            whopUserId: response.data.whopUserId,
+          },
+        });
       } catch (error) {
-        console.log("Error creating new user.", userId, error);
-        await supabase.auth.signOut();
-        signOut();
-        navigate("/login");
+        if (!cancelled && authenticated()) {
+          signOut();
+        }
+      } finally {
+        authMePromise = null;
+        if (!cancelled) {
+          setBootstrapping(false);
+        }
       }
     }
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session == null && authenticated()) {
-        signOut();
-      }
+    bootstrapSession();
 
-      if (session != null && !authenticated()) {
-        const user = session.user;
-        const userId = user.id;
+    return () => {
+      cancelled = true;
+    };
+  }, [authenticated, signIn, signOut]);
 
-        if (signIn({
-          token: session.access_token,
-          expiresIn: session.expires_in,
-          tokenType: session.token_type,
-          authState: {
-            userId: userId,
-            email: user.email,
-            name: user.user_metadata.name,
-          },
-        })) {
-          await handleSignIn(userId, session);
-        }
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate, signIn, signOut, authenticated]); // Removed location.state to avoid re-run loops
+  if (bootstrapping) {
+    return <FullScreenLoader />;
+  }
 
   return (
     <Routes>

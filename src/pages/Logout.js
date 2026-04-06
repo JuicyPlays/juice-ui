@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { supabase } from "../App";
+import axios from "axios";
 import { useSignOut } from "react-auth-kit";
 
 const Logout = () => {
@@ -10,10 +10,11 @@ const Logout = () => {
   useEffect(() => {
     async function handleSignout() {
       try {
-        await supabase.auth.signOut();
+        await axios.post(`${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/logout`);
         signOut();
       } catch (e) {
         console.error("Error during sign out:", e);
+        signOut();
       } finally {
         navigate("/");
       }

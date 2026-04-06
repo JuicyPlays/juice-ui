@@ -34,17 +34,11 @@ export function useJuicyPlaysData(userId) {
       stats,
       baselineBook,
     };
-    
-    const headers = {
-      "x-customer-id": "",
-      "x-user-id": userId,
-    };
 
     try {
       setLoading(true);
       const res = await axios.get(paths.getJuicyPlaysBasePath, {
         params: queryParams,
-        headers,
       });
 
       setData(res.data.plays);

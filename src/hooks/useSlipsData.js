@@ -35,13 +35,10 @@ export function useSlipsData(userId) {
     if (stats?.length > 0) queryParams.stats = stats.join(",");
     if (baselineBook) queryParams.baselineBook = baselineBook;
 
-    const headers = { "x-user-id": userId };
-
     try {
       setLoading(true);
       const slipsRes = await axios.get(paths.getSlipsBasePath, {
         params: queryParams,
-        headers,
       });
 
       setSlipsData(slipsRes.data.slips || []);

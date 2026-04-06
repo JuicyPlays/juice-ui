@@ -1,17 +1,11 @@
-import axios from "axios";
-import { Auth } from "@supabase/auth-ui-react";
-import { supabase } from "../App";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useIsAuthenticated, useSignIn, useSignOut } from "react-auth-kit";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useIsAuthenticated } from "react-auth-kit";
 
 export default function SupabaseLogin() {
+  const location = useLocation();
   const navigate = useNavigate();
   const authenticated = useIsAuthenticated();
-  const signIn = useSignIn();
-  const signOut = useSignOut();
-  const [session, setSession] = useState(null);
 
   useEffect(() => {
     if (authenticated()) {
@@ -19,88 +13,52 @@ export default function SupabaseLogin() {
     }
   }, [authenticated, navigate]);
 
+  const handleWhopLogin = () => {
+    const redirectPath = location.state?.from?.pathname || "/";
+    const loginUrl = `${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/whop/login?redirect=${encodeURIComponent(redirectPath)}`;
+    window.location.assign(loginUrl);
+  };
 
-  if (!session) {
-    return (
-      <div style={styles.page}>
-        {/* Animated background orbs */}
-        <div style={styles.orb1} />
-        <div style={styles.orb2} />
-        <div style={styles.orb3} />
+  return (
+    <div style={styles.page}>
+      {/* Animated background orbs */}
+      <div style={styles.orb1} />
+      <div style={styles.orb2} />
+      <div style={styles.orb3} />
 
-        <div style={styles.card}>
-          {/* Branding */}
-          <div style={styles.branding}>
-            <div style={styles.logoWrap}>
-              <span style={styles.logoEmoji}>⚡</span>
-            </div>
-            <h1 style={styles.logoTitle}>
-              <span style={styles.logoPrimary}>Juicy</span>
-              <span style={styles.logoSecondary}>Plays</span>
-            </h1>
-            <p style={styles.tagline}>Data-driven esports value.</p>
+      <div style={styles.card}>
+        {/* Branding */}
+        <div style={styles.branding}>
+          <div style={styles.logoWrap}>
+            <span style={styles.logoEmoji}>⚡</span>
           </div>
-
-          {/* Auth widget */}
-          <div style={styles.authWrap}>
-            <Auth
-              supabaseClient={supabase}
-              theme="dark"
-              appearance={{
-                theme: ThemeSupa,
-                variables: {
-                  default: {
-                    colors: {
-                      brand: "#6366f1",
-                      brandAccent: "#8b5cf6",
-                      brandButtonText: "white",
-                      defaultButtonBackground: "rgba(19,19,43,0.8)",
-                      defaultButtonBackgroundHover: "rgba(99,102,241,0.12)",
-                      inputBackground: "rgba(19,19,43,0.9)",
-                      inputBorder: "rgba(99,102,241,0.2)",
-                      inputBorderFocus: "#6366f1",
-                      inputText: "#f1f1fb",
-                      inputPlaceholder: "#5a5a7a",
-                      messageText: "#a0a0c0",
-                      anchorTextColor: "#818cf8",
-                      dividerBackground: "rgba(99,102,241,0.15)",
-                    },
-                    radii: {
-                      borderRadiusButton: "10px",
-                      buttonBorderRadius: "10px",
-                      inputBorderRadius: "10px",
-                    },
-                    fontSizes: {
-                      baseBodySize: "14px",
-                      baseLabelSize: "13px",
-                    },
-                    fonts: {
-                      bodyFontFamily: "'Inter', sans-serif",
-                      buttonFontFamily: "'Inter', sans-serif",
-                      inputFontFamily: "'Inter', sans-serif",
-                      labelFontFamily: "'Inter', sans-serif",
-                    },
-                  },
-                },
-              }}
-              providers={["google", "twitter"]}
-              redirectTo={import.meta.env.VITE_BASE_URL + "/"}
-            />
-          </div>
+          <h1 style={styles.logoTitle}>
+            <span style={styles.logoPrimary}>Juicy</span>
+            <span style={styles.logoSecondary}>Plays</span>
+          </h1>
+          <p style={styles.tagline}>Data-driven esports value.</p>
         </div>
 
-        {/* Footer hint */}
-        <p style={styles.footerHint}>
-          By signing in you agree to our{" "}
-          <Link to="/terms" style={styles.footerLink}>
-            Terms &amp; Conditions
-          </Link>
-        </p>
+        {/* Auth widget */}
+        <div style={styles.authWrap}>
+          <button style={styles.whopButton} onClick={handleWhopLogin}>
+            Continue with Whop
+          </button>
+          <p style={styles.authSubtext}>
+            Sign in with your Whop account to manage access and unlock premium plays.
+          </p>
+        </div>
       </div>
-    );
-  } else {
-    return <div />;
-  }
+
+      {/* Footer hint */}
+      <p style={styles.footerHint}>
+        By signing in you agree to our{" "}
+        <Link to="/terms" style={styles.footerLink}>
+          Terms &amp; Conditions
+        </Link>
+      </p>
+    </div>
+  );
 }
 
 const styles = {
@@ -217,6 +175,28 @@ const styles = {
   },
   authWrap: {
     padding: "4px 20px 24px",
+  },
+  whopButton: {
+    width: "100%",
+    border: "none",
+    borderRadius: "12px",
+    padding: "14px 18px",
+    background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+    color: "white",
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: 700,
+    fontSize: "14px",
+    cursor: "pointer",
+    boxShadow: "0 10px 24px rgba(99,102,241,0.35)",
+  },
+  authSubtext: {
+    marginTop: "14px",
+    marginBottom: 0,
+    color: "var(--text-muted)",
+    fontSize: "13px",
+    lineHeight: 1.5,
+    fontFamily: "'Inter', sans-serif",
+    textAlign: "center",
   },
   footerHint: {
     position: "relative",

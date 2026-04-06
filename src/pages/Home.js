@@ -4,8 +4,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import axios from "axios";
-import { Elements, useStripe } from "@stripe/react-stripe-js";
-import { stripePromise } from "../App";
 import { useAuthUser } from "react-auth-kit";
 
 // -------------- Pricing Data --------------
@@ -27,7 +25,7 @@ const plans = [
     period: "/ 2 weeks",
     discount: null,
     featured: false,
-    priceId: "price_1T4yqfFbPaDvi0T07mimbuDg",
+    checkoutUrl: import.meta.env.VITE_WHOP_CHECKOUT_BIWEEKLY || "https://whop.com/checkout/plan_wZ7lvQANDaJfm",
     ctaText: "Select Plan",
   },
   {
@@ -40,7 +38,7 @@ const plans = [
     period: "/ month",
     discount: "40% off",
     featured: true,
-    priceId: "price_1T4yrMFbPaDvi0T0f6CRfOB0",
+    checkoutUrl: import.meta.env.VITE_WHOP_CHECKOUT_MONTHLY || "https://whop.com/checkout/plan_eTvnZxV1Mxi4w",
     ctaText: "Start Winning Now",
   },
   {
@@ -53,57 +51,44 @@ const plans = [
     period: "/ year",
     discount: "58% off",
     featured: false,
-    priceId: "price_1T4ypsFbPaDvi0T0wpLJcxRI",
+    checkoutUrl: import.meta.env.VITE_WHOP_CHECKOUT_YEARLY || "https://whop.com/checkout/plan_yUCMmCIrbzdAL",
     ctaText: "Select Plan",
   },
 ];
 
 // -------------- Pricing Card Component --------------
 const PricingCard = ({ plan }) => {
-  const stripe = useStripe();
   const user = useAuthUser();
   const navigate = useNavigate();
   const [subscribed, setSubscribed] = useState(false);
   const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
-    async function getUser(userId) {
-      if (!userId) return;
+    async function getUser() {
+      if (!user()) return;
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_JUICE_API_USERS}/userId/${userId}`
+          `${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/me`
         );
-        setSubscribed(response.data.subscribed);
+        setSubscribed(response.data.subscribed || response.data.hasAccess);
       } catch (e) {
         console.error("Error fetching user sub status", e);
       }
     }
-    if (user()) getUser(user().userId);
+    getUser();
   }, [user()?.userId]);
 
   const location = useLocation();
 
-  const handleClick = async () => {
+  const handleClick = () => {
     if (!user()) {
       navigate("/login", { state: { from: location } });
       return;
     }
     if (!subscribed) {
-      const response = await axios.post(
-        import.meta.env.VITE_JUICE_API_BASE_URL + "/checkout-session",
-        {
-          priceId: plan.priceId,
-          userId: user().userId,
-          email: user().email,
-          successUrl: import.meta.env.VITE_BASE_URL + "/",
-          cancelUrl: import.meta.env.VITE_BASE_URL + "/",
-        }
-      );
-      const sessionUrl = response.data;
-      const result = await stripe.redirectToCheckout({ sessionId: sessionUrl });
-      if (result.error) console.error(result.error.message);
+      window.open(plan.checkoutUrl, "_blank", "noopener,noreferrer");
     } else {
-      window.open("https://billing.stripe.com/p/login/test_dR6g2g6mg6W1bcY4gg", "_blank");
+      navigate("/ev-plays");
     }
   };
 
@@ -242,7 +227,7 @@ const PricingCard = ({ plan }) => {
           onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85'; }}
           onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
         >
-          {!subscribed ? plan.ctaText : 'Manage Subscription'}
+          {subscribed ? "Open Dashboard" : plan.ctaText}
         </button>
       </div>
     </div>
@@ -551,11 +536,9 @@ const LandingPage = () => {
         </div>
 
         <div className="pricing-grid" style={styles.pricingGrid}>
-          <Elements stripe={stripePromise}>
-            {plans.map((plan) => (
-              <PricingCard key={plan.name} plan={plan} />
-            ))}
-          </Elements>
+          {plans.map((plan) => (
+            <PricingCard key={plan.name} plan={plan} />
+          ))}
         </div>
 
         {/* Assurance strip */}
@@ -569,7 +552,7 @@ const LandingPage = () => {
         }}>
           {[
             { icon: '🛡️', text: 'Cancel anytime' },
-            { icon: '🔒', text: 'Secure payment via Stripe' },
+            { icon: '🔒', text: 'Secure checkout via Whop' },
             { icon: '⚡', text: 'Instant access' },
           ].map((item) => (
             <div key={item.text} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

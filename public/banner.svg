@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400">
+  <defs>
+    <!-- Main gradient -->
+    <linearGradient id="bannerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="50%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#6366f1"/>
+    </linearGradient>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f1e"/>
+      <stop offset="100%" style="stop-color:#080810"/>
+    </linearGradient>
+    <!-- Gold accent -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fbbf24"/>
+      <stop offset="50%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#d97706"/>
+    </linearGradient>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="400" fill="url(#bgGrad)" rx="16"/>
+  
+  <!-- Decorative grid pattern -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(99,102,241,0.1)" stroke-width="1"/>
+  </pattern>
+  <rect width="1200" height="400" fill="url(#grid)" rx="16"/>
+  
+  <!-- Abstract data visualization lines (suggesting sports analytics) -->
+  <g opacity="0.15">
+    <path d="M 0 300 Q 200 250 400 280 T 800 200 T 1200 250" 
+          fill="none" stroke="#6366f1" stroke-width="3"/>
+    <path d="M 0 320 Q 300 270 600 300 T 1200 280" 
+          fill="none" stroke="#8b5cf6" stroke-width="2"/>
+    <path d="M 0 340 Q 150 290 300 320 T 900 280 T 1200 310" 
+          fill="none" stroke="#6366f1" stroke-width="2"/>
+  </g>
+  
+  <!-- Logo icon on left -->
+  <g transform="translate(80, 80)">
+    <!-- Glow circle -->
+    <circle cx="120" cy="120" r="110" fill="rgba(99,102,241,0.1)"/>
+    <circle cx="120" cy="120" r="100" fill="none" stroke="url(#bannerGrad)" stroke-width="3"/>
+    
+    <!-- J letter -->
+    <g transform="translate(120, 120)">
+      <path d="M -35 -80 
+               L 35 -80 
+               L 35 30 
+               Q 35 80 0 80 
+               Q -35 80 -35 50 
+               L -35 30 
+               L -8 30 
+               L -8 50 
+               Q -8 60 0 60 
+               Q 8 60 8 30 
+               L 8 -55 
+               L -35 -55 
+               Z" 
+            fill="url(#bannerGrad)" filter="url(#glow)"/>
+      
+      <!-- Droplet accents -->
+      <circle cx="50" cy="-65" r="10" fill="url(#goldGrad)"/>
+      <circle cx="62" cy="-48" r="5" fill="url(#goldGrad)" opacity="0.7"/>
+    </g>
+  </g>
+  
+  <!-- Text: JuicyPlays -->
+  <text x="380" y="170" 
+        font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" 
+        font-size="72" 
+        font-weight="800" 
+        fill="url(#bannerGrad)"
+        filter="url(#glow)">
+    Juicy
+  </text>
+  <text x="580" y="170" 
+        font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" 
+        font-size="72" 
+        font-weight="800" 
+        fill="#f1f1fb">
+    Plays
+  </text>
+  
+  <!-- Tagline -->
+  <text x="380" y="220" 
+        font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" 
+        font-size="22" 
+        font-weight="500" 
+        fill="#a0a0c0">
+    Advanced Sports Betting Analytics
+  </text>
+  
+  <!-- Feature badges -->
+  <g transform="translate(380, 260)">
+    <rect width="110" height="32" rx="16" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.3)"/>
+    <text x="55" y="21" 
+          font-family="Inter, sans-serif" 
+          font-size="12" 
+          font-weight="600" 
+          fill="#818cf8" 
+          text-anchor="middle">
+      EV+ PLAYS
+    </text>
+    
+    <g transform="translate(125, 0)">
+      <rect width="130" height="32" rx="16" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.3)"/>
+      <text x="65" y="21" 
+            font-family="Inter, sans-serif" 
+            font-size="12" 
+            font-weight="600" 
+            fill="#818cf8" 
+            text-anchor="middle">
+        LINE SHOPPING
+      </text>
+    </g>
+    
+    <g transform="translate(270, 0)">
+      <rect width="100" height="32" rx="16" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.3)"/>
+      <text x="50" y="21" 
+            font-family="Inter, sans-serif" 
+            font-size="12" 
+            font-weight="600" 
+            fill="#818cf8" 
+            text-anchor="middle">
+        SLIP TRACKER
+      </text>
+    </g>
+  </g>
+  
+  <!-- Corner accent -->
+  <circle cx="1120" cy="80" r="40" fill="url(#goldGrad)" opacity="0.1"/>
+  <circle cx="1140" cy="60" r="20" fill="url(#goldGrad)" opacity="0.2"/>
+</svg>

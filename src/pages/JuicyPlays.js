@@ -27,7 +27,6 @@ const JuicyPlays = () => {
   const [statOptions, setStatOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const user = useAuthUser();
   const isMobile = useMediaQuery("(max-width: 900px)");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,14 +69,9 @@ const JuicyPlays = () => {
       stats: typeof stats === "string" ? stats : stats.join(","),
       baselineBook: currentBaseline,
     };
-    const headers = {
-      "x-customer-id": "",
-      "x-user-id": user().userId,
-    };
     try {
       const res = await axios.get(paths.getJuicyPlaysBasePath, {
         params: queryParams,
-        headers,
       });
       setData(res.data.plays.sort((a, b) => b.diffs - a.diffs));
       setStatOptions(res.data.statTypes.map((v) => ({ value: v, label: v })));

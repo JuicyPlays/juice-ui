@@ -1,6 +1,4 @@
 import React from "react";
-import { Elements } from "@stripe/react-stripe-js";
-import { stripePromise } from "../../../App";
 import { styles } from "../styles/home.styles";
 import { pricingPlans, sharedFeatures } from "../data/pricingPlans";
 import PricingCard from "./PricingCard";
@@ -21,11 +19,9 @@ export default function PricingSection() {
       </div>
 
       <div className="pricing-grid" style={styles.pricingGrid}>
-        <Elements stripe={stripePromise}>
-          {plansWithFeatures.map((plan) => (
-            <PricingCard key={plan.name} plan={plan} />
-          ))}
-        </Elements>
+        {plansWithFeatures.map((plan) => (
+          <PricingCard key={plan.name} plan={plan} />
+        ))}
       </div>
 
       {/* Assurance strip */}
@@ -39,7 +35,7 @@ export default function PricingSection() {
       }}>
         {[
           { icon: '🛡️', text: 'Cancel anytime' },
-          { icon: '🔒', text: 'Secure payment via Stripe' },
+          { icon: '🔒', text: 'Secure checkout via Whop' },
           { icon: '⚡', text: 'Instant access' },
         ].map((item) => (
           <div key={item.text} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

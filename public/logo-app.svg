@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <!-- Main gradient -->
+    <linearGradient id="iconMainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+    <!-- Background -->
+    <linearGradient id="iconBgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f1e"/>
+      <stop offset="100%" style="stop-color:#080810"/>
+    </linearGradient>
+    <!-- Gold accent -->
+    <linearGradient id="iconGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fbbf24"/>
+      <stop offset="50%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#d97706"/>
+    </linearGradient>
+    <!-- Glow filter -->
+    <filter id="iconGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background with rounded corners for app icon -->
+  <rect width="1024" height="1024" rx="224" fill="url(#iconBgGrad)"/>
+  
+  <!-- Subtle grid pattern -->
+  <pattern id="iconGrid" width="64" height="64" patternUnits="userSpaceOnUse">
+    <path d="M 64 0 L 0 0 0 64" fill="none" stroke="rgba(99,102,241,0.08)" stroke-width="1"/>
+  </pattern>
+  <rect width="1024" height="1024" rx="224" fill="url(#iconGrid)"/>
+  
+  <!-- Outer glow ring -->
+  <circle cx="512" cy="512" r="420" fill="none" stroke="rgba(99,102,241,0.2)" stroke-width="2"/>
+  <circle cx="512" cy="512" r="400" fill="none" stroke="url(#iconMainGrad)" stroke-width="6"/>
+  
+  <!-- Main J letter -->
+  <g transform="translate(512, 512)">
+    <!-- Glow behind J -->
+    <path d="M -140 -320 
+             L 140 -320 
+             L 140 130 
+             Q 140 320 0 320 
+             Q -140 320 -140 200 
+             L -140 130 
+             L -40 130 
+             L -40 200 
+             Q -40 240 0 240 
+             Q 40 240 40 130 
+             L 40 -220 
+             L -140 -220 
+             Z" 
+          fill="rgba(99,102,241,0.2)" 
+          filter="url(#iconGlow)"
+          transform="scale(0.95)"/>
+    
+    <!-- Main J shape -->
+    <path d="M -140 -320 
+             L 140 -320 
+             L 140 130 
+             Q 140 320 0 320 
+             Q -140 320 -140 200 
+             L -140 130 
+             L -40 130 
+             L -40 200 
+             Q -40 240 0 240 
+             Q 40 240 40 130 
+             L 40 -220 
+             L -140 -220 
+             Z" 
+          fill="url(#iconMainGrad)"/>
+    
+    <!-- Inner highlight for depth -->
+    <path d="M -120 -300 
+             L 120 -300 
+             L 120 -240 
+             L -120 -240 
+             Z" 
+          fill="rgba(255,255,255,0.1)"/>
+  </g>
+  
+  <!-- Juicy droplet accents -->
+  <g transform="translate(720, 280)">
+    <!-- Large droplet -->
+    <circle cx="0" cy="0" r="50" fill="url(#iconGoldGrad)" filter="url(#iconGlow)"/>
+    <ellipse cx="-12" cy="-12" rx="15" ry="10" fill="rgba(255,255,255,0.4)" transform="rotate(-45)"/>
+    
+    <!-- Small droplets -->
+    <circle cx="70" cy="40" r="25" fill="url(#iconGoldGrad)" opacity="0.7"/>
+    <circle cx="-30" cy="-70" r="18" fill="url(#iconGoldGrad)" opacity="0.5"/>
+    <circle cx="90" cy="-20" r="12" fill="url(#iconGoldGrad)" opacity="0.4"/>
+  </g>
+  
+  <!-- Data/analytics accent lines -->
+  <g stroke="rgba(99,102,241,0.3)" stroke-width="3" fill="none">
+    <path d="M 200 750 L 250 700 L 250 650"/>
+    <circle cx="250" cy="640" r="8" fill="#6366f1" stroke="none"/>
+    <path d="M 824 750 L 774 700 L 774 670"/>
+    <circle cx="774" cy="660" r="6" fill="#6366f1" stroke="none"/>
+  </g>
+</svg>

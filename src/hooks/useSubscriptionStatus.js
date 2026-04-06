@@ -15,9 +15,9 @@ export function useSubscriptionStatus(userId) {
     const checkSubscription = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_JUICE_API_BASE_URL}/user/${userId}`
+          `${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/me`
         );
-        setSubscribed(response.data.subscribed || false);
+        setSubscribed(response.data.subscribed || response.data.hasAccess || false);
         setError(null);
       } catch (error) {
         // Graceful error handling for backend connection failures
