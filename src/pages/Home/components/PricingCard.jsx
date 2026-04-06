@@ -1,22 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthUser } from "react-auth-kit";
-import { useSubscriptionStatus } from "../../../hooks/useSubscriptionStatus";
 
 export default function PricingCard({ plan }) {
   const user = useAuthUser();
   const navigate = useNavigate();
   const location = useLocation();
+  const authUser = user();
+  const subscribed = Boolean(authUser?.subscribed || authUser?.hasAccess);
   const [hovered, setHovered] = useState(false);
 
-  const { subscribed, setSubscribed } = useSubscriptionStatus(user()?.userId);
-
-  useEffect(() => {
-    setSubscribed(Boolean(subscribed));
-  }, [setSubscribed, subscribed]);
-
   const handleClick = () => {
-    if (!user()) {
+    if (!authUser) {
       navigate("/login", { state: { from: location } });
       return;
     }

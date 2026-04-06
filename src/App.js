@@ -51,38 +51,14 @@ function getCachedAuthMe() {
 
 function SubscriptionGuard({ children }) {
   const user = useAuthUser();
-  const signOut = useSignOut();
-  const [status, setStatus] = React.useState({ loading: true, hasAccess: false });
   const location = useLocation();
+  const authUser = user();
 
-  React.useEffect(() => {
-    async function checkAccess() {
-      if (!user()) {
-        setStatus({ loading: false, hasAccess: false });
-        return;
-      }
-      try {
-        const response = await getCachedAuthMe();
-        setStatus({
-          loading: false,
-          hasAccess: response.data.subscribed || response.data.hasAccess,
-        });
-      } catch (error) {
-        if (error?.response?.status === 401) {
-          signOut();
-        }
-        console.error("Error checking subscription", error);
-        setStatus({ loading: false, hasAccess: false });
-      }
-    }
-    checkAccess();
-  }, [signOut, user()?.userId]);
-
-  if (status.loading) {
-    return <FullScreenLoader />;
+  if (!authUser) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (!status.hasAccess) {
+  if (!(authUser.subscribed || authUser.hasAccess)) {
     return <Navigate to="/" state={{ from: location, subscriptionRequired: true }} replace />;
   }
 
@@ -93,7 +69,6 @@ function SubscriptionGuard({ children }) {
 let authMePromise = null;
 
 function MainContent() {
-  const location = useLocation();
   const authenticated = useIsAuthenticated();
   const signIn = useSignIn();
   const signOut = useSignOut();
@@ -125,6 +100,10 @@ function MainContent() {
             email: response.data.email,
             name: response.data.name,
             whopUserId: response.data.whopUserId,
+            subscribed: response.data.subscribed,
+            hasAccess: response.data.hasAccess,
+            planId: response.data.planId,
+            subscriptionId: response.data.subscriptionId,
           },
         });
       } catch (error) {
@@ -144,7 +123,7 @@ function MainContent() {
     return () => {
       cancelled = true;
     };
-  }, [authenticated, signIn, signOut]);
+  }, []);
 
   if (bootstrapping) {
     return <FullScreenLoader />;

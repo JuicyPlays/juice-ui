@@ -3,7 +3,6 @@ import React, { Component, useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
-import axios from "axios";
 import { useAuthUser } from "react-auth-kit";
 
 // -------------- Pricing Data --------------
@@ -60,28 +59,14 @@ const plans = [
 const PricingCard = ({ plan }) => {
   const user = useAuthUser();
   const navigate = useNavigate();
-  const [subscribed, setSubscribed] = useState(false);
+  const authUser = user();
+  const subscribed = Boolean(authUser?.subscribed || authUser?.hasAccess);
   const [hovered, setHovered] = useState(false);
-
-  useEffect(() => {
-    async function getUser() {
-      if (!user()) return;
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/me`
-        );
-        setSubscribed(response.data.subscribed || response.data.hasAccess);
-      } catch (e) {
-        console.error("Error fetching user sub status", e);
-      }
-    }
-    getUser();
-  }, [user()?.userId]);
 
   const location = useLocation();
 
   const handleClick = () => {
-    if (!user()) {
+    if (!authUser) {
       navigate("/login", { state: { from: location } });
       return;
     }
