@@ -174,8 +174,8 @@ const JuicyPlays = () => {
           <span style={mobileDetailStyles.chip}>{row.original.sport}</span>
         </div>
         <div style={{ ...mobileDetailStyles.grid, marginTop: "8px" }}>
-          <span style={mobileDetailStyles.bookChip}>Book: {row.original?.sportsbookLine}</span>
-          <span style={mobileDetailStyles.juicyChip}>Juicy: {row.original?.juicyLine}</span>
+          <span style={mobileDetailStyles.bookChip}>Book: {row.original?.sportsbookLine ?? "—"}</span>
+          <span style={mobileDetailStyles.juicyChip}>Juicy: {row.original?.juicyLine ?? "—"}</span>
           <span style={row.original?.over ? mobileDetailStyles.leanOver : mobileDetailStyles.leanUnder}>
             {row.original?.over ? "OVER" : "UNDER"}
           </span>

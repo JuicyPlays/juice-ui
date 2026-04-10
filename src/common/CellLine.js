@@ -12,6 +12,11 @@ const CellLine = ({ cell }) => {
     backgroundColor = "#2563eb"; // Sportsbook Blue
   }
 
+  // Handle null/undefined values
+  if (cellValue == null) {
+    return <span style={{ color: "var(--text-muted)", fontSize: "13px" }}>—</span>;
+  }
+
   return (
     <span
       style={{
