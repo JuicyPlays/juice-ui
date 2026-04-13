@@ -7,27 +7,27 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { BrowserRouter as Router } from "react-router-dom";
 
 const theme = createTheme({
-    palette: {
-        mode: "dark",
-    },
-    components: {
-        MuiCard: {
-            styleOverrides: {
-                outlined: {
-                    border: "2px solid #fff",
-                },
-            },
+  palette: {
+    mode: "dark",
+  },
+  components: {
+    MuiCard: {
+      styleOverrides: {
+        outlined: {
+          border: "2px solid #fff",
         },
+      },
     },
+  },
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-    <Router>
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <App />
-        </ThemeProvider>
-    </Router>
+  <Router>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <App />
+    </ThemeProvider>
+  </Router>
 );

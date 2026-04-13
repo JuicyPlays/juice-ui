@@ -7,6 +7,7 @@ React + Vite frontend for the JuicyPlays esports analytics platform. Provides re
 ## 🎯 Overview
 
 The `juice-ui` is a modern React application built with Vite that delivers:
+
 - **Juicy Screen** - Real-time esports prop line comparisons with +EV indicators
 - **Slip Generator** - AI-optimized parlays across multiple sportsbooks
 - **Subscription Management** - Stripe-powered billing with tiered access
@@ -72,6 +73,7 @@ yarn install
 ```
 
 **Key Dependencies:**
+
 - `react@18.3.1` - UI library
 - `vite@6.0.7` - Build tool
 - `react-router-dom@7.1.1` - Routing
@@ -104,14 +106,14 @@ VITE_BASE_URL=http://localhost:5173
 
 **Environment Variable Details:**
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `VITE_SUPABASE_URL` | Supabase project URL | `https://abc123.supabase.co` |
-| `VITE_SUPABASE_ANON` | Supabase anonymous key (public) | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` |
-| `VITE_JUICE_API_BASE_URL` | Backend API base URL | `http://localhost:8080` |
-| `VITE_JUICE_API_USERS` | User management endpoint | `http://localhost:8080/users` |
-| `VITE_STRIPE_PK` | Stripe publishable key | `pk_test_51...` |
-| `VITE_BASE_URL` | Frontend URL (for redirects) | `http://localhost:5173` |
+| Variable                  | Description                     | Example                                   |
+| ------------------------- | ------------------------------- | ----------------------------------------- |
+| `VITE_SUPABASE_URL`       | Supabase project URL            | `https://abc123.supabase.co`              |
+| `VITE_SUPABASE_ANON`      | Supabase anonymous key (public) | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` |
+| `VITE_JUICE_API_BASE_URL` | Backend API base URL            | `http://localhost:8080`                   |
+| `VITE_JUICE_API_USERS`    | User management endpoint        | `http://localhost:8080/users`             |
+| `VITE_STRIPE_PK`          | Stripe publishable key          | `pk_test_51...`                           |
+| `VITE_BASE_URL`           | Frontend URL (for redirects)    | `http://localhost:5173`                   |
 
 ### 4. Start Development Server
 
@@ -134,6 +136,7 @@ yarn dev
 ```bash
 npm run dev
 ```
+
 Starts Vite dev server with HMR on `http://localhost:5173`
 
 ### Build for Production
@@ -141,6 +144,7 @@ Starts Vite dev server with HMR on `http://localhost:5173`
 ```bash
 npm run build
 ```
+
 Creates optimized production build in `dist/` folder
 
 ### Preview Production Build
@@ -148,6 +152,7 @@ Creates optimized production build in `dist/` folder
 ```bash
 npm run preview
 ```
+
 Serves the production build locally for testing
 
 ### Lint Code
@@ -155,6 +160,7 @@ Serves the production build locally for testing
 ```bash
 npm run lint
 ```
+
 Runs ESLint to check code quality
 
 ---
@@ -170,6 +176,7 @@ The app uses **Supabase Auth** with **react-auth-kit** for state management:
 5. **Subscription Guard** checks user access for premium features
 
 **Key Components:**
+
 - `SupabaseLogin.js` - Login/signup form
 - `App.js` - Auth provider and route guards
 - `SubscriptionGuard` - Checks user subscription status
@@ -181,6 +188,7 @@ The app uses **Supabase Auth** with **react-auth-kit** for state management:
 Subscription management is handled via **Stripe Checkout**:
 
 **Flow:**
+
 1. User selects a plan on the Home page
 2. Frontend calls `POST /checkout-session` on `juice-api`
 3. Backend creates Stripe Checkout session
@@ -189,11 +197,13 @@ Subscription management is handled via **Stripe Checkout**:
 6. Subscription status is synced via Stripe webhooks
 
 **Pricing Plans:**
+
 - **Bi-Weekly:** $19.99 / 2 weeks
 - **Monthly:** $29.99 / month (40% off)
 - **Annual:** $249 / year (58% off)
 
 **Billing Portal:**
+
 - Users can manage subscriptions at `https://billing.stripe.com/p/login/...`
 
 ---
@@ -201,6 +211,7 @@ Subscription management is handled via **Stripe Checkout**:
 ## 📊 Key Features
 
 ### 1. Juicy Screen (`/juicyplays`)
+
 **Real-time line comparison dashboard**
 
 - Fetches player props from `juice-api`
@@ -212,6 +223,7 @@ Subscription management is handled via **Stripe Checkout**:
 **Data Hook:** `useJuicyPlaysData(userId)`
 
 ### 2. Slip Generator (`/slips`)
+
 **AI-optimized parlay builder**
 
 - Generates profitable 2-3 pick parlays
@@ -222,6 +234,7 @@ Subscription management is handled via **Stripe Checkout**:
 **Data Hook:** `useSlipsData(userId)`
 
 ### 3. Home Page (`/`)
+
 **Landing page with pricing**
 
 - Hero section with animated slip visual
@@ -237,6 +250,7 @@ Subscription management is handled via **Stripe Checkout**:
 ## 🎨 Styling
 
 **CSS Variables** (defined in `index.css`):
+
 ```css
 --bg-primary: #0d0d1a
 --text-primary: #f1f1fb
@@ -295,6 +309,7 @@ netlify deploy --prod --dir=dist
 ```
 
 **Build Settings:**
+
 - **Build Command:** `npm run build`
 - **Publish Directory:** `dist`
 - **Node Version:** 18+
@@ -307,6 +322,7 @@ netlify deploy --prod --dir=dist
 
 **Solution:**
 Ensure Vite alias is configured in `vite.config.js`:
+
 ```javascript
 resolve: {
   alias: {
@@ -318,6 +334,7 @@ resolve: {
 ### Issue: `Supabase session not persisting`
 
 **Solution:**
+
 - Check `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON` are correct
 - Clear localStorage and cookies
 - Verify Supabase project is active
@@ -325,6 +342,7 @@ resolve: {
 ### Issue: `Stripe checkout not redirecting`
 
 **Solution:**
+
 - Verify `VITE_STRIPE_PK` is the **publishable key** (starts with `pk_`)
 - Check `VITE_BASE_URL` matches your frontend URL
 - Ensure backend `/checkout-session` endpoint is accessible
@@ -332,6 +350,7 @@ resolve: {
 ### Issue: `API calls failing with CORS errors`
 
 **Solution:**
+
 - Ensure `juice-api` backend has CORS enabled for your frontend URL
 - Check `VITE_JUICE_API_BASE_URL` is correct
 - Verify backend is running on the specified port

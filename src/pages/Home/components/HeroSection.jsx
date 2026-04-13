@@ -8,16 +8,17 @@ export default function HeroSection() {
       <div className="hero-grid" style={styles.heroGrid}>
         <div style={styles.heroContent}>
           <h1 style={styles.headline}>
-            Data-Driven <br /> <span style={styles.gradientText}>Esports Value</span>
+            Data-Driven <br />{" "}
+            <span style={styles.gradientText}>Esports Value</span>
           </h1>
           <p style={styles.subheadline}>
-            Stop guessing. We analyze millions of data points across global esports lines to identify profitable discrepancies before the books can adjust.
+            Stop guessing. We analyze millions of data points across global
+            esports lines to identify profitable discrepancies before the books
+            can adjust.
           </p>
           <div style={styles.actionRow}>
-            <a href="#pricing-section" style={{ textDecoration: 'none' }}>
-              <button className="btn-gradient">
-                Start Winning Now
-              </button>
+            <a href="#pricing-section" style={{ textDecoration: "none" }}>
+              <button className="btn-gradient">Start Winning Now</button>
             </a>
           </div>
         </div>

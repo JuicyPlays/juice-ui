@@ -96,5 +96,3 @@ export const juicyColumnsV2 = [
     size: 60,
   },
 ];
-
-

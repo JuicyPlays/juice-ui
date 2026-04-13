@@ -13,7 +13,15 @@ import { createPortal } from "react-dom";
  *   onToggle   – (value) => void — toggle a single option
  *   onToggleAll – (selectAll: boolean) => void — select / deselect all
  */
-const FilterSelect = ({ label, icon, options, selected, onToggle, onToggleAll, singleMode = false }) => {
+const FilterSelect = ({
+  label,
+  icon,
+  options,
+  selected,
+  onToggle,
+  onToggleAll,
+  singleMode = false,
+}) => {
   const [open, setOpen] = useState(false);
   const panelRef = useRef(null);
   const triggerRef = useRef(null);
@@ -52,9 +60,10 @@ const FilterSelect = ({ label, icon, options, selected, onToggle, onToggleAll, s
 
   const selectedCount = selected.length;
   const hasSelection = selectedCount > 0;
-  const singleSelectedLabel = singleMode && hasSelection
-    ? options.find((o) => selected.includes(o.value))?.label || ""
-    : "";
+  const singleSelectedLabel =
+    singleMode && hasSelection
+      ? options.find((o) => selected.includes(o.value))?.label || ""
+      : "";
 
   return (
     <div style={{ position: "relative" }}>

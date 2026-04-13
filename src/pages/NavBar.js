@@ -59,7 +59,9 @@ const NavBar = () => {
                   onClick={handleProfileClick}
                   aria-label="User menu"
                 >
-                  <AccountCircleIcon style={{ fontSize: 20, color: "var(--text-secondary)" }} />
+                  <AccountCircleIcon
+                    style={{ fontSize: 20, color: "var(--text-secondary)" }}
+                  />
                 </button>
               ) : (
                 <Link
@@ -81,16 +83,31 @@ const NavBar = () => {
                 <>
                   <div style={styles.menuBackdrop} onClick={closeProfile} />
                   <div style={styles.dropdown}>
-                    <Link to="/account" style={styles.dropdownItem} onClick={closeProfile}>
+                    <Link
+                      to="/account"
+                      style={styles.dropdownItem}
+                      onClick={closeProfile}
+                    >
                       <AccountCircleIcon style={{ fontSize: 16 }} />
                       Account
                     </Link>
-                    <Link to="/account" style={styles.dropdownItem} onClick={closeProfile}>
+                    <Link
+                      to="/account"
+                      style={styles.dropdownItem}
+                      onClick={closeProfile}
+                    >
                       <Settings style={{ fontSize: 16 }} />
                       Settings
                     </Link>
                     <div style={styles.dropdownDivider} />
-                    <Link to="/logout" style={{ ...styles.dropdownItem, ...styles.dropdownDanger }} onClick={closeProfile}>
+                    <Link
+                      to="/logout"
+                      style={{
+                        ...styles.dropdownItem,
+                        ...styles.dropdownDanger,
+                      }}
+                      onClick={closeProfile}
+                    >
                       <Logout style={{ fontSize: 16 }} />
                       Sign out
                     </Link>
@@ -100,8 +117,14 @@ const NavBar = () => {
             </div>
 
             {/* Mobile hamburger */}
-            <button style={styles.hamburger} onClick={toggleMobile} aria-label="Menu">
-              <MenuIcon style={{ fontSize: 22, color: "var(--text-secondary)" }} />
+            <button
+              style={styles.hamburger}
+              onClick={toggleMobile}
+              aria-label="Menu"
+            >
+              <MenuIcon
+                style={{ fontSize: 22, color: "var(--text-secondary)" }}
+              />
             </button>
           </div>
         </div>
@@ -125,12 +148,40 @@ const NavBar = () => {
             <div style={styles.dropdownDivider} />
             {authenticated() ? (
               <>
-                <Link to="/account" style={styles.mobileLink} onClick={closeMobile}>Account</Link>
-                <Link to="/account" style={styles.mobileLink} onClick={closeMobile}>Settings</Link>
-                <Link to="/logout" style={{ ...styles.mobileLink, color: "#ef4444" }} onClick={closeMobile}>Sign out</Link>
+                <Link
+                  to="/account"
+                  style={styles.mobileLink}
+                  onClick={closeMobile}
+                >
+                  Account
+                </Link>
+                <Link
+                  to="/account"
+                  style={styles.mobileLink}
+                  onClick={closeMobile}
+                >
+                  Settings
+                </Link>
+                <Link
+                  to="/logout"
+                  style={{ ...styles.mobileLink, color: "#ef4444" }}
+                  onClick={closeMobile}
+                >
+                  Sign out
+                </Link>
               </>
             ) : (
-              <Link to="/login" style={{ ...styles.mobileLink, background: "rgba(99, 102, 241, 0.1)", color: "var(--accent-light)" }} onClick={closeMobile}>Login</Link>
+              <Link
+                to="/login"
+                style={{
+                  ...styles.mobileLink,
+                  background: "rgba(99, 102, 241, 0.1)",
+                  color: "var(--accent-light)",
+                }}
+                onClick={closeMobile}
+              >
+                Login
+              </Link>
             )}
           </div>
         )}

@@ -1,6 +1,7 @@
 const Cell = ({ cell }) => {
   const cellValue = cell.getValue();
-  const numericValue = typeof cellValue === "number" ? cellValue : parseFloat(cellValue);
+  const numericValue =
+    typeof cellValue === "number" ? cellValue : parseFloat(cellValue);
   if (isNaN(numericValue)) return null;
   const roundedValue = numericValue.toFixed(2);
 

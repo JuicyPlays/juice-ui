@@ -44,7 +44,9 @@ const CopyToClipboardButton = ({ player, hideText = false }) => {
       }}
     >
       {!hideText && player}
-      <span style={{ fontSize: "11px", opacity: 0.6 }}>{copied ? "✓" : "⎘"}</span>
+      <span style={{ fontSize: "11px", opacity: 0.6 }}>
+        {copied ? "✓" : "⎘"}
+      </span>
     </button>
   );
 };

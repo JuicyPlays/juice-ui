@@ -13,7 +13,8 @@ const bookDisplayName = (key) => {
   if (lower === "parlayplay") return "ParlayPlay";
   if (lower === "betr") return "Betr";
   if (lower === "boom") return "BOOM";
-  if (lower === "draftkings_pick6" || lower === "draftkings-pick6") return "DK Pick6";
+  if (lower === "draftkings_pick6" || lower === "draftkings-pick6")
+    return "DK Pick6";
   return key.charAt(0).toUpperCase() + key.slice(1);
 };
 
@@ -25,49 +26,58 @@ export function useJuicyPlaysData(userId) {
   const [statOptions, setStatOptions] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchData = useCallback(async (filters) => {
-    const { sportsbook, sports, stats, baselineBook } = filters;
-    
-    const queryParams = {
-      sportsbook,
-      sports,
-      stats,
-      baselineBook,
-    };
+  const fetchData = useCallback(
+    async (filters) => {
+      const { sportsbook, sports, stats, baselineBook } = filters;
 
-    try {
-      setLoading(true);
-      const res = await axios.get(paths.getJuicyPlaysBasePath, {
-        params: queryParams,
-      });
+      const queryParams = {
+        sportsbook,
+        sports,
+        stats,
+        baselineBook,
+      };
 
-      setData(res.data.plays);
-      setStatOptions(res.data.statTypes.map((v) => ({ value: v, label: v })));
-      setSportsOptions(res.data.sports.map((v) => ({ value: v, label: v })));
+      try {
+        setLoading(true);
+        const res = await axios.get(paths.getJuicyPlaysBasePath, {
+          params: queryParams,
+        });
 
-      if (res.data.sportsbooks) {
-        let books = [...res.data.sportsbooks];
-        if (!books.includes("underdog")) books.push("underdog");
-        if (!books.includes("prizepicks")) books.push("prizepicks");
+        setData(res.data.plays);
+        setStatOptions(res.data.statTypes.map((v) => ({ value: v, label: v })));
+        setSportsOptions(res.data.sports.map((v) => ({ value: v, label: v })));
 
-        const targetBooks = books.filter(b => b.toLowerCase() !== "juice_ml" && b.toLowerCase() !== "juiceml");
-        const mappedBooks = targetBooks.map((v) => ({
-          value: v.toLowerCase(),
-          label: bookDisplayName(v)
-        }));
-        setBookOptions(mappedBooks);
+        if (res.data.sportsbooks) {
+          let books = [...res.data.sportsbooks];
+          if (!books.includes("underdog")) books.push("underdog");
+          if (!books.includes("prizepicks")) books.push("prizepicks");
 
-        const baselineOpts = [...mappedBooks, { value: "juice_ml", label: "Juicy" }];
-        setBaselineOptions(baselineOpts);
+          const targetBooks = books.filter(
+            (b) =>
+              b.toLowerCase() !== "juice_ml" && b.toLowerCase() !== "juiceml"
+          );
+          const mappedBooks = targetBooks.map((v) => ({
+            value: v.toLowerCase(),
+            label: bookDisplayName(v),
+          }));
+          setBookOptions(mappedBooks);
 
-        return mappedBooks;
+          const baselineOpts = [
+            ...mappedBooks,
+            { value: "juice_ml", label: "Juicy" },
+          ];
+          setBaselineOptions(baselineOpts);
+
+          return mappedBooks;
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [userId]);
+    },
+    [userId]
+  );
 
   return {
     data,

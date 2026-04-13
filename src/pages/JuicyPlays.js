@@ -30,7 +30,9 @@ const JuicyPlays = () => {
   const isMobile = useMediaQuery("(max-width: 900px)");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { handleClick(); }, []);
+  useEffect(() => {
+    handleClick();
+  }, []);
 
   async function handleClick() {
     setLoading(true);
@@ -39,7 +41,9 @@ const JuicyPlays = () => {
   }
 
   const handleToggleSport = (val) => {
-    setSports((prev) => prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]);
+    setSports((prev) =>
+      prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]
+    );
   };
 
   const handleToggleAllSports = (selectAll) => {
@@ -55,14 +59,19 @@ const JuicyPlays = () => {
   };
 
   const handleToggleStat = (val) => {
-    setStats((prev) => prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]);
+    setStats((prev) =>
+      prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]
+    );
   };
 
   const handleToggleAllStats = (selectAll) => {
     setStats(selectAll ? statOptions.map((o) => o.value) : []);
   };
 
-  const fetchJuicyPlaysData = async (currentBook = sportsbook, currentBaseline = baselineBook) => {
+  const fetchJuicyPlaysData = async (
+    currentBook = sportsbook,
+    currentBaseline = baselineBook
+  ) => {
     const queryParams = {
       sportsbook: currentBook,
       sports: typeof sports === "string" ? sports : sports.join(","),
@@ -76,7 +85,7 @@ const JuicyPlays = () => {
       setData(res.data.plays.sort((a, b) => b.diffs - a.diffs));
       setStatOptions(res.data.statTypes.map((v) => ({ value: v, label: v })));
       setSportsOptions(res.data.sports.map((v) => ({ value: v, label: v })));
-      
+
       if (isInitialLoad) {
         setStats(res.data.statTypes);
         setSports(res.data.sports);
@@ -88,14 +97,19 @@ const JuicyPlays = () => {
         if (!books.includes("underdog")) books.push("underdog");
         if (!books.includes("prizepicks")) books.push("prizepicks");
 
-        const targetBooks = books.filter(b => b.toLowerCase() !== "juice_ml" && b.toLowerCase() !== "juiceml");
+        const targetBooks = books.filter(
+          (b) => b.toLowerCase() !== "juice_ml" && b.toLowerCase() !== "juiceml"
+        );
         const mappedBooks = targetBooks.map((v) => ({
           value: v.toLowerCase(),
-          label: bookDisplayName(v)
+          label: bookDisplayName(v),
         }));
         setBookOptions(mappedBooks);
 
-        const baselineOpts = [...mappedBooks, { value: "juice_ml", label: "Juicy" }];
+        const baselineOpts = [
+          ...mappedBooks,
+          { value: "juice_ml", label: "Juicy" },
+        ];
         setBaselineOptions(baselineOpts);
 
         // Auto-select the first sportsbook on initial load if none is selected yet
@@ -163,7 +177,7 @@ const JuicyPlays = () => {
     initialState: {
       expanded: true,
       pagination: { pageSize: 10 },
-      sorting: [{ id: "diffs", desc: true }]
+      sorting: [{ id: "diffs", desc: true }],
     },
     muiPaginationProps: { rowsPerPageOptions: ["10"] },
     renderDetailPanel: ({ row }) => (
@@ -174,9 +188,19 @@ const JuicyPlays = () => {
           <span style={mobileDetailStyles.chip}>{row.original.sport}</span>
         </div>
         <div style={{ ...mobileDetailStyles.grid, marginTop: "8px" }}>
-          <span style={mobileDetailStyles.bookChip}>Book: {row.original?.sportsbookLine ?? "—"}</span>
-          <span style={mobileDetailStyles.juicyChip}>Juicy: {row.original?.juicyLine ?? "—"}</span>
-          <span style={row.original?.over ? mobileDetailStyles.leanOver : mobileDetailStyles.leanUnder}>
+          <span style={mobileDetailStyles.bookChip}>
+            Book: {row.original?.sportsbookLine ?? "—"}
+          </span>
+          <span style={mobileDetailStyles.juicyChip}>
+            Juicy: {row.original?.juicyLine ?? "—"}
+          </span>
+          <span
+            style={
+              row.original?.over
+                ? mobileDetailStyles.leanOver
+                : mobileDetailStyles.leanUnder
+            }
+          >
             {row.original?.over ? "OVER" : "UNDER"}
           </span>
         </div>
@@ -187,30 +211,43 @@ const JuicyPlays = () => {
         width: "100%",
         boxShadow: "none",
         border: "none",
-        background: "transparent"
-      }
+        background: "transparent",
+      },
     },
     muiTableBodyCellProps: {
       sx: {
         padding: "8px 8px",
-        fontSize: "11px"
-      }
-    }
+        fontSize: "11px",
+      },
+    },
   });
 
   return (
-    <div style={{ ...styles.page, padding: isMobile ? "16px 8px 60px" : styles.page.padding }}>
+    <div
+      style={{
+        ...styles.page,
+        padding: isMobile ? "16px 8px 60px" : styles.page.padding,
+      }}
+    >
       {/* Page header */}
       <div style={styles.header}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <h2 style={styles.title}>EV Plays</h2>
-          <p style={styles.subtitle}>Model-based +EV plays across sportsbooks</p>
+          <p style={styles.subtitle}>
+            Model-based +EV plays across sportsbooks
+          </p>
         </div>
         <div style={styles.countBadge}>{data.length} props</div>
       </div>
 
       {/* Filter bar */}
-      <div style={{ ...styles.filterBar, padding: isMobile ? "12px" : styles.filterBar.padding, alignItems: "flex-end" }}>
+      <div
+        style={{
+          ...styles.filterBar,
+          padding: isMobile ? "12px" : styles.filterBar.padding,
+          alignItems: "flex-end",
+        }}
+      >
         <div style={styles.selectWrap}>
           <div style={styles.dropdownLabel}>Sportsbook</div>
           <BookieSettings
@@ -255,7 +292,11 @@ const JuicyPlays = () => {
           className="btn-gradient"
           onClick={handleClick}
           disabled={loading}
-          style={{ minWidth: isMobile ? "100%" : "110px", flexShrink: 0, height: "40px" }}
+          style={{
+            minWidth: isMobile ? "100%" : "110px",
+            flexShrink: 0,
+            height: "40px",
+          }}
         >
           {loading ? (
             <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -348,7 +389,7 @@ const styles = {
   },
   selectWrap: {
     flex: "1 1 200px",
-    minWidth: "150px"
+    minWidth: "150px",
   },
   dropdownLabel: {
     fontSize: "12px",

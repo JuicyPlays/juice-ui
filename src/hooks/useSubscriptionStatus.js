@@ -17,12 +17,19 @@ export function useSubscriptionStatus(userId) {
         const response = await axios.get(
           `${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/me`
         );
-        setSubscribed(response.data.subscribed || response.data.hasAccess || false);
+        setSubscribed(
+          response.data.subscribed || response.data.hasAccess || false
+        );
         setError(null);
       } catch (error) {
         // Graceful error handling for backend connection failures
-        if (error.code === 'ERR_NETWORK' || error.code === 'ERR_CONNECTION_REFUSED') {
-          console.warn("Backend API not available. Defaulting to no subscription.");
+        if (
+          error.code === "ERR_NETWORK" ||
+          error.code === "ERR_CONNECTION_REFUSED"
+        ) {
+          console.warn(
+            "Backend API not available. Defaulting to no subscription."
+          );
           setError("Backend API unavailable");
         } else {
           console.error("Failed to check subscription status:", error);

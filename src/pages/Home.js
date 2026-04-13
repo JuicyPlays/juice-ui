@@ -24,7 +24,9 @@ const plans = [
     period: "/ 2 weeks",
     discount: null,
     featured: false,
-    checkoutUrl: import.meta.env.VITE_WHOP_CHECKOUT_BIWEEKLY || "https://whop.com/checkout/plan_wZ7lvQANDaJfm",
+    checkoutUrl:
+      import.meta.env.VITE_WHOP_CHECKOUT_BIWEEKLY ||
+      "https://whop.com/checkout/plan_wZ7lvQANDaJfm",
     ctaText: "Select Plan",
   },
   {
@@ -37,7 +39,9 @@ const plans = [
     period: "/ month",
     discount: "40% off",
     featured: true,
-    checkoutUrl: import.meta.env.VITE_WHOP_CHECKOUT_MONTHLY || "https://whop.com/checkout/plan_eTvnZxV1Mxi4w",
+    checkoutUrl:
+      import.meta.env.VITE_WHOP_CHECKOUT_MONTHLY ||
+      "https://whop.com/checkout/plan_eTvnZxV1Mxi4w",
     ctaText: "Start Winning Now",
   },
   {
@@ -50,7 +54,9 @@ const plans = [
     period: "/ year",
     discount: "58% off",
     featured: false,
-    checkoutUrl: import.meta.env.VITE_WHOP_CHECKOUT_YEARLY || "https://whop.com/checkout/plan_yUCMmCIrbzdAL",
+    checkoutUrl:
+      import.meta.env.VITE_WHOP_CHECKOUT_YEARLY ||
+      "https://whop.com/checkout/plan_yUCMmCIrbzdAL",
     ctaText: "Select Plan",
   },
 ];
@@ -80,27 +86,35 @@ const PricingCard = ({ plan }) => {
   const isFeatured = plan.featured;
 
   return (
-    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
+    <div
+      style={{ position: "relative", display: "flex", flexDirection: "column" }}
+    >
       {/* Floating pill label */}
       {plan.label && (
-        <div style={{
-          position: 'absolute',
-          top: '-16px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          background: plan.labelColor === '#10b981'
-            ? 'linear-gradient(135deg, #10b981, #059669)'
-            : 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-          color: 'white',
-          padding: '5px 18px',
-          borderRadius: '999px',
-          fontSize: '11px',
-          fontWeight: 800,
-          letterSpacing: '0.1em',
-          whiteSpace: 'nowrap',
-          zIndex: 2,
-          boxShadow: plan.labelColor === '#10b981' ? '0 4px 12px rgba(16,185,129,0.4)' : '0 4px 12px rgba(99,102,241,0.4)',
-        }}>
+        <div
+          style={{
+            position: "absolute",
+            top: "-16px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            background:
+              plan.labelColor === "#10b981"
+                ? "linear-gradient(135deg, #10b981, #059669)"
+                : "linear-gradient(135deg, #6366f1, #8b5cf6)",
+            color: "white",
+            padding: "5px 18px",
+            borderRadius: "999px",
+            fontSize: "11px",
+            fontWeight: 800,
+            letterSpacing: "0.1em",
+            whiteSpace: "nowrap",
+            zIndex: 2,
+            boxShadow:
+              plan.labelColor === "#10b981"
+                ? "0 4px 12px rgba(16,185,129,0.4)"
+                : "0 4px 12px rgba(99,102,241,0.4)",
+          }}
+        >
           {plan.label}
         </div>
       )}
@@ -108,85 +122,169 @@ const PricingCard = ({ plan }) => {
       <div
         style={{
           background: isFeatured
-            ? 'linear-gradient(145deg, rgba(30,30,70,0.95), rgba(20,20,55,0.98))'
-            : 'rgba(19,19,43,0.7)',
+            ? "linear-gradient(145deg, rgba(30,30,70,0.95), rgba(20,20,55,0.98))"
+            : "rgba(19,19,43,0.7)",
           border: isFeatured
-            ? '1px solid rgba(99,102,241,0.5)'
-            : '1px solid rgba(255,255,255,0.08)',
-          borderRadius: '20px',
-          padding: '40px 28px 32px',
-          display: 'flex',
-          flexDirection: 'column',
+            ? "1px solid rgba(99,102,241,0.5)"
+            : "1px solid rgba(255,255,255,0.08)",
+          borderRadius: "20px",
+          padding: "40px 28px 32px",
+          display: "flex",
+          flexDirection: "column",
           boxShadow: hovered
-            ? (isFeatured
-              ? '0 0 80px rgba(99,102,241,0.35), 0 16px 56px rgba(0,0,0,0.6)'
-              : '0 0 40px rgba(99,102,241,0.15), 0 12px 40px rgba(0,0,0,0.5)')
-            : (isFeatured
-              ? '0 0 60px rgba(99,102,241,0.2), 0 8px 48px rgba(0,0,0,0.5)'
-              : '0 4px 32px rgba(0,0,0,0.4)'),
+            ? isFeatured
+              ? "0 0 80px rgba(99,102,241,0.35), 0 16px 56px rgba(0,0,0,0.6)"
+              : "0 0 40px rgba(99,102,241,0.15), 0 12px 40px rgba(0,0,0,0.5)"
+            : isFeatured
+            ? "0 0 60px rgba(99,102,241,0.2), 0 8px 48px rgba(0,0,0,0.5)"
+            : "0 4px 32px rgba(0,0,0,0.4)",
           transform: hovered
-            ? 'translateY(-6px) scale(1.03)'
-            : isFeatured ? 'scale(1.02)' : 'scale(1)',
-          transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+            ? "translateY(-6px) scale(1.03)"
+            : isFeatured
+            ? "scale(1.02)"
+            : "scale(1)",
+          transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
           flex: 1,
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
         {/* Plan name */}
-        <h3 style={{
-          fontFamily: "'Inter', sans-serif",
-          fontWeight: 700,
-          fontSize: '22px',
-          color: isFeatured ? '#c4b5fd' : 'var(--text-primary)',
-          margin: '0 0 12px',
-          textAlign: 'center',
-        }}>{plan.name}</h3>
+        <h3
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 700,
+            fontSize: "22px",
+            color: isFeatured ? "#c4b5fd" : "var(--text-primary)",
+            margin: "0 0 12px",
+            textAlign: "center",
+          }}
+        >
+          {plan.name}
+        </h3>
 
         {/* Original price + discount badge */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', minHeight: '26px', marginBottom: '8px' }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+            minHeight: "26px",
+            marginBottom: "8px",
+          }}
+        >
           {plan.originalPrice && (
             <>
-              <span style={{ fontSize: '14px', color: 'var(--text-muted)', textDecoration: 'line-through' }}>${plan.originalPrice}</span>
-              <span style={{
-                background: isFeatured ? 'rgba(99,102,241,0.25)' : 'rgba(16,185,129,0.15)',
-                color: isFeatured ? '#818cf8' : '#10b981',
-                padding: '2px 8px',
-                borderRadius: '4px',
-                fontSize: '12px',
-                fontWeight: 700,
-                border: isFeatured ? '1px solid rgba(99,102,241,0.3)' : '1px solid rgba(16,185,129,0.3)',
-              }}>{plan.discount}</span>
+              <span
+                style={{
+                  fontSize: "14px",
+                  color: "var(--text-muted)",
+                  textDecoration: "line-through",
+                }}
+              >
+                ${plan.originalPrice}
+              </span>
+              <span
+                style={{
+                  background: isFeatured
+                    ? "rgba(99,102,241,0.25)"
+                    : "rgba(16,185,129,0.15)",
+                  color: isFeatured ? "#818cf8" : "#10b981",
+                  padding: "2px 8px",
+                  borderRadius: "4px",
+                  fontSize: "12px",
+                  fontWeight: 700,
+                  border: isFeatured
+                    ? "1px solid rgba(99,102,241,0.3)"
+                    : "1px solid rgba(16,185,129,0.3)",
+                }}
+              >
+                {plan.discount}
+              </span>
             </>
           )}
         </div>
 
         {/* Big price */}
-        <div style={{ textAlign: 'center', margin: '4px 0 6px' }}>
-          <span style={{
-            fontSize: '52px',
-            fontWeight: 800,
-            color: isFeatured ? '#a78bfa' : 'var(--text-primary)',
-            letterSpacing: '-2px',
-            fontFamily: "'Inter', sans-serif",
-            lineHeight: 1,
-          }}>${plan.price}</span>
-          <span style={{ fontSize: '14px', color: 'var(--text-muted)', marginLeft: '4px' }}>{plan.period}</span>
+        <div style={{ textAlign: "center", margin: "4px 0 6px" }}>
+          <span
+            style={{
+              fontSize: "52px",
+              fontWeight: 800,
+              color: isFeatured ? "#a78bfa" : "var(--text-primary)",
+              letterSpacing: "-2px",
+              fontFamily: "'Inter', sans-serif",
+              lineHeight: 1,
+            }}
+          >
+            ${plan.price}
+          </span>
+          <span
+            style={{
+              fontSize: "14px",
+              color: "var(--text-muted)",
+              marginLeft: "4px",
+            }}
+          >
+            {plan.period}
+          </span>
         </div>
 
         {/* Subtitle */}
-        <p style={{ textAlign: 'center', fontSize: '13px', color: 'var(--text-muted)', margin: '0 0 24px', fontFamily: "'Inter', sans-serif" }}>
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: "13px",
+            color: "var(--text-muted)",
+            margin: "0 0 24px",
+            fontFamily: "'Inter', sans-serif",
+          }}
+        >
           {plan.subtitle}
         </p>
 
         {/* Divider */}
-        <div style={{ height: '1px', background: isFeatured ? 'rgba(99,102,241,0.2)' : 'rgba(255,255,255,0.06)', marginBottom: '24px' }} />
+        <div
+          style={{
+            height: "1px",
+            background: isFeatured
+              ? "rgba(99,102,241,0.2)"
+              : "rgba(255,255,255,0.06)",
+            marginBottom: "24px",
+          }}
+        />
 
         {/* Features */}
-        <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 28px', display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
+        <ul
+          style={{
+            listStyle: "none",
+            padding: 0,
+            margin: "0 0 28px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            flex: 1,
+          }}
+        >
           {sharedFeatures.map((feat, i) => (
-            <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '14px', color: 'var(--text-secondary)', fontFamily: "'Inter', sans-serif", lineHeight: 1.5 }}>
-              <span style={{ color: '#10b981', fontWeight: 700, flexShrink: 0 }}>✓</span>
+            <li
+              key={i}
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "10px",
+                fontSize: "14px",
+                color: "var(--text-secondary)",
+                fontFamily: "'Inter', sans-serif",
+                lineHeight: 1.5,
+              }}
+            >
+              <span
+                style={{ color: "#10b981", fontWeight: 700, flexShrink: 0 }}
+              >
+                ✓
+              </span>
               {feat}
             </li>
           ))}
@@ -196,21 +294,27 @@ const PricingCard = ({ plan }) => {
         <button
           onClick={handleClick}
           style={{
-            width: '100%',
-            padding: '14px',
-            borderRadius: '12px',
-            border: isFeatured ? 'none' : '1px solid rgba(255,255,255,0.12)',
-            background: isFeatured ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'transparent',
-            color: isFeatured ? 'white' : 'var(--text-primary)',
+            width: "100%",
+            padding: "14px",
+            borderRadius: "12px",
+            border: isFeatured ? "none" : "1px solid rgba(255,255,255,0.12)",
+            background: isFeatured
+              ? "linear-gradient(135deg, #6366f1, #8b5cf6)"
+              : "transparent",
+            color: isFeatured ? "white" : "var(--text-primary)",
             fontFamily: "'Inter', sans-serif",
             fontWeight: 700,
-            fontSize: '15px',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            boxShadow: isFeatured ? '0 4px 20px rgba(99,102,241,0.4)' : 'none',
+            fontSize: "15px",
+            cursor: "pointer",
+            transition: "all 0.2s ease",
+            boxShadow: isFeatured ? "0 4px 20px rgba(99,102,241,0.4)" : "none",
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.opacity = "0.85";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.opacity = "1";
+          }}
         >
           {subscribed ? "Open Dashboard" : plan.ctaText}
         </button>
@@ -219,72 +323,200 @@ const PricingCard = ({ plan }) => {
   );
 };
 
-
 // -------------- UI Mocks for Hero --------------
 const TechGridVisual = () => {
   return (
-    <div style={{
-      position: 'relative',
-      width: '100%',
-      height: '400px',
-      background: 'linear-gradient(180deg, rgba(19, 19, 43, 0.4) 0%, rgba(13, 13, 26, 0.8) 100%)',
-      border: '1px solid rgba(99, 102, 241, 0.2)',
-      borderRadius: '16px',
-      overflow: 'hidden',
-      display: 'flex',
-      flexDirection: 'column',
-      boxShadow: '0 0 40px rgba(99, 102, 241, 0.1)',
-    }}>
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "400px",
+        background:
+          "linear-gradient(180deg, rgba(19, 19, 43, 0.4) 0%, rgba(13, 13, 26, 0.8) 100%)",
+        border: "1px solid rgba(99, 102, 241, 0.2)",
+        borderRadius: "16px",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        boxShadow: "0 0 40px rgba(99, 102, 241, 0.1)",
+      }}
+    >
       {/* Animated Matrix/Grid effect overlay */}
-      <div style={{
-        position: 'absolute',
-        top: 0, left: 0, right: 0, bottom: 0,
-        backgroundImage: 'linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px)',
-        backgroundSize: '20px 20px',
-        opacity: 0.5,
-        zIndex: 0
-      }}></div>
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage:
+            "linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px)",
+          backgroundSize: "20px 20px",
+          opacity: 0.5,
+          zIndex: 0,
+        }}
+      ></div>
 
-      <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 1 }}>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#6366f1', boxShadow: '0 0 10px #6366f1' }}></div>
-          <span style={{ color: '#a0a0c0', fontSize: '13px', fontFamily: 'monospace', letterSpacing: '0.05em' }}>SLIP GENERATOR</span>
+      <div
+        style={{
+          padding: "20px",
+          borderBottom: "1px solid rgba(255,255,255,0.05)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          zIndex: 1,
+        }}
+      >
+        <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+          <div
+            style={{
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              background: "#6366f1",
+              boxShadow: "0 0 10px #6366f1",
+            }}
+          ></div>
+          <span
+            style={{
+              color: "#a0a0c0",
+              fontSize: "13px",
+              fontFamily: "monospace",
+              letterSpacing: "0.05em",
+            }}
+          >
+            SLIP GENERATOR
+          </span>
         </div>
-        <div style={{ background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '2px 8px', borderRadius: '4px' }}>
-          <span style={{ color: '#10b981', fontSize: '11px', fontWeight: 700 }}>+EV FOUND</span>
+        <div
+          style={{
+            background: "rgba(16, 185, 129, 0.15)",
+            border: "1px solid rgba(16, 185, 129, 0.3)",
+            padding: "2px 8px",
+            borderRadius: "4px",
+          }}
+        >
+          <span style={{ color: "#10b981", fontSize: "11px", fontWeight: 700 }}>
+            +EV FOUND
+          </span>
         </div>
       </div>
 
-      <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column', gap: '15px', zIndex: 1 }}>
+      <div
+        style={{
+          padding: "20px",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          gap: "15px",
+          zIndex: 1,
+        }}
+      >
         {/* Mock Slip Rows */}
         {[
-          { game: "CS2 • TS vs NAVI", player: "donk", stat: "Map 1-2 Kills", line: "38.5", pick: "OVER", ev: "+11.4%" },
-          { game: "VAL • SEN vs LOUD", player: "TenZ", stat: "Map 1-2 Kills", line: "35.5", pick: "OVER", ev: "+14.2%" },
-          { game: "LoL • T1 vs GEN", player: "Faker", stat: "Map 1-2 Kills", line: "9.5", pick: "OVER", ev: "+8.9%" },
+          {
+            game: "CS2 • TS vs NAVI",
+            player: "donk",
+            stat: "Map 1-2 Kills",
+            line: "38.5",
+            pick: "OVER",
+            ev: "+11.4%",
+          },
+          {
+            game: "VAL • SEN vs LOUD",
+            player: "TenZ",
+            stat: "Map 1-2 Kills",
+            line: "35.5",
+            pick: "OVER",
+            ev: "+14.2%",
+          },
+          {
+            game: "LoL • T1 vs GEN",
+            player: "Faker",
+            stat: "Map 1-2 Kills",
+            line: "9.5",
+            pick: "OVER",
+            ev: "+8.9%",
+          },
         ].map((row, i) => (
-          <div key={i} style={{
-            background: 'rgba(99, 102, 241, 0.15)',
-            border: '1px solid rgba(99, 102, 241, 0.4)',
-            borderRadius: '8px',
-            padding: '12px 16px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            boxShadow: '0 0 15px rgba(99, 102, 241, 0.2)'
-          }}>
+          <div
+            key={i}
+            style={{
+              background: "rgba(99, 102, 241, 0.15)",
+              border: "1px solid rgba(99, 102, 241, 0.4)",
+              borderRadius: "8px",
+              padding: "12px 16px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              boxShadow: "0 0 15px rgba(99, 102, 241, 0.2)",
+            }}
+          >
             <div>
-              <div style={{ fontSize: '10px', color: '#a0a0c0', marginBottom: '4px', textTransform: 'uppercase' }}>{row.game}</div>
-              <div style={{ color: '#f1f1fb', fontWeight: 600, fontSize: '15px' }}>{row.player}</div>
-              <div style={{ color: '#818cf8', fontSize: '12px', marginTop: '2px' }}>{row.stat}</div>
+              <div
+                style={{
+                  fontSize: "10px",
+                  color: "#a0a0c0",
+                  marginBottom: "4px",
+                  textTransform: "uppercase",
+                }}
+              >
+                {row.game}
+              </div>
+              <div
+                style={{ color: "#f1f1fb", fontWeight: 600, fontSize: "15px" }}
+              >
+                {row.player}
+              </div>
+              <div
+                style={{ color: "#818cf8", fontSize: "12px", marginTop: "2px" }}
+              >
+                {row.stat}
+              </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '11px', color: '#10b981', marginBottom: '2px', fontWeight: 700 }}>{row.ev} EV</div>
-                <div style={{ fontSize: '11px', color: '#a0a0c0', marginBottom: '4px' }}>LINE: {row.line}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+              <div style={{ textAlign: "right" }}>
+                <div
+                  style={{
+                    fontSize: "11px",
+                    color: "#10b981",
+                    marginBottom: "2px",
+                    fontWeight: 700,
+                  }}
+                >
+                  {row.ev} EV
+                </div>
+                <div
+                  style={{
+                    fontSize: "11px",
+                    color: "#a0a0c0",
+                    marginBottom: "4px",
+                  }}
+                >
+                  LINE: {row.line}
+                </div>
               </div>
-              <div style={{ background: '#10b981', padding: '6px 12px', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ color: '#000', fontWeight: 800, fontSize: '12px', letterSpacing: '0.05em' }}>{row.pick}</span>
+              <div
+                style={{
+                  background: "#10b981",
+                  padding: "6px 12px",
+                  borderRadius: "6px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <span
+                  style={{
+                    color: "#000",
+                    fontWeight: 800,
+                    fontSize: "12px",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  {row.pick}
+                </span>
               </div>
             </div>
           </div>
@@ -292,27 +524,44 @@ const TechGridVisual = () => {
       </div>
 
       {/* Slip Footer / Total EV */}
-      <div style={{
-        padding: '16px 20px',
-        background: 'rgba(19, 19, 43, 0.8)',
-        borderTop: '1px solid rgba(99, 102, 241, 0.3)',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        zIndex: 1
-      }}>
+      <div
+        style={{
+          padding: "16px 20px",
+          background: "rgba(19, 19, 43, 0.8)",
+          borderTop: "1px solid rgba(99, 102, 241, 0.3)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          zIndex: 1,
+        }}
+      >
         <div>
-          <div style={{ fontSize: '12px', color: '#a0a0c0', fontWeight: 500 }}>3-PICK POWER PLAY</div>
-          <div style={{ color: '#f1f1fb', fontSize: '14px', fontWeight: 700, marginTop: '2px' }}>Total Expected Value</div>
+          <div style={{ fontSize: "12px", color: "#a0a0c0", fontWeight: 500 }}>
+            3-PICK POWER PLAY
+          </div>
+          <div
+            style={{
+              color: "#f1f1fb",
+              fontSize: "14px",
+              fontWeight: 700,
+              marginTop: "2px",
+            }}
+          >
+            Total Expected Value
+          </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ color: '#10b981', fontSize: '20px', fontWeight: 800 }}>+34.5%</span>
-          <span style={{ color: '#a0a0c0', fontSize: '13px', fontWeight: 600 }}>EV</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <span style={{ color: "#10b981", fontSize: "20px", fontWeight: 800 }}>
+            +34.5%
+          </span>
+          <span style={{ color: "#a0a0c0", fontSize: "13px", fontWeight: 600 }}>
+            EV
+          </span>
         </div>
       </div>
     </div>
   );
-}
+};
 
 // -------------- FAQ Accordion --------------
 const faqItems = [
@@ -412,20 +661,23 @@ const LandingPage = () => {
     <div style={styles.container}>
       {/* Subscription Required Alert */}
       {subscriptionRequired && (
-        <div style={{
-          background: 'rgba(239, 68, 68, 0.1)',
-          border: '1px solid rgba(239, 68, 68, 0.2)',
-          borderRadius: '12px',
-          padding: '16px',
-          marginTop: '24px',
-          textAlign: 'center',
-          color: '#ef4444',
-          fontWeight: 600,
-          fontFamily: "'Inter', sans-serif",
-          zIndex: 10,
-          position: 'relative'
-        }}>
-          ⚠️ Subscription required to access Juicy Screen or Slip Generator. Please choose a plan below.
+        <div
+          style={{
+            background: "rgba(239, 68, 68, 0.1)",
+            border: "1px solid rgba(239, 68, 68, 0.2)",
+            borderRadius: "12px",
+            padding: "16px",
+            marginTop: "24px",
+            textAlign: "center",
+            color: "#ef4444",
+            fontWeight: 600,
+            fontFamily: "'Inter', sans-serif",
+            zIndex: 10,
+            position: "relative",
+          }}
+        >
+          ⚠️ Subscription required to access Juicy Screen or Slip Generator.
+          Please choose a plan below.
         </div>
       )}
 
@@ -437,18 +689,19 @@ const LandingPage = () => {
       <section style={styles.sectionLarge}>
         <div className="hero-grid" style={styles.heroGrid}>
           <div style={styles.heroContent}>
-            <h1 style={styles.headline}>Data-Driven <br /> <span style={styles.gradientText}>Esports Value</span></h1>
+            <h1 style={styles.headline}>
+              Data-Driven <br />{" "}
+              <span style={styles.gradientText}>Esports Value</span>
+            </h1>
             <p style={styles.subheadline}>
-              Stop guessing. We analyze millions of data points across global esports lines to identify profitable discrepancies before the books can adjust.
+              Stop guessing. We analyze millions of data points across global
+              esports lines to identify profitable discrepancies before the
+              books can adjust.
             </p>
             <div style={styles.actionRow}>
               {/* Anchor scroll to pricing block */}
-              <a href="#pricing-section" style={{ textDecoration: 'none' }}>
-                <button
-                  className="btn-gradient"
-                >
-                  Start Winning Now
-                </button>
+              <a href="#pricing-section" style={{ textDecoration: "none" }}>
+                <button className="btn-gradient">Start Winning Now</button>
               </a>
             </div>
           </div>
@@ -458,21 +711,37 @@ const LandingPage = () => {
         </div>
       </section>
 
-
-
       {/* 3. Esports Pipeline (How it works alternative) */}
       <section style={styles.sectionStandard}>
-        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+        <div style={{ textAlign: "center", marginBottom: "60px" }}>
           <h2 style={styles.sectionTitle}>The Technology Advantage</h2>
-          <p style={styles.sectionSub}>How our system finds an edge in volatile esports markets.</p>
+          <p style={styles.sectionSub}>
+            How our system finds an edge in volatile esports markets.
+          </p>
         </div>
 
         <div style={styles.stepsGrid}>
           {[
-            { step: "01", title: "Live Polling", desc: "Our engine scans player props across top esports titles every single minute." },
-            { step: "02", title: "EV Calculation", desc: "We run lines against our proven AI model to calculate true probability and determine Expected Value (+EV)." },
-            { step: "03", title: "Discrepancy Alerts", desc: "When heavily mispriced lines appear on DFS platforms, they are instantly pushed to the dashboard." },
-            { step: "04", title: "Slip Execution", desc: "Use the Slip Generator to mathematically combine the highest EV props into optimized entries." }
+            {
+              step: "01",
+              title: "Live Polling",
+              desc: "Our engine scans player props across top esports titles every single minute.",
+            },
+            {
+              step: "02",
+              title: "EV Calculation",
+              desc: "We run lines against our proven AI model to calculate true probability and determine Expected Value (+EV).",
+            },
+            {
+              step: "03",
+              title: "Discrepancy Alerts",
+              desc: "When heavily mispriced lines appear on DFS platforms, they are instantly pushed to the dashboard.",
+            },
+            {
+              step: "04",
+              title: "Slip Execution",
+              desc: "Use the Slip Generator to mathematically combine the highest EV props into optimized entries.",
+            },
           ].map((s, i) => (
             <div key={i} style={styles.stepCard}>
               <div style={styles.stepNum}>{s.step}</div>
@@ -485,39 +754,85 @@ const LandingPage = () => {
 
       {/* 4. Comparison Matrix: Algorithmic vs Gut */}
       <section style={styles.sectionStandard}>
-        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+        <div style={{ textAlign: "center", marginBottom: "60px" }}>
           <h2 style={styles.sectionTitle}>Why Data &gt; Gut Feelings</h2>
         </div>
 
         <div className="comparison-wrapper" style={styles.comparisonWrapper}>
-          <div style={{ ...styles.compCol, backgroundColor: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.1)' }}>
-            <h3 style={{ ...styles.compHeader, color: '#ef4444' }}>Traditional Handicapping</h3>
+          <div
+            style={{
+              ...styles.compCol,
+              backgroundColor: "rgba(239, 68, 68, 0.05)",
+              border: "1px solid rgba(239, 68, 68, 0.1)",
+            }}
+          >
+            <h3 style={{ ...styles.compHeader, color: "#ef4444" }}>
+              Traditional Handicapping
+            </h3>
             <ul style={styles.compList}>
-              <li style={styles.compItem}><span style={{ color: '#ef4444' }}>✕</span> Relies on "eye test" and emotion</li>
-              <li style={styles.compItem}><span style={{ color: '#ef4444' }}>✕</span> Too slow to catch live line movement</li>
-              <li style={styles.compItem}><span style={{ color: '#ef4444' }}>✕</span> Biased toward favorite teams/players</li>
-              <li style={styles.compItem}><span style={{ color: '#ef4444' }}>✕</span> Ignores mathematical Expected Value</li>
+              <li style={styles.compItem}>
+                <span style={{ color: "#ef4444" }}>✕</span> Relies on "eye test"
+                and emotion
+              </li>
+              <li style={styles.compItem}>
+                <span style={{ color: "#ef4444" }}>✕</span> Too slow to catch
+                live line movement
+              </li>
+              <li style={styles.compItem}>
+                <span style={{ color: "#ef4444" }}>✕</span> Biased toward
+                favorite teams/players
+              </li>
+              <li style={styles.compItem}>
+                <span style={{ color: "#ef4444" }}>✕</span> Ignores mathematical
+                Expected Value
+              </li>
             </ul>
           </div>
-          <div style={{ ...styles.compCol, backgroundColor: 'rgba(99, 102, 241, 0.08)', border: '1px solid rgba(99, 102, 241, 0.3)', transform: 'scale(1.05)' }}>
+          <div
+            style={{
+              ...styles.compCol,
+              backgroundColor: "rgba(99, 102, 241, 0.08)",
+              border: "1px solid rgba(99, 102, 241, 0.3)",
+              transform: "scale(1.05)",
+            }}
+          >
             <div style={styles.compBadge}>JuicyPlays</div>
-            <h3 style={{ ...styles.compHeader, color: '#818cf8' }}>Algorithmic Execution</h3>
+            <h3 style={{ ...styles.compHeader, color: "#818cf8" }}>
+              Algorithmic Execution
+            </h3>
             <ul style={styles.compList}>
-              <li style={styles.compItem}><span style={{ color: '#10b981' }}>✓</span> 100% data-driven projections</li>
-              <li style={styles.compItem}><span style={{ color: '#10b981' }}>✓</span> Captures volatile discrepancies instantly</li>
-              <li style={styles.compItem}><span style={{ color: '#10b981' }}>✓</span> Completely unbaised modeling</li>
-              <li style={styles.compItem}><span style={{ color: '#10b981' }}>✓</span> Mathematically guaranteed long-term edge</li>
+              <li style={styles.compItem}>
+                <span style={{ color: "#10b981" }}>✓</span> 100% data-driven
+                projections
+              </li>
+              <li style={styles.compItem}>
+                <span style={{ color: "#10b981" }}>✓</span> Captures volatile
+                discrepancies instantly
+              </li>
+              <li style={styles.compItem}>
+                <span style={{ color: "#10b981" }}>✓</span> Completely unbaised
+                modeling
+              </li>
+              <li style={styles.compItem}>
+                <span style={{ color: "#10b981" }}>✓</span> Mathematically
+                guaranteed long-term edge
+              </li>
             </ul>
           </div>
         </div>
       </section>
 
       {/* 5. Inline Pricing */}
-      <section id="pricing-section" style={{ ...styles.sectionStandard, paddingBottom: '120px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+      <section
+        id="pricing-section"
+        style={{ ...styles.sectionStandard, paddingBottom: "120px" }}
+      >
+        <div style={{ textAlign: "center", marginBottom: "60px" }}>
           <h2 style={styles.sectionTitle}>Choose Your Plan</h2>
-          <p style={styles.sectionSub}>Get instant access to profitable predictions, real-time line alerts, and a proven system that works while you sleep.</p>
-
+          <p style={styles.sectionSub}>
+            Get instant access to profitable predictions, real-time line alerts,
+            and a proven system that works while you sleep.
+          </p>
         </div>
 
         <div className="pricing-grid" style={styles.pricingGrid}>
@@ -527,22 +842,36 @@ const LandingPage = () => {
         </div>
 
         {/* Assurance strip */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: '40px',
-          marginTop: '36px',
-          flexWrap: 'wrap',
-        }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "40px",
+            marginTop: "36px",
+            flexWrap: "wrap",
+          }}
+        >
           {[
-            { icon: '🛡️', text: 'Cancel anytime' },
-            { icon: '🔒', text: 'Secure checkout via Whop' },
-            { icon: '⚡', text: 'Instant access' },
+            { icon: "🛡️", text: "Cancel anytime" },
+            { icon: "🔒", text: "Secure checkout via Whop" },
+            { icon: "⚡", text: "Instant access" },
           ].map((item) => (
-            <div key={item.text} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '16px' }}>{item.icon}</span>
-              <span style={{ fontSize: '13px', color: 'var(--text-muted)', fontFamily: "'Inter', sans-serif", fontWeight: 500 }}>{item.text}</span>
+            <div
+              key={item.text}
+              style={{ display: "flex", alignItems: "center", gap: "8px" }}
+            >
+              <span style={{ fontSize: "16px" }}>{item.icon}</span>
+              <span
+                style={{
+                  fontSize: "13px",
+                  color: "var(--text-muted)",
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 500,
+                }}
+              >
+                {item.text}
+              </span>
             </div>
           ))}
         </div>
@@ -552,13 +881,19 @@ const LandingPage = () => {
       <FAQSection />
     </div>
   );
-}
+};
 
 // ============== MAIN EXPORT ==============
 export default class RenderHome extends Component {
   render() {
     return (
-      <div style={{ backgroundColor: 'var(--bg-primary)', minHeight: '100vh', overflowX: 'hidden' }}>
+      <div
+        style={{
+          backgroundColor: "var(--bg-primary)",
+          minHeight: "100vh",
+          overflowX: "hidden",
+        }}
+      >
         <NavBar />
         <LandingPage />
         <Footer />
@@ -570,10 +905,10 @@ export default class RenderHome extends Component {
 // ============== STYLES ==============
 const styles = {
   container: {
-    position: 'relative',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '0 24px',
+    position: "relative",
+    maxWidth: "1200px",
+    margin: "0 auto",
+    padding: "0 24px",
     fontFamily: "'Inter', sans-serif",
   },
   bgOrbTop: {
@@ -581,7 +916,8 @@ const styles = {
     width: "800px",
     height: "800px",
     borderRadius: "50%",
-    background: "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 60%)",
+    background:
+      "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 60%)",
     top: "-200px",
     right: "-300px",
     pointerEvents: "none",
@@ -592,7 +928,8 @@ const styles = {
     width: "800px",
     height: "800px",
     borderRadius: "50%",
-    background: "radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 60%)",
+    background:
+      "radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 60%)",
     bottom: "10%",
     left: "-400px",
     pointerEvents: "none",
@@ -600,12 +937,12 @@ const styles = {
   },
   sectionLarge: {
     padding: "120px 0 80px 0",
-    position: 'relative',
+    position: "relative",
     zIndex: 1,
   },
   sectionStandard: {
     padding: "80px 0",
-    position: 'relative',
+    position: "relative",
     zIndex: 1,
   },
   sectionStrip: {
@@ -613,7 +950,7 @@ const styles = {
     borderTop: "1px solid var(--border-subtle)",
     borderBottom: "1px solid var(--border-subtle)",
     textAlign: "center",
-    position: 'relative',
+    position: "relative",
     zIndex: 1,
   },
   heroGrid: {
@@ -671,12 +1008,12 @@ const styles = {
     fontSize: "16px",
     fontWeight: 700,
     minWidth: "200px",
-    cursor: 'pointer',
+    cursor: "pointer",
     boxShadow: "0 0 24px rgba(99, 102, 241, 0.4)",
-    border: 'none',
-    borderRadius: '12px',
-    color: 'white',
-    background: 'linear-gradient(135deg, #6366f1, #8b5cf6)'
+    border: "none",
+    borderRadius: "12px",
+    color: "white",
+    background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
   },
   stripTitle: {
     fontSize: "14px",

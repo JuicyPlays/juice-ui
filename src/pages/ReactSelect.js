@@ -1,7 +1,13 @@
 import React from "react";
 import Select from "react-select";
 
-const MySelect = ({ options, handleChanges, label, defaultSelected = [], isMulti = true }) => {
+const MySelect = ({
+  options,
+  handleChanges,
+  label,
+  defaultSelected = [],
+  isMulti = true,
+}) => {
   const [selectedOptions, setSelectedOptions] = React.useState(defaultSelected);
 
   React.useEffect(() => {

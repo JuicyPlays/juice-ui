@@ -6,7 +6,14 @@ import JuicyPlaysPage from "./pages/JuicyPlays";
 import LineShopperPage from "./pages/LineShopper";
 import SlipsPage from "./pages/Slips";
 import Logout from "./pages/Logout";
-import { AuthProvider, RequireAuth, useAuthUser, useIsAuthenticated, useSignIn, useSignOut } from "react-auth-kit";
+import {
+  AuthProvider,
+  RequireAuth,
+  useAuthUser,
+  useIsAuthenticated,
+  useSignIn,
+  useSignOut,
+} from "react-auth-kit";
 import RenderAccount from "./pages/Account";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
@@ -18,7 +25,15 @@ axios.defaults.withCredentials = true;
 
 function FullScreenLoader() {
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", background: "var(--bg-primary)" }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        background: "var(--bg-primary)",
+      }}
+    >
       <CircularProgress style={{ color: "var(--accent)" }} />
     </div>
   );
@@ -30,21 +45,25 @@ const CACHE_TTL_MS = 5000; // 5 second cache
 
 function getCachedAuthMe() {
   const now = Date.now();
-  if (globalAuthMeCache.data && (now - globalAuthMeCache.timestamp) < CACHE_TTL_MS) {
+  if (
+    globalAuthMeCache.data &&
+    now - globalAuthMeCache.timestamp < CACHE_TTL_MS
+  ) {
     return Promise.resolve({ data: globalAuthMeCache.data });
   }
   if (!globalAuthMeCache.promise) {
-    globalAuthMeCache.promise = axios.get(
-      `${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/me`
-    ).then(response => {
-      globalAuthMeCache.data = response.data;
-      globalAuthMeCache.timestamp = Date.now();
-      globalAuthMeCache.promise = null;
-      return response;
-    }).catch(error => {
-      globalAuthMeCache.promise = null;
-      throw error;
-    });
+    globalAuthMeCache.promise = axios
+      .get(`${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/me`)
+      .then((response) => {
+        globalAuthMeCache.data = response.data;
+        globalAuthMeCache.timestamp = Date.now();
+        globalAuthMeCache.promise = null;
+        return response;
+      })
+      .catch((error) => {
+        globalAuthMeCache.promise = null;
+        throw error;
+      });
   }
   return globalAuthMeCache.promise;
 }
@@ -59,7 +78,13 @@ function SubscriptionGuard({ children }) {
   }
 
   if (!(authUser.subscribed || authUser.hasAccess)) {
-    return <Navigate to="/" state={{ from: location, subscriptionRequired: true }} replace />;
+    return (
+      <Navigate
+        to="/"
+        state={{ from: location, subscriptionRequired: true }}
+        replace
+      />
+    );
   }
 
   return children;
@@ -84,7 +109,7 @@ function MainContent() {
           `${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/me`
         );
       }
-      
+
       try {
         const response = await authMePromise;
         if (cancelled) {
@@ -201,4 +226,3 @@ export default function App() {
     </AuthProvider>
   );
 }
-

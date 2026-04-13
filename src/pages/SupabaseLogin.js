@@ -15,7 +15,9 @@ export default function SupabaseLogin() {
 
   const handleWhopLogin = () => {
     const redirectPath = location.state?.from?.pathname || "/";
-    const loginUrl = `${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/whop/login?redirect=${encodeURIComponent(redirectPath)}`;
+    const loginUrl = `${
+      import.meta.env.VITE_JUICE_API_BASE_URL
+    }/auth/whop/login?redirect=${encodeURIComponent(redirectPath)}`;
     window.location.assign(loginUrl);
   };
 
@@ -45,7 +47,8 @@ export default function SupabaseLogin() {
             Continue with Whop
           </button>
           <p style={styles.authSubtext}>
-            Sign in with your Whop account to manage access and unlock premium plays.
+            Sign in with your Whop account to manage access and unlock premium
+            plays.
           </p>
         </div>
       </div>
@@ -78,7 +81,8 @@ const styles = {
     width: "600px",
     height: "600px",
     borderRadius: "50%",
-    background: "radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)",
+    background:
+      "radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)",
     top: "-200px",
     left: "-150px",
     animation: "orb-drift 20s ease-in-out infinite",
@@ -89,7 +93,8 @@ const styles = {
     width: "500px",
     height: "500px",
     borderRadius: "50%",
-    background: "radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)",
+    background:
+      "radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)",
     bottom: "-150px",
     right: "-100px",
     animation: "orb-drift 25s ease-in-out infinite reverse",
@@ -100,7 +105,8 @@ const styles = {
     width: "300px",
     height: "300px",
     borderRadius: "50%",
-    background: "radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%)",
+    background:
+      "radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%)",
     top: "50%",
     left: "60%",
     animation: "orb-drift 18s ease-in-out infinite 5s",
@@ -116,7 +122,8 @@ const styles = {
     borderRadius: "20px",
     backdropFilter: "blur(24px)",
     WebkitBackdropFilter: "blur(24px)",
-    boxShadow: "0 4px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04) inset",
+    boxShadow:
+      "0 4px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04) inset",
     overflow: "hidden",
   },
   branding: {
@@ -125,7 +132,8 @@ const styles = {
     alignItems: "center",
     paddingTop: "36px",
     paddingBottom: "8px",
-    background: "linear-gradient(180deg, rgba(99,102,241,0.06) 0%, transparent 100%)",
+    background:
+      "linear-gradient(180deg, rgba(99,102,241,0.06) 0%, transparent 100%)",
     borderBottom: "1px solid rgba(99,102,241,0.1)",
     marginBottom: "4px",
   },
@@ -133,7 +141,8 @@ const styles = {
     width: "52px",
     height: "52px",
     borderRadius: "14px",
-    background: "linear-gradient(135deg, rgba(99,102,241,0.3), rgba(139,92,246,0.2))",
+    background:
+      "linear-gradient(135deg, rgba(99,102,241,0.3), rgba(139,92,246,0.2))",
     border: "1px solid rgba(99,102,241,0.3)",
     display: "flex",
     alignItems: "center",

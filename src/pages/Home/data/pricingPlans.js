@@ -16,7 +16,9 @@ export const pricingPlans = [
     period: "/ 2 weeks",
     discount: null,
     featured: false,
-    checkoutUrl: import.meta.env.VITE_WHOP_CHECKOUT_BIWEEKLY || "https://whop.com/checkout/plan_wZ7lvQANDaJfm",
+    checkoutUrl:
+      import.meta.env.VITE_WHOP_CHECKOUT_BIWEEKLY ||
+      "https://whop.com/checkout/plan_wZ7lvQANDaJfm",
     ctaText: "Select Plan",
   },
   {
@@ -29,7 +31,9 @@ export const pricingPlans = [
     period: "/ month",
     discount: "40% off",
     featured: true,
-    checkoutUrl: import.meta.env.VITE_WHOP_CHECKOUT_MONTHLY || "https://whop.com/checkout/plan_eTvnZxV1Mxi4w",
+    checkoutUrl:
+      import.meta.env.VITE_WHOP_CHECKOUT_MONTHLY ||
+      "https://whop.com/checkout/plan_eTvnZxV1Mxi4w",
     ctaText: "Start Winning Now",
   },
   {
@@ -42,7 +46,9 @@ export const pricingPlans = [
     period: "/ year",
     discount: "58% off",
     featured: false,
-    checkoutUrl: import.meta.env.VITE_WHOP_CHECKOUT_YEARLY || "https://whop.com/checkout/plan_yUCMmCIrbzdAL",
+    checkoutUrl:
+      import.meta.env.VITE_WHOP_CHECKOUT_YEARLY ||
+      "https://whop.com/checkout/plan_yUCMmCIrbzdAL",
     ctaText: "Select Plan",
   },
 ];

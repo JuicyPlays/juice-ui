@@ -15,12 +15,18 @@ export default function Home() {
   const subscriptionRequired = location.state?.subscriptionRequired;
 
   return (
-    <div style={{ backgroundColor: 'var(--bg-primary)', minHeight: '100vh', overflowX: 'hidden' }}>
+    <div
+      style={{
+        backgroundColor: "var(--bg-primary)",
+        minHeight: "100vh",
+        overflowX: "hidden",
+      }}
+    >
       <NavBar />
-      
+
       <div style={styles.container}>
         {subscriptionRequired && <SubscriptionAlert />}
-        
+
         {/* Background Orbs */}
         <div style={styles.bgOrbTop} />
         <div style={styles.bgOrbBottom} />

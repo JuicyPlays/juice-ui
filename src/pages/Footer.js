@@ -16,9 +16,13 @@ const Footer = () => {
 
           {/* Legal links — center */}
           <div style={styles.links}>
-            <Link to="/privacy" style={styles.link}>Privacy Policy</Link>
+            <Link to="/privacy" style={styles.link}>
+              Privacy Policy
+            </Link>
             <span style={styles.dot}>·</span>
-            <Link to="/terms" style={styles.link}>Terms &amp; Conditions</Link>
+            <Link to="/terms" style={styles.link}>
+              Terms &amp; Conditions
+            </Link>
           </div>
 
           {/* Social icons — right */}
@@ -29,7 +33,9 @@ const Footer = () => {
               rel="noopener noreferrer"
               style={styles.iconLink}
               onMouseEnter={(e) => (e.currentTarget.style.color = "#818cf8")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = "var(--text-muted)")
+              }
             >
               <Twitter style={{ fontSize: 18 }} />
             </a>
@@ -37,7 +43,9 @@ const Footer = () => {
               href="mailto:juicyplaysofficial@gmail.com"
               style={styles.iconLink}
               onMouseEnter={(e) => (e.currentTarget.style.color = "#818cf8")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = "var(--text-muted)")
+              }
             >
               <MailOutline style={{ fontSize: 18 }} />
             </a>
@@ -46,8 +54,12 @@ const Footer = () => {
 
         {/* Bottom strip */}
         <div style={styles.bottomRow}>
-          <span style={styles.small}>© 2026 JuicyPlays. All Rights Reserved.</span>
-          <span style={styles.small}>For informational purposes only. Not financial advice. Must be 18+.</span>
+          <span style={styles.small}>
+            © 2026 JuicyPlays. All Rights Reserved.
+          </span>
+          <span style={styles.small}>
+            For informational purposes only. Not financial advice. Must be 18+.
+          </span>
         </div>
       </div>
     </footer>

@@ -1,9 +1,9 @@
 export const styles = {
   container: {
-    position: 'relative',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '0 24px',
+    position: "relative",
+    maxWidth: "1200px",
+    margin: "0 auto",
+    padding: "0 24px",
     fontFamily: "'Inter', sans-serif",
   },
   bgOrbTop: {
@@ -11,7 +11,8 @@ export const styles = {
     width: "800px",
     height: "800px",
     borderRadius: "50%",
-    background: "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 60%)",
+    background:
+      "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 60%)",
     top: "-200px",
     right: "-300px",
     pointerEvents: "none",
@@ -22,7 +23,8 @@ export const styles = {
     width: "800px",
     height: "800px",
     borderRadius: "50%",
-    background: "radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 60%)",
+    background:
+      "radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 60%)",
     bottom: "10%",
     left: "-400px",
     pointerEvents: "none",
@@ -30,12 +32,12 @@ export const styles = {
   },
   sectionLarge: {
     padding: "120px 0 80px 0",
-    position: 'relative',
+    position: "relative",
     zIndex: 1,
   },
   sectionStandard: {
     padding: "80px 0",
-    position: 'relative',
+    position: "relative",
     zIndex: 1,
   },
   sectionTitle: {

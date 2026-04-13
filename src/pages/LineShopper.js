@@ -4,7 +4,12 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { CircularProgress, TextField, InputAdornment, Tooltip } from "@mui/material";
+import {
+  CircularProgress,
+  TextField,
+  InputAdornment,
+  Tooltip,
+} from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
 import { paths } from "../common/constants";
 import NavBar from "./NavBar";
@@ -12,7 +17,12 @@ import Footer from "./Footer";
 import FilterSelect from "../common/FilterSelect";
 import CellPlayer from "../common/CellPlayer";
 import BookieSettings from "../common/BookieSettings";
-import { ALL_BOOK_KEYS, BOOK_CONFIG, bookDisplayName, bookLogo } from "../common/bookLogos";
+import {
+  ALL_BOOK_KEYS,
+  BOOK_CONFIG,
+  bookDisplayName,
+  bookLogo,
+} from "../common/bookLogos";
 import { useAuthUser } from "react-auth-kit";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 
@@ -29,7 +39,9 @@ const LineShopper = () => {
   const isMobile = useMediaQuery("(max-width: 900px)");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { handleRefresh(); }, []);
+  useEffect(() => {
+    handleRefresh();
+  }, []);
 
   async function handleRefresh() {
     setLoading(true);
@@ -99,22 +111,24 @@ const LineShopper = () => {
     if (!playerSearch.trim()) return data;
 
     const searchTerm = playerSearch.toLowerCase().trim();
-    return data.filter(row =>
-      row.player && row.player.toLowerCase().includes(searchTerm)
+    return data.filter(
+      (row) => row.player && row.player.toLowerCase().includes(searchTerm)
     );
   }, [data, playerSearch]);
 
   // Add min/max line values per row for highlighting
   const processedData = useMemo(() => {
-    return filteredData.map(row => {
+    return filteredData.map((row) => {
       // Collect all lines from selected books (excluding juice_ml for min/max)
       const sportsbookLines = Object.entries(row.bookLines || {})
         .filter(([book]) => selectedBooks.includes(book) && book !== "juice_ml")
         .map(([_, line]) => line)
-        .filter(line => line != null);
+        .filter((line) => line != null);
 
-      const minLine = sportsbookLines.length > 0 ? Math.min(...sportsbookLines) : null;
-      const maxLine = sportsbookLines.length > 0 ? Math.max(...sportsbookLines) : null;
+      const minLine =
+        sportsbookLines.length > 0 ? Math.min(...sportsbookLines) : null;
+      const maxLine =
+        sportsbookLines.length > 0 ? Math.max(...sportsbookLines) : null;
 
       return {
         ...row,
@@ -131,7 +145,13 @@ const LineShopper = () => {
 
     if (!logo) {
       return (
-        <span style={{ fontSize: "12px", fontWeight: 700, color: "var(--text-muted)" }}>
+        <span
+          style={{
+            fontSize: "12px",
+            fontWeight: 700,
+            color: "var(--text-muted)",
+          }}
+        >
           {name}
         </span>
       );
@@ -158,16 +178,19 @@ const LineShopper = () => {
   // Line cell renderer
   const BookLineCell = ({ cell, row, bookKey }) => {
     const val = cell.getValue();
-    if (val == null) return <span style={{ color: "var(--text-muted)", fontSize: "12px" }}>—</span>;
+    if (val == null)
+      return (
+        <span style={{ color: "var(--text-muted)", fontSize: "12px" }}>—</span>
+      );
 
     const minLine = row.original._minLine;
     const maxLine = row.original._maxLine;
-    
+
     // Check if this is a single-option prop
     const overEnabled = row.original?.overEnabled !== false;
     const underEnabled = row.original?.underEnabled !== false;
     const isSingleOption = !overEnabled || !underEnabled;
-    
+
     // Create tooltip content for single-option props
     const getTooltipTitle = () => {
       if (!isSingleOption) return "";
@@ -251,7 +274,10 @@ const LineShopper = () => {
   // Model line cell renderer (distinct purple styling)
   const ModelLineCell = ({ cell }) => {
     const val = cell.getValue();
-    if (val == null) return <span style={{ color: "var(--text-muted)", fontSize: "12px" }}>—</span>;
+    if (val == null)
+      return (
+        <span style={{ color: "var(--text-muted)", fontSize: "12px" }}>—</span>
+      );
 
     return (
       <span
@@ -305,8 +331,8 @@ const LineShopper = () => {
         },
         size: 80,
         minSize: 65,
-        muiTableBodyCellProps: { align: 'center' },
-        muiTableHeadCellProps: { align: 'center' },
+        muiTableBodyCellProps: { align: "center" },
+        muiTableHeadCellProps: { align: "center" },
         Cell: ({ cell, row }) => (
           <BookLineCell cell={cell} row={row} bookKey={bookKey} />
         ),
@@ -337,8 +363,8 @@ const LineShopper = () => {
       accessorFn: (row) => (row.bookLines ? row.bookLines["juice_ml"] : null),
       size: 80,
       minSize: 65,
-      muiTableBodyCellProps: { align: 'center' },
-      muiTableHeadCellProps: { align: 'center' },
+      muiTableBodyCellProps: { align: "center" },
+      muiTableHeadCellProps: { align: "center" },
       Cell: ModelLineCell,
     });
 
@@ -370,8 +396,7 @@ const LineShopper = () => {
         id: `book_${firstBook}`,
         header: bookDisplayName(firstBook),
         Header: () => <LogoHeader bookKey={firstBook} />,
-        accessorFn: (row) =>
-          row.bookLines ? row.bookLines[firstBook] : null,
+        accessorFn: (row) => (row.bookLines ? row.bookLines[firstBook] : null),
         size: 70,
         Cell: ({ cell, row }) => {
           const val = cell.getValue();
@@ -379,12 +404,12 @@ const LineShopper = () => {
 
           const minLine = row.original._minLine;
           const maxLine = row.original._maxLine;
-          
+
           // Check if this is a single-option prop
           const overEnabled = row.original?.overEnabled !== false;
           const underEnabled = row.original?.underEnabled !== false;
           const isSingleOption = !overEnabled || !underEnabled;
-          
+
           // Create tooltip content for single-option props
           const getTooltipTitle = () => {
             if (!isSingleOption) return "";
@@ -530,7 +555,9 @@ const LineShopper = () => {
           <div style={{ padding: "8px 4px" }}>
             <div style={mobileDetailStyles.grid}>
               <span style={mobileDetailStyles.chip}>{row.original.teams}</span>
-              <span style={mobileDetailStyles.chip}>{row.original.statType}</span>
+              <span style={mobileDetailStyles.chip}>
+                {row.original.statType}
+              </span>
               <span style={mobileDetailStyles.chip}>{row.original.sport}</span>
             </div>
             <div style={{ ...mobileDetailStyles.grid, marginTop: "8px" }}>
@@ -538,7 +565,14 @@ const LineShopper = () => {
                 const logo = bookLogo(book);
                 const name = bookDisplayName(book);
                 return (
-                  <span key={book} style={book === "juice_ml" ? mobileDetailStyles.modelChip : mobileDetailStyles.otherChip}>
+                  <span
+                    key={book}
+                    style={
+                      book === "juice_ml"
+                        ? mobileDetailStyles.modelChip
+                        : mobileDetailStyles.otherChip
+                    }
+                  >
                     {logo && (
                       <img
                         src={logo}
@@ -565,18 +599,30 @@ const LineShopper = () => {
   });
 
   return (
-    <div style={{ ...styles.page, padding: isMobile ? "16px 8px 60px" : styles.page.padding }}>
+    <div
+      style={{
+        ...styles.page,
+        padding: isMobile ? "16px 8px 60px" : styles.page.padding,
+      }}
+    >
       {/* Page header */}
       <div style={styles.header}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <h2 style={styles.title}>Juicy Screen</h2>
-          <p style={styles.subtitle}>Compare lines against different platforms</p>
+          <p style={styles.subtitle}>
+            Compare lines against different platforms
+          </p>
         </div>
         <div style={styles.countBadge}>{data.length} props</div>
       </div>
 
       {/* Filter bar */}
-      <div style={{ ...styles.filterBar, padding: isMobile ? "12px" : styles.filterBar.padding }}>
+      <div
+        style={{
+          ...styles.filterBar,
+          padding: isMobile ? "12px" : styles.filterBar.padding,
+        }}
+      >
         <div style={styles.selectWrap}>
           <div style={styles.dropdownLabel}>Search Players</div>
           <TextField
@@ -588,7 +634,9 @@ const LineShopper = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon style={{ color: "var(--text-muted)", fontSize: "18px" }} />
+                  <SearchIcon
+                    style={{ color: "var(--text-muted)", fontSize: "18px" }}
+                  />
                 </InputAdornment>
               ),
               style: {
@@ -601,7 +649,9 @@ const LineShopper = () => {
             }}
             sx={{
               "& .MuiOutlinedInput-notchedOutline": { border: "none" },
-              "& .Mui-focused .MuiOutlinedInput-notchedOutline": { border: "none" },
+              "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+                border: "none",
+              },
               "& .MuiOutlinedInput-root": {
                 "&:hover fieldset": { border: "none" },
               },
@@ -640,7 +690,11 @@ const LineShopper = () => {
           className="btn-gradient"
           onClick={handleRefresh}
           disabled={loading}
-          style={{ minWidth: isMobile ? "100%" : "110px", flexShrink: 0, height: "40px" }}
+          style={{
+            minWidth: isMobile ? "100%" : "110px",
+            flexShrink: 0,
+            height: "40px",
+          }}
         >
           {loading ? (
             <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>

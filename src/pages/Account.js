@@ -6,9 +6,18 @@ class RenderAccount extends Component {
     return (
       <>
         <NavBar />
-        <div style={{ padding: "100px 24px", textAlign: "center", color: "white", fontFamily: "'Inter', sans-serif" }}>
+        <div
+          style={{
+            padding: "100px 24px",
+            textAlign: "center",
+            color: "white",
+            fontFamily: "'Inter', sans-serif",
+          }}
+        >
           <h2>My Account</h2>
-          <p style={{ color: "var(--text-muted)" }}>Account management features coming soon.</p>
+          <p style={{ color: "var(--text-muted)" }}>
+            Account management features coming soon.
+          </p>
         </div>
       </>
     );
