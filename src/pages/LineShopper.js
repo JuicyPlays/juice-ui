@@ -30,9 +30,11 @@ const LineShopper = () => {
   const [data, setData] = useState([]);
   const [sports, setSports] = useState([]);
   const [stats, setStats] = useState([]);
+  const [games, setGames] = useState([]);
   const [selectedBooks, setSelectedBooks] = useState([...ALL_BOOK_KEYS]);
   const [sportsOptions, setSportsOptions] = useState([]);
   const [statOptions, setStatOptions] = useState([]);
+  const [gameOptions, setGameOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [playerSearch, setPlayerSearch] = useState("");
@@ -69,6 +71,16 @@ const LineShopper = () => {
     setStats(selectAll ? statOptions.map((o) => o.value) : []);
   };
 
+  const handleToggleGame = (val) => {
+    setGames((prev) =>
+      prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]
+    );
+  };
+
+  const handleToggleAllGames = (selectAll) => {
+    setGames(selectAll ? gameOptions.map((o) => o.value) : []);
+  };
+
   const handleToggleBook = (bookKey) => {
     setSelectedBooks((prev) =>
       prev.includes(bookKey)
@@ -85,6 +97,7 @@ const LineShopper = () => {
     const queryParams = {
       sports: sports.join(","),
       stats: stats.join(","),
+      games: games.join(","),
     };
     try {
       const res = await axios.get(paths.getLineShopperBasePath, {
@@ -93,12 +106,15 @@ const LineShopper = () => {
       setData(res.data.rows || []);
       const retrievedStats = res.data.statTypes || [];
       const retrievedSports = res.data.sports || [];
+      const retrievedGames = res.data.games || [];
       setStatOptions(retrievedStats.map((v) => ({ value: v, label: v })));
       setSportsOptions(retrievedSports.map((v) => ({ value: v, label: v })));
+      setGameOptions(retrievedGames);
 
       if (isInitialLoad) {
         setStats(retrievedStats);
         setSports(retrievedSports);
+        setGames(retrievedGames.map((v) => v.value));
         setIsInitialLoad(false);
       }
     } catch (error) {
@@ -613,7 +629,7 @@ const LineShopper = () => {
             Compare lines against different platforms
           </p>
         </div>
-        <div style={styles.countBadge}>{data.length} props</div>
+        <div style={styles.countBadge}>{processedData.length} props</div>
       </div>
 
       {/* Filter bar */}
@@ -684,6 +700,16 @@ const LineShopper = () => {
             selected={stats}
             onToggle={handleToggleStat}
             onToggleAll={handleToggleAllStats}
+          />
+        </div>
+        <div style={styles.selectWrap}>
+          <div style={styles.dropdownLabel}>Game</div>
+          <FilterSelect
+            label="Game"
+            options={gameOptions}
+            selected={games}
+            onToggle={handleToggleGame}
+            onToggleAll={handleToggleAllGames}
           />
         </div>
         <button
