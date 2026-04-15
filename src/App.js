@@ -1,5 +1,11 @@
 import "./index.css";
-import { Route, Routes, useLocation, Navigate } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  useLocation,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import SupabaseLogin from "./pages/SupabaseLogin";
 import Home from "./pages/Home";
 import JuicyPlaysPage from "./pages/JuicyPlays";
@@ -17,11 +23,45 @@ import {
 import RenderAccount from "./pages/Account";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
 
 axios.defaults.withCredentials = true;
+
+const PROTECTED_API_PATHS = ["/v1/juicy", "/v1/line-shopper", "/v1/slips"];
+
+function buildAuthState(sessionData) {
+  return {
+    userId: sessionData.userId,
+    email: sessionData.email,
+    name: sessionData.name,
+    whopUserId: sessionData.whopUserId,
+    subscribed: sessionData.subscribed,
+    hasAccess: sessionData.hasAccess,
+    planId: sessionData.planId,
+    subscriptionId: sessionData.subscriptionId,
+  };
+}
+
+function isProtectedApiRequest(config) {
+  const requestUrl = config?.url;
+
+  if (!requestUrl) {
+    return false;
+  }
+
+  return PROTECTED_API_PATHS.some((path) => requestUrl.includes(path));
+}
+
+function isSubscriptionRequiredError(error) {
+  const message = error?.response?.data?.error;
+
+  return (
+    typeof message === "string" &&
+    message.toLowerCase().includes("subscription required")
+  );
+}
 
 function FullScreenLoader() {
   return (
@@ -97,7 +137,96 @@ function MainContent() {
   const authenticated = useIsAuthenticated();
   const signIn = useSignIn();
   const signOut = useSignOut();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [bootstrapping, setBootstrapping] = useState(true);
+  const locationRef = useRef(location);
+  const authTransitionRef = useRef(null);
+
+  useEffect(() => {
+    locationRef.current = location;
+  }, [location]);
+
+  const syncAuthState = useCallback(
+    (sessionData) => {
+      signIn({
+        token: "whop-session",
+        expiresIn: 60 * 24 * 7,
+        tokenType: "Bearer",
+        authState: buildAuthState(sessionData),
+      });
+    },
+    [signIn]
+  );
+
+  const handleUnauthorizedResponse = useCallback(
+    async (error) => {
+      if (authTransitionRef.current) {
+        return authTransitionRef.current;
+      }
+
+      const currentLocation = locationRef.current;
+      const from = {
+        pathname: currentLocation.pathname,
+        search: currentLocation.search,
+        hash: currentLocation.hash,
+      };
+
+      authTransitionRef.current = (async () => {
+        if (isSubscriptionRequiredError(error)) {
+          try {
+            const response = await axios.get(
+              `${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/me`
+            );
+            syncAuthState(response.data);
+            navigate("/", {
+              replace: true,
+              state: { from, subscriptionRequired: true },
+            });
+            return;
+          } catch (refreshError) {
+            signOut();
+            navigate("/login", {
+              replace: true,
+              state: { from, sessionExpired: true },
+            });
+            return;
+          }
+        }
+
+        signOut();
+        navigate("/login", {
+          replace: true,
+          state: { from, sessionExpired: true },
+        });
+      })().finally(() => {
+        authTransitionRef.current = null;
+      });
+
+      return authTransitionRef.current;
+    },
+    [navigate, signOut, syncAuthState]
+  );
+
+  useEffect(() => {
+    const interceptorId = axios.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        if (
+          error?.response?.status === 401 &&
+          isProtectedApiRequest(error.config)
+        ) {
+          await handleUnauthorizedResponse(error);
+        }
+
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.response.eject(interceptorId);
+    };
+  }, [handleUnauthorizedResponse]);
 
   useEffect(() => {
     let cancelled = false;
@@ -116,24 +245,26 @@ function MainContent() {
           return;
         }
 
-        signIn({
-          token: "whop-session",
-          expiresIn: 60 * 24 * 7,
-          tokenType: "Bearer",
-          authState: {
-            userId: response.data.userId,
-            email: response.data.email,
-            name: response.data.name,
-            whopUserId: response.data.whopUserId,
-            subscribed: response.data.subscribed,
-            hasAccess: response.data.hasAccess,
-            planId: response.data.planId,
-            subscriptionId: response.data.subscriptionId,
-          },
-        });
+        syncAuthState(response.data);
       } catch (error) {
-        if (!cancelled && authenticated()) {
+        if (
+          !cancelled &&
+          error?.response?.status === 401 &&
+          authenticated()
+        ) {
+          const currentLocation = locationRef.current;
           signOut();
+          navigate("/login", {
+            replace: true,
+            state: {
+              from: {
+                pathname: currentLocation.pathname,
+                search: currentLocation.search,
+                hash: currentLocation.hash,
+              },
+              sessionExpired: true,
+            },
+          });
         }
       } finally {
         authMePromise = null;
@@ -148,7 +279,7 @@ function MainContent() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [authenticated, navigate, signOut, syncAuthState]);
 
   if (bootstrapping) {
     return <FullScreenLoader />;

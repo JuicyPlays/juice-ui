@@ -6,6 +6,7 @@ export default function SupabaseLogin() {
   const location = useLocation();
   const navigate = useNavigate();
   const authenticated = useIsAuthenticated();
+  const sessionExpired = Boolean(location.state?.sessionExpired);
 
   useEffect(() => {
     if (authenticated()) {
@@ -14,7 +15,9 @@ export default function SupabaseLogin() {
   }, [authenticated, navigate]);
 
   const handleWhopLogin = () => {
-    const redirectPath = location.state?.from?.pathname || "/";
+    const redirectPath = location.state?.from?.pathname
+      ? `${location.state.from.pathname}${location.state.from.search || ""}${location.state.from.hash || ""}`
+      : "/";
     const loginUrl = `${
       import.meta.env.VITE_JUICE_API_BASE_URL
     }/auth/whop/login?redirect=${encodeURIComponent(redirectPath)}`;
@@ -43,6 +46,11 @@ export default function SupabaseLogin() {
 
         {/* Auth widget */}
         <div style={styles.authWrap}>
+          {sessionExpired && (
+            <div style={styles.alertBox}>
+              Your session expired. Please sign in again.
+            </div>
+          )}
           <button style={styles.whopButton} onClick={handleWhopLogin}>
             Continue with Whop
           </button>
@@ -184,6 +192,19 @@ const styles = {
   },
   authWrap: {
     padding: "4px 20px 24px",
+  },
+  alertBox: {
+    marginBottom: "14px",
+    padding: "12px 14px",
+    borderRadius: "12px",
+    background: "rgba(239, 68, 68, 0.12)",
+    border: "1px solid rgba(239, 68, 68, 0.28)",
+    color: "#fca5a5",
+    fontFamily: "'Inter', sans-serif",
+    fontSize: "13px",
+    fontWeight: 600,
+    textAlign: "center",
+    lineHeight: 1.5,
   },
   whopButton: {
     width: "100%",
