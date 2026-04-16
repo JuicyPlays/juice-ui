@@ -710,6 +710,7 @@ const LineShopper = () => {
             selected={games}
             onToggle={handleToggleGame}
             onToggleAll={handleToggleAllGames}
+            searchable={true}
           />
         </div>
         <button

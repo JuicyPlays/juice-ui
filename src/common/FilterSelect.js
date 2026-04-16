@@ -12,6 +12,7 @@ import { createPortal } from "react-dom";
  *   selected   – Array of currently selected values
  *   onToggle   – (value) => void — toggle a single option
  *   onToggleAll – (selectAll: boolean) => void — select / deselect all
+ *   searchable – boolean — enable search input (default false)
  */
 const FilterSelect = ({
   label,
@@ -21,12 +22,14 @@ const FilterSelect = ({
   onToggle,
   onToggleAll,
   singleMode = false,
+  searchable = false,
 }) => {
   const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const panelRef = useRef(null);
   const triggerRef = useRef(null);
 
-  // Close on outside click
+  // Close on outside click + clear search when closing
   useEffect(() => {
     const handler = (e) => {
       if (
@@ -37,14 +40,23 @@ const FilterSelect = ({
         !triggerRef.current.contains(e.target)
       ) {
         setOpen(false);
+        setSearchQuery("");
       }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [open]);
 
+  // Filter options by search query (case-insensitive on label)
+  const filteredOptions = searchable && searchQuery.trim()
+    ? options.filter((o) =>
+        o.label.toLowerCase().includes(searchQuery.trim().toLowerCase())
+      )
+    : options;
+
   const allSelected =
-    options.length > 0 && options.every((o) => selected.includes(o.value));
+    filteredOptions.length > 0 &&
+    filteredOptions.every((o) => selected.includes(o.value));
 
   // Calculate panel position from trigger button rect
   const getPanelPosition = useCallback(() => {
@@ -154,14 +166,65 @@ const FilterSelect = ({
                   color: "var(--text-muted)",
                 }}
               >
-                {options.length} available
+                {searchable && searchQuery.trim()
+                  ? `${filteredOptions.length} of ${options.length} matches`
+                  : `${options.length} available`}
               </div>
             </div>
 
+            {/* Search input */}
+            {searchable && (
+              <div style={{ marginBottom: "10px" }}>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search..."
+                  style={{
+                    width: "100%",
+                    padding: "8px 12px",
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid var(--border-subtle)",
+                    borderRadius: "8px",
+                    color: "var(--text-primary)",
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: "13px",
+                    outline: "none",
+                    transition: "var(--transition)",
+                  }}
+                  onKeyDown={(e) => e.stopPropagation()}
+                />
+              </div>
+            )}
+
             {/* Select all toggle */}
-            {!singleMode && options.length > 1 && (
+            {!singleMode && filteredOptions.length > 1 && (
               <button
-                onClick={() => onToggleAll(!allSelected)}
+                onClick={() => {
+                  if (searchable && searchQuery.trim()) {
+                    // When searching, only toggle visible filtered options
+                    const visibleValues = new Set(filteredOptions.map((o) => o.value));
+                    const allVisibleSelected = filteredOptions.every((o) =>
+                      selected.includes(o.value)
+                    );
+                    if (allVisibleSelected) {
+                      // Deselect only visible
+                      const newSelected = selected.filter((v) => !visibleValues.has(v));
+                      onToggleAll(false);
+                      // Apply the filtered deselection via individual toggles
+                      filteredOptions.forEach((o) => {
+                        if (selected.includes(o.value)) onToggle(o.value);
+                      });
+                    } else {
+                      // Select all visible
+                      filteredOptions.forEach((o) => {
+                        if (!selected.includes(o.value)) onToggle(o.value);
+                      });
+                    }
+                  } else {
+                    onToggleAll(!allSelected);
+                  }
+                }}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -185,6 +248,19 @@ const FilterSelect = ({
                 <Checkbox checked={allSelected} />
                 {allSelected ? "Deselect All" : "Select All"}
               </button>
+            )}
+            {searchable && searchQuery.trim() && filteredOptions.length === 0 && (
+              <div
+                style={{
+                  padding: "12px 10px",
+                  color: "var(--text-muted)",
+                  fontSize: "12px",
+                  fontFamily: "'Inter', sans-serif",
+                  textAlign: "center",
+                }}
+              >
+                No matches
+              </div>
             )}
 
             {/* Divider */}
@@ -219,14 +295,17 @@ const FilterSelect = ({
                   No options available
                 </div>
               )}
-              {options.map((option) => {
+              {filteredOptions.map((option) => {
                 const checked = selected.includes(option.value);
                 return (
                   <button
                     key={option.value}
                     onClick={() => {
                       onToggle(option.value);
-                      if (singleMode) setOpen(false);
+                      if (singleMode) {
+                        setOpen(false);
+                        setSearchQuery("");
+                      }
                     }}
                     style={{
                       display: "flex",
