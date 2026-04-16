@@ -357,9 +357,9 @@ const FilterSelect = ({
                         <span
                           style={{
                             fontFamily: "'Inter', sans-serif",
-                            fontSize: "11px",
+                            fontSize: "12px",
                             fontWeight: 400,
-                            color: "var(--text-muted)",
+                            color: "var(--text-secondary)",
                             transition: "var(--transition)",
                             textAlign: "left",
                             lineHeight: "1.2",
