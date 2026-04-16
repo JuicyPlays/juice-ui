@@ -700,6 +700,7 @@ const LineShopper = () => {
             selected={stats}
             onToggle={handleToggleStat}
             onToggleAll={handleToggleAllStats}
+            searchable={true}
           />
         </div>
         <div style={styles.selectWrap}>
