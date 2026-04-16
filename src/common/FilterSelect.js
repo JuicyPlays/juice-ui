@@ -134,7 +134,7 @@ const FilterSelect = ({
               top: `${panelPos.top}px`,
               left: `${panelPos.left}px`,
               zIndex: 9999,
-              width: "260px",
+              width: label === "Game" ? "320px" : "260px",
               background: "rgba(19, 19, 43, 0.97)",
               border: "1px solid rgba(99,102,241,0.25)",
               borderRadius: "14px",
@@ -297,6 +297,11 @@ const FilterSelect = ({
               )}
               {filteredOptions.map((option) => {
                 const checked = selected.includes(option.value);
+                const isGameFilter = label === "Game";
+                // For Game filter, split label into teams and date
+                const labelParts = isGameFilter ? option.label.split(" • ") : null;
+                const hasTwoLines = isGameFilter && labelParts && labelParts.length >= 2;
+                
                 return (
                   <button
                     key={option.value}
@@ -309,10 +314,10 @@ const FilterSelect = ({
                     }}
                     style={{
                       display: "flex",
-                      alignItems: "center",
+                      alignItems: "flex-start",
                       gap: "10px",
                       width: "100%",
-                      padding: "7px 10px",
+                      padding: hasTwoLines ? "6px 10px" : "7px 10px",
                       background: checked
                         ? "rgba(99,102,241,0.06)"
                         : "transparent",
@@ -322,21 +327,63 @@ const FilterSelect = ({
                       transition: "var(--transition)",
                     }}
                   >
-                    <Checkbox checked={checked} />
-                    <span
-                      style={{
-                        fontFamily: "'Inter', sans-serif",
-                        fontSize: "13px",
-                        fontWeight: 500,
-                        color: checked
-                          ? "var(--text-primary)"
-                          : "var(--text-secondary)",
-                        transition: "var(--transition)",
-                        textAlign: "left",
-                      }}
-                    >
-                      {option.label}
-                    </span>
+                    <div style={{ marginTop: hasTwoLines ? "2px" : "0", flexShrink: 0 }}>
+                      <Checkbox checked={checked} />
+                    </div>
+                    {hasTwoLines ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          gap: "2px",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: "'Inter', sans-serif",
+                            fontSize: "13px",
+                            fontWeight: 500,
+                            color: checked
+                              ? "var(--text-primary)"
+                              : "var(--text-secondary)",
+                            transition: "var(--transition)",
+                            textAlign: "left",
+                            lineHeight: "1.3",
+                          }}
+                        >
+                          {labelParts[0]}
+                        </span>
+                        <span
+                          style={{
+                            fontFamily: "'Inter', sans-serif",
+                            fontSize: "11px",
+                            fontWeight: 400,
+                            color: "var(--text-muted)",
+                            transition: "var(--transition)",
+                            textAlign: "left",
+                            lineHeight: "1.2",
+                          }}
+                        >
+                          {labelParts.slice(1).join(" • ")}
+                        </span>
+                      </div>
+                    ) : (
+                      <span
+                        style={{
+                          fontFamily: "'Inter', sans-serif",
+                          fontSize: "13px",
+                          fontWeight: 500,
+                          color: checked
+                            ? "var(--text-primary)"
+                            : "var(--text-secondary)",
+                          transition: "var(--transition)",
+                          textAlign: "left",
+                        }}
+                      >
+                        {option.label}
+                      </span>
+                    )}
                   </button>
                 );
               })}
