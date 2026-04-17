@@ -208,15 +208,12 @@ const FilterSelect = ({
                       selected.includes(o.value)
                     );
                     if (allVisibleSelected) {
-                      // Deselect only visible
-                      const newSelected = selected.filter((v) => !visibleValues.has(v));
-                      onToggleAll(false);
-                      // Apply the filtered deselection via individual toggles
-                      filteredOptions.forEach((o) => {
-                        if (selected.includes(o.value)) onToggle(o.value);
+                      // Deselect only visible: toggle off each visible selected item
+                      selected.forEach((v) => {
+                        if (visibleValues.has(v)) onToggle(v);
                       });
                     } else {
-                      // Select all visible
+                      // Select all visible: toggle on each visible unselected item
                       filteredOptions.forEach((o) => {
                         if (!selected.includes(o.value)) onToggle(o.value);
                       });
