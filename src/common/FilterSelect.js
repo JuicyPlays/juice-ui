@@ -298,9 +298,40 @@ const FilterSelect = ({
               {filteredOptions.map((option) => {
                 const checked = selected.includes(option.value);
                 const isGameFilter = label === "Game";
-                // For Game filter, split label into teams and date
+                // For Game filter, extract teams from label and format startTime in local timezone
+                const formatGameTime = (dateStr) => {
+                  if (!dateStr) return "";
+                  try {
+                    // Backend sends UTC times - append 'Z' to ensure proper UTC parsing
+                    const utcDateStr = dateStr.endsWith("Z") ? dateStr : dateStr + "Z";
+                    const date = new Date(utcDateStr);
+                    const now = new Date();
+                    const isToday = date.toDateString() === now.toDateString();
+                    const timeStr = date.toLocaleTimeString([], {
+                      hour: "numeric",
+                      minute: "2-digit",
+                      hour12: true,
+                    });
+                    if (isToday) {
+                      return `Today ${timeStr}`;
+                    } else {
+                      return (
+                        date.toLocaleDateString([], { month: "short", day: "numeric" }) + " " + timeStr
+                      );
+                    }
+                  } catch (e) {
+                    return "";
+                  }
+                };
+                // Extract teams from label (everything before " • " if present)
                 const labelParts = isGameFilter ? option.label.split(" • ") : null;
-                const hasTwoLines = isGameFilter && labelParts && labelParts.length >= 2;
+                const teamsLabel = isGameFilter
+                  ? (labelParts && labelParts.length >= 1 ? labelParts[0] : option.label)
+                  : option.label;
+                const timeLabel = isGameFilter && option.startTime
+                  ? formatGameTime(option.startTime)
+                  : (labelParts && labelParts.length >= 2 ? labelParts.slice(1).join(" • ") : "");
+                const hasTwoLines = isGameFilter && teamsLabel && timeLabel;
                 
                 return (
                   <button
@@ -352,7 +383,7 @@ const FilterSelect = ({
                             lineHeight: "1.3",
                           }}
                         >
-                          {labelParts[0]}
+                          {teamsLabel}
                         </span>
                         <span
                           style={{
@@ -365,7 +396,7 @@ const FilterSelect = ({
                             lineHeight: "1.2",
                           }}
                         >
-                          {labelParts.slice(1).join(" • ")}
+                          {timeLabel}
                         </span>
                       </div>
                     ) : (
