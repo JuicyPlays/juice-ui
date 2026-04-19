@@ -83,7 +83,7 @@ function FullScreenLoader() {
 let globalAuthMeCache = { promise: null, timestamp: 0, data: null };
 const CACHE_TTL_MS = 5000; // 5 second cache
 
-function getCachedAuthMe() {
+export function getCachedAuthMe() {
   const now = Date.now();
   if (
     globalAuthMeCache.data &&
@@ -130,8 +130,7 @@ function SubscriptionGuard({ children }) {
   return children;
 }
 
-// Cache for auth/me to prevent duplicate in-flight requests
-let authMePromise = null;
+
 
 function MainContent() {
   const authenticated = useIsAuthenticated();
@@ -175,9 +174,7 @@ function MainContent() {
       authTransitionRef.current = (async () => {
         if (isSubscriptionRequiredError(error)) {
           try {
-            const response = await axios.get(
-              `${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/me`
-            );
+            const response = await getCachedAuthMe();
             syncAuthState(response.data);
             navigate("/", {
               replace: true,
@@ -232,15 +229,8 @@ function MainContent() {
     let cancelled = false;
 
     async function bootstrapSession() {
-      // Deduplicate concurrent auth/me requests
-      if (!authMePromise) {
-        authMePromise = axios.get(
-          `${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/me`
-        );
-      }
-
       try {
-        const response = await authMePromise;
+        const response = await getCachedAuthMe();
         if (cancelled) {
           return;
         }
@@ -267,7 +257,6 @@ function MainContent() {
           });
         }
       } finally {
-        authMePromise = null;
         if (!cancelled) {
           setBootstrapping(false);
         }
@@ -279,7 +268,8 @@ function MainContent() {
     return () => {
       cancelled = true;
     };
-  }, [authenticated, navigate, signOut, syncAuthState]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array prevents infinite loops on auth state changes
 
   if (bootstrapping) {
     return <FullScreenLoader />;

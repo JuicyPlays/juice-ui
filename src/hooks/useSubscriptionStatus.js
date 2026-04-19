@@ -14,9 +14,8 @@ export function useSubscriptionStatus(userId) {
 
     const checkSubscription = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_JUICE_API_BASE_URL}/auth/me`
-        );
+        const { getCachedAuthMe } = await import("../App");
+        const response = await getCachedAuthMe();
         setSubscribed(
           response.data.subscribed || response.data.hasAccess || false
         );
