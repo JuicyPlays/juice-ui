@@ -29,7 +29,12 @@ import { CircularProgress } from "@mui/material";
 
 axios.defaults.withCredentials = true;
 
-const PROTECTED_API_PATHS = ["/v1/juicy", "/v1/line-shopper", "/v1/slips"];
+const PROTECTED_API_PATHS = [
+  "/v1/juicy",
+  "/v1/line-shopper",
+  "/v1/getPropHistory",
+  "/v1/slips",
+];
 
 function buildAuthState(sessionData) {
   return {

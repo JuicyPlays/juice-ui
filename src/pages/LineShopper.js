@@ -17,6 +17,7 @@ import Footer from "./Footer";
 import FilterSelect from "../common/FilterSelect";
 import CellPlayer from "../common/CellPlayer";
 import BookieSettings from "../common/BookieSettings";
+import PropHistoryModal from "../common/PropHistoryModal";
 import {
   ALL_BOOK_KEYS,
   BOOK_CONFIG,
@@ -38,6 +39,10 @@ const LineShopper = () => {
   const [loading, setLoading] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [playerSearch, setPlayerSearch] = useState("");
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState("");
+  const [historyData, setHistoryData] = useState(null);
   const isMobile = useMediaQuery("(max-width: 900px)");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,6 +125,50 @@ const LineShopper = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleOpenHistory = async (row) => {
+    if (!row) return;
+
+    setHistoryOpen(true);
+    setHistoryLoading(true);
+    setHistoryError("");
+    setHistoryData({
+      player: row.player,
+      sport: row.sport,
+      statType: row.statType,
+      gameKey: row.gameKey,
+      teams: row.teams,
+      startTime: row.startTime,
+      currentModelLine: row.bookLines?.juice_ml ?? null,
+      series: [],
+    });
+
+    try {
+      const res = await axios.get(paths.getPropHistoryBasePath, {
+        params: {
+          player: row.player,
+          sport: row.sport,
+          statType: row.statType,
+          gameKey: row.gameKey,
+        },
+      });
+      setHistoryData({
+        ...res.data,
+        currentModelLine: row.bookLines?.juice_ml ?? null,
+      });
+    } catch (error) {
+      console.error(error);
+      setHistoryError("Failed to load prop history.");
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  const handleCloseHistory = () => {
+    setHistoryOpen(false);
+    setHistoryLoading(false);
+    setHistoryError("");
   };
 
   // Filter data based on player search
@@ -539,7 +588,17 @@ const LineShopper = () => {
     },
     enableBottomToolbar: !isMobile,
     enableTopToolbar: false,
-    muiTableBodyRowProps: { hover: false },
+    muiTableBodyRowProps: ({ row }) => ({
+      hover: false,
+      onClick: () => handleOpenHistory(row.original),
+      sx: {
+        cursor: "pointer",
+        transition: "background-color 0.18s ease",
+        "&:hover": {
+          backgroundColor: "rgba(99,102,241,0.06)",
+        },
+      },
+    }),
     muiTablePaperProps: { style: { width: "100%" } },
     muiTableContainerProps: { style: { maxWidth: "100%" } },
     muiTableHeadCellProps: {
@@ -608,6 +667,16 @@ const LineShopper = () => {
                 );
               })}
             </div>
+            <button
+              className="btn-gradient"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleOpenHistory(row.original);
+              }}
+              style={{ marginTop: "12px", minWidth: "100%", height: "36px" }}
+            >
+              View History
+            </button>
           </div>
         );
       },
@@ -739,6 +808,14 @@ const LineShopper = () => {
       <div style={styles.tableWrap}>
         <MaterialReactTable table={table} />
       </div>
+
+      <PropHistoryModal
+        open={historyOpen}
+        onClose={handleCloseHistory}
+        historyData={historyData}
+        loading={historyLoading}
+        error={historyError}
+      />
     </div>
   );
 };
