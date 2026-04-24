@@ -27,6 +27,39 @@ import {
 import { useAuthUser } from "react-auth-kit";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 
+const uniqueFilterValues = (values) => {
+  if (!Array.isArray(values)) return [];
+
+  return [...new Set(values.filter((value) => value != null && value !== ""))];
+};
+
+const buildFilterParamValues = (selectedValues, availableValues) => {
+  const normalizedSelected = uniqueFilterValues(selectedValues);
+  const normalizedAvailable = uniqueFilterValues(availableValues);
+
+  if (normalizedSelected.length === 0) {
+    return [];
+  }
+
+  if (normalizedAvailable.length === 0) {
+    return normalizedSelected;
+  }
+
+  const availableSet = new Set(normalizedAvailable);
+  const filteredSelected = normalizedSelected.filter((value) =>
+    availableSet.has(value)
+  );
+
+  if (
+    filteredSelected.length === 0 ||
+    filteredSelected.length === normalizedAvailable.length
+  ) {
+    return [];
+  }
+
+  return filteredSelected;
+};
+
 const LineShopper = () => {
   const [data, setData] = useState([]);
   const [sports, setSports] = useState([]);
@@ -99,11 +132,31 @@ const LineShopper = () => {
   };
 
   const fetchLineShopperData = async () => {
-    const queryParams = {
-      sports: sports.join(","),
-      stats: stats.join(","),
-      games: games.join(","),
-    };
+    const queryParams = {};
+    const selectedSports = buildFilterParamValues(
+      sports,
+      sportsOptions.map((option) => option.value)
+    );
+    const selectedStats = buildFilterParamValues(
+      stats,
+      statOptions.map((option) => option.value)
+    );
+    const selectedGames = buildFilterParamValues(
+      games,
+      gameOptions.map((option) => option.value)
+    );
+
+    if (selectedSports.length > 0) {
+      queryParams.sports = selectedSports.join(",");
+    }
+
+    if (selectedStats.length > 0) {
+      queryParams.stats = selectedStats.join(",");
+    }
+
+    if (selectedGames.length > 0) {
+      queryParams.games = selectedGames.join(",");
+    }
     try {
       const res = await axios.get(paths.getLineShopperBasePath, {
         params: queryParams,
