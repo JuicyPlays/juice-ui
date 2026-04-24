@@ -285,6 +285,13 @@ const PropHistoryModal = React.memo(function PropHistoryModal({
       }
     });
 
+    // Extend to now using UTC to avoid timezone mismatch
+    const now = new Date();
+    const nowNum = now.getTime();
+    if (!maxTime || maxTime.getTime() < nowNum) {
+      maxTime = now;
+    }
+
     if (maxTime && Object.keys(lastValues).length > 0) {
       const maxTimeNum = maxTime.getTime();
       const finalPoint = { observedAt: maxTimeNum, ...lastValues };
