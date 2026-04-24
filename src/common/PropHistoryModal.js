@@ -18,20 +18,9 @@ import {
   Tooltip,
   Area,
 } from "recharts";
-import { bookDisplayName, bookLogo } from "./bookLogos";
+import { bookDisplayName, bookLogo, bookColor, bookDash, bookDotShape } from "./bookLogos";
 
-const SERIES_COLORS = {
-  boom: "#ff6b35",           // BOOM orange
-  prizepicks: "#ff4ecd",     // PrizePicks pink
-  sleeper: "#7c3aed",        // Sleeper purple
-  underdog: "#ff9500",       // Underdog orange
-  parlayplay: "#fbbf24",     // ParlayPlay yellow/gold
-  dabble: "#f472b6",         // Dabble pink
-  draftkings_pick6: "#10b981", // DraftKings green
-  betr: "#fb7185",           // Betr pink/red
-  thunderpick: "#06b6d4",    // Thunderpick cyan
-  juice_ml: "#a855f7",       // Model purple
-};
+const MODEL_COLOR = "#a855f7";
 
 // Book display order (popular first)
 const BOOK_ORDER = [
@@ -75,6 +64,94 @@ const formatLine = (value) => {
   if (value == null || Number.isNaN(value)) return "—";
   return Number(value).toFixed(2).replace(/\.00$/, "");
 };
+
+const SHAPE_PATHS = {
+  circle: null, // uses default circle
+  square: (cx, cy, r) => ({ type: "rect", x: cx - r, y: cy - r, width: r * 2, height: r * 2 }),
+  diamond: (cx, cy, r) => {
+    const d = r * 1.3;
+    return { type: "polygon", points: `${cx},${cy - d} ${cx + d},${cy} ${cx},${cy + d} ${cx - d},${cy}` };
+  },
+  triangle: (cx, cy, r) => {
+    const d = r * 1.4;
+    return { type: "polygon", points: `${cx},${cy - d} ${cx + d},${cy + d * 0.6} ${cx - d},${cy + d * 0.6}` };
+  },
+  cross: (cx, cy, r) => {
+    const d = r * 0.8;
+    return {
+      type: "g",
+      children: [
+        { type: "line", x1: cx - d, y1: cy - d, x2: cx + d, y2: cy + d },
+        { type: "line", x1: cx + d, y1: cy - d, x2: cx - d, y2: cy + d },
+      ],
+    };
+  },
+  plus: (cx, cy, r) => {
+    const d = r * 0.8;
+    return {
+      type: "g",
+      children: [
+        { type: "line", x1: cx, y1: cy - d, x2: cx, y2: cy + d },
+        { type: "line", x1: cx - d, y1: cy, x2: cx + d, y2: cy },
+      ],
+    };
+  },
+  star: (cx, cy, r) => {
+    const outer = r * 1.3;
+    const inner = r * 0.6;
+    let points = "";
+    for (let i = 0; i < 10; i++) {
+      const angle = (Math.PI / 5) * i - Math.PI / 2;
+      const radius = i % 2 === 0 ? outer : inner;
+      points += `${cx + Math.cos(angle) * radius},${cy + Math.sin(angle) * radius} `;
+    }
+    return { type: "polygon", points: points.trim() };
+  },
+  hexagon: (cx, cy, r) => {
+    const d = r * 1.2;
+    let points = "";
+    for (let i = 0; i < 6; i++) {
+      const angle = (Math.PI / 3) * i - Math.PI / 2;
+      points += `${cx + Math.cos(angle) * d},${cy + Math.sin(angle) * d} `;
+    }
+    return { type: "polygon", points: points.trim() };
+  },
+};
+
+const CustomDot = React.memo(function CustomDot({ cx, cy, stroke, fill, payload, dataKey }) {
+  if (cx == null || cy == null) return null;
+  const shape = bookDotShape(dataKey);
+  const r = 3.5;
+  const commonProps = {
+    stroke: "#0f172a",
+    strokeWidth: 2,
+    fill: fill || stroke,
+  };
+
+  if (shape === "circle") {
+    return <circle cx={cx} cy={cy} r={r} {...commonProps} />;
+  }
+
+  const spec = SHAPE_PATHS[shape]?.(cx, cy, r);
+  if (!spec) return <circle cx={cx} cy={cy} r={r} {...commonProps} />;
+
+  if (spec.type === "rect") {
+    return <rect {...spec} {...commonProps} rx={1} />;
+  }
+  if (spec.type === "polygon") {
+    return <polygon points={spec.points} {...commonProps} />;
+  }
+  if (spec.type === "g") {
+    return (
+      <g>
+        {spec.children.map((child, i) => (
+          <line key={i} {...child} stroke={commonProps.fill} strokeWidth={2} strokeLinecap="round" />
+        ))}
+      </g>
+    );
+  }
+  return <circle cx={cx} cy={cy} r={r} {...commonProps} />;
+});
 
 const CustomTooltip = ({ active, payload, label, seriesMeta }) => {
   if (!active || !payload || payload.length === 0) {
@@ -330,6 +407,20 @@ const PropHistoryModal = React.memo(function PropHistoryModal({
   const handleLegendHover = useCallback((bookKey) => setHoveredBook(bookKey), []);
   const handleLegendLeave = useCallback(() => setHoveredBook(null), []);
 
+  // Compute overlap groups: books sharing the exact same current line
+  const overlapGroups = useMemo(() => {
+    const groups = new Map();
+    sortedSeries.forEach((s) => {
+      if (s.currentLine == null) return;
+      const key = Number(s.currentLine).toFixed(2);
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(s);
+    });
+    return Array.from(groups.entries())
+      .filter(([, books]) => books.length >= 2)
+      .sort((a, b) => b[0] - a[0]);
+  }, [sortedSeries]);
+
   return (
     <Dialog
       open={open}
@@ -439,7 +530,7 @@ const PropHistoryModal = React.memo(function PropHistoryModal({
                   <LegendItem
                     key={seriesItem.sportsbook}
                     bookKey={seriesItem.sportsbook}
-                    color={SERIES_COLORS[seriesItem.sportsbook] || "#c084fc"}
+                    color={bookColor(seriesItem.sportsbook) || "#c084fc"}
                     currentLine={seriesItem.currentLine}
                     isActive={hoveredBook === null || hoveredBook === seriesItem.sportsbook}
                     onHover={handleLegendHover}
@@ -480,6 +571,59 @@ const PropHistoryModal = React.memo(function PropHistoryModal({
               </div>
             )}
 
+            {/* Overlap badges: books sharing the same current line */}
+            {overlapGroups.length > 0 && (
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "6px",
+                  marginBottom: "12px",
+                  padding: "0 4px",
+                }}
+              >
+                {overlapGroups.map(([line, books]) => (
+                  <span
+                    key={line}
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 600,
+                      color: "#e2e8f0",
+                      background: "rgba(30, 41, 59, 0.8)",
+                      border: "1px solid rgba(148, 163, 184, 0.2)",
+                      borderRadius: "8px",
+                      padding: "4px 10px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                  >
+                    <span style={{ color: "#94a3b8" }}>
+                      {books.length} books
+                    </span>
+                    <span style={{ color: "#64748b" }}>@</span>
+                    <span style={{ color: "#fff" }}>{line}</span>
+                    <span style={{ display: "flex", gap: "2px", marginLeft: "2px" }}>
+                      {books.map((b) => (
+                        <img
+                          key={b.sportsbook}
+                          src={bookLogo(b.sportsbook)}
+                          alt=""
+                          style={{
+                            width: "14px",
+                            height: "14px",
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                            background: "rgba(255,255,255,0.1)",
+                          }}
+                        />
+                      ))}
+                    </span>
+                  </span>
+                ))}
+              </div>
+            )}
+
             {/* Chart */}
             <div style={{ width: "100%", height: "440px" }}>
               <ResponsiveContainer>
@@ -496,12 +640,12 @@ const PropHistoryModal = React.memo(function PropHistoryModal({
                       >
                         <stop
                           offset="0%"
-                          stopColor={SERIES_COLORS[seriesItem.sportsbook] || "#c084fc"}
+                          stopColor={bookColor(seriesItem.sportsbook) || "#c084fc"}
                           stopOpacity={0.15}
                         />
                         <stop
                           offset="100%"
-                          stopColor={SERIES_COLORS[seriesItem.sportsbook] || "#c084fc"}
+                          stopColor={bookColor(seriesItem.sportsbook) || "#c084fc"}
                           stopOpacity={0}
                         />
                       </linearGradient>
@@ -542,7 +686,7 @@ const PropHistoryModal = React.memo(function PropHistoryModal({
                   {currentModelLine != null && (
                     <ReferenceLine
                       y={currentModelLine}
-                      stroke={SERIES_COLORS.juice_ml}
+                      stroke={MODEL_COLOR}
                       strokeDasharray="6 4"
                       strokeWidth={2}
                       ifOverflow="extendDomain"
@@ -550,7 +694,7 @@ const PropHistoryModal = React.memo(function PropHistoryModal({
                   )}
                   <Tooltip content={<CustomTooltip seriesMeta={seriesMeta} />} />
                   {sortedSeries.map((seriesItem, index) => {
-                    const color = SERIES_COLORS[seriesItem.sportsbook] || "#c084fc";
+                    const color = bookColor(seriesItem.sportsbook) || "#c084fc";
                     const isDimmed = hoveredBook !== null && hoveredBook !== seriesItem.sportsbook;
                     return (
                       <React.Fragment key={seriesItem.sportsbook}>
@@ -563,23 +707,22 @@ const PropHistoryModal = React.memo(function PropHistoryModal({
                           isAnimationActive={false}
                         />
                         <Line
-                          type="linear"
+                          type="stepAfter"
                           dataKey={seriesItem.sportsbook}
                           name={bookDisplayName(seriesItem.sportsbook)}
                           stroke={color}
                           strokeWidth={hoveredBook === seriesItem.sportsbook ? 4 : 3}
                           strokeOpacity={isDimmed ? 0.3 : 1}
-                          dot={{ r: 3, stroke: "#0f172a", strokeWidth: 2, fill: color }}
+                          strokeDasharray={bookDash(seriesItem.sportsbook) || undefined}
+                          dot={<CustomDot dataKey={seriesItem.sportsbook} fill={color} />}
                           activeDot={{
                             r: 6,
                             stroke: "#0f172a",
                             strokeWidth: 2,
                             fill: color,
                           }}
-                          connectNulls={true}
-                          animationDuration={800}
-                          animationBegin={index * 100}
-                          isAnimationActive={true}
+                          connectNulls={false}
+                          isAnimationActive={false}
                         />
                       </React.Fragment>
                     );

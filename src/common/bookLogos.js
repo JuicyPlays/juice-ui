@@ -12,15 +12,15 @@
  */
 
 export const BOOK_CONFIG = {
-  prizepicks: { name: "PrizePicks", logo: "/logos/prizepicks.svg" },
-  underdog: { name: "Underdog", logo: "/logos/underdog.svg" },
-  parlayplay: { name: "ParlayPlay", logo: "/logos/parlayplay.svg" },
-  dabble: { name: "Dabble", logo: "/logos/dabble.svg" },
-  draftkings_pick6: { name: "Pick6", logo: "/logos/pick6.png" },
-  sleeper: { name: "Sleeper", logo: "/logos/sleeper.jpg" },
-  boom: { name: "BOOM", logo: "/logos/boom.webp" },
-  betr: { name: "Betr", logo: "/logos/betr.png" },
-  thunderpick: { name: "Thunderpick", logo: "/logos/thunderpick.jpeg" },
+  prizepicks:      { name: "PrizePicks",  logo: "/logos/prizepicks.svg",      color: "#ff4ecd",  dash: null,       dot: "circle" },
+  underdog:        { name: "Underdog",    logo: "/logos/underdog.svg",        color: "#ff9500",  dash: "6 4",       dot: "square" },
+  parlayplay:      { name: "ParlayPlay",  logo: "/logos/parlayplay.svg",      color: "#fbbf24",  dash: "3 3",       dot: "diamond" },
+  dabble:          { name: "Dabble",      logo: "/logos/dabble.svg",          color: "#f472b6",  dash: "6 2 2 2",   dot: "triangle" },
+  draftkings_pick6:{ name: "Pick6",       logo: "/logos/pick6.png",           color: "#10b981",  dash: "2 4",       dot: "cross" },
+  sleeper:         { name: "Sleeper",     logo: "/logos/sleeper.jpg",         color: "#7c3aed",  dash: "8 3 2 3",   dot: "star" },
+  boom:            { name: "BOOM",        logo: "/logos/boom.webp",           color: "#ff6b35",  dash: "4 2",       dot: "hexagon" },
+  betr:            { name: "Betr",        logo: "/logos/betr.png",            color: "#fb7185",  dash: "10 3",      dot: "plus" },
+  thunderpick:     { name: "Thunderpick", logo: "/logos/thunderpick.jpeg",    color: "#06b6d4",  dash: "2 2 6 2",   dot: "circle" },
 };
 
 /** All integrated book keys in alphabetical order (excluding juice_ml). */
@@ -46,4 +46,31 @@ export const bookLogo = (key) => {
   if (!key) return null;
   const cfg = BOOK_CONFIG[key.toLowerCase()];
   return cfg ? cfg.logo : null;
+};
+
+/**
+ * Return the brand color for a sportsbook key, or null if none.
+ */
+export const bookColor = (key) => {
+  if (!key) return null;
+  const cfg = BOOK_CONFIG[key.toLowerCase()];
+  return cfg ? cfg.color : null;
+};
+
+/**
+ * Return the stroke dash array for a sportsbook key, or null for solid.
+ */
+export const bookDash = (key) => {
+  if (!key) return null;
+  const cfg = BOOK_CONFIG[key.toLowerCase()];
+  return cfg ? cfg.dash : null;
+};
+
+/**
+ * Return the dot shape name for a sportsbook key, or 'circle' if none.
+ */
+export const bookDotShape = (key) => {
+  if (!key) return "circle";
+  const cfg = BOOK_CONFIG[key.toLowerCase()];
+  return cfg ? cfg.dot : "circle";
 };
