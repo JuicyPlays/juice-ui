@@ -31,10 +31,23 @@ const SERIES_COLORS = {
   juice_ml: "#a855f7",
 };
 
+const parseTimestamp = (value) => {
+  if (!value) return null;
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
+
+  const normalizedValue =
+    typeof value === "string" && !/[zZ]|[+-]\d{2}:?\d{2}$/.test(value)
+      ? `${value}Z`
+      : value;
+
+  const date = new Date(normalizedValue);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
 const formatTimestamp = (value) => {
   if (!value) return "";
-  const date = new Date(value.endsWith("Z") ? value : `${value}Z`);
-  if (Number.isNaN(date.getTime())) return value;
+  const date = parseTimestamp(value);
+  if (!date) return value;
   return date.toLocaleString([], {
     month: "short",
     day: "numeric",
@@ -108,7 +121,11 @@ export default function PropHistoryModal({
     });
 
     return Array.from(pointsByTimestamp.values()).sort(
-      (a, b) => new Date(a.observedAt) - new Date(b.observedAt)
+      (a, b) => {
+        const first = parseTimestamp(a.observedAt);
+        const second = parseTimestamp(b.observedAt);
+        return (first?.getTime() || 0) - (second?.getTime() || 0);
+      }
     );
   }, [historyData]);
 
