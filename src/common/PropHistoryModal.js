@@ -276,11 +276,6 @@ const PropHistoryModal = React.memo(function PropHistoryModal({
       });
     });
 
-    // Always extend to now for the full window effect
-    const now = new Date();
-    if (!maxTime || maxTime < now) maxTime = now;
-    const maxTimeNum = maxTime.getTime();
-
     // Add final data points at maxTime using currentLine for each series
     // This ensures lines extend horizontally to the end of the chart
     const lastValues = {};
@@ -290,7 +285,8 @@ const PropHistoryModal = React.memo(function PropHistoryModal({
       }
     });
 
-    if (Object.keys(lastValues).length > 0) {
+    if (maxTime && Object.keys(lastValues).length > 0) {
+      const maxTimeNum = maxTime.getTime();
       const finalPoint = { observedAt: maxTimeNum, ...lastValues };
       pointsByTimestamp.set(maxTimeNum, finalPoint);
     }
