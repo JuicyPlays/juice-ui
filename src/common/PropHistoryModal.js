@@ -287,9 +287,10 @@ const PropHistoryModal = React.memo(function PropHistoryModal({
 
     // Extend to now using UTC to avoid timezone mismatch
     const now = new Date();
-    const nowNum = now.getTime();
+    const nowUtc = new Date(now.toUTCString());
+    const nowNum = nowUtc.getTime();
     if (!maxTime || maxTime.getTime() < nowNum) {
-      maxTime = now;
+      maxTime = nowUtc;
     }
 
     if (maxTime && Object.keys(lastValues).length > 0) {
