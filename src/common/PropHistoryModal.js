@@ -721,7 +721,7 @@ const PropHistoryModal = React.memo(function PropHistoryModal({
                             strokeWidth: 2,
                             fill: color,
                           }}
-                          connectNulls={false}
+                          connectNulls={true}
                           isAnimationActive={false}
                         />
                       </React.Fragment>
